@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPServerProto", "TCPServer
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FaceRecognition", "FaceRecognition\FaceRecognition.vcxproj", "{0FE49453-2484-4166-993A-D87A001E80EB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPClientUI", "TCPClientUI\TCPClientUI.vcxproj", "{17543ADB-983C-41C3-96FB-7FC0F35ABC12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -59,6 +61,12 @@ Global
 		{0FE49453-2484-4166-993A-D87A001E80EB}.Release|x64.Build.0 = Release|x64
 		{0FE49453-2484-4166-993A-D87A001E80EB}.Release|x86.ActiveCfg = Release|Win32
 		{0FE49453-2484-4166-993A-D87A001E80EB}.Release|x86.Build.0 = Release|Win32
+		{17543ADB-983C-41C3-96FB-7FC0F35ABC12}.Debug|x64.ActiveCfg = Debug|x64
+		{17543ADB-983C-41C3-96FB-7FC0F35ABC12}.Debug|x64.Build.0 = Debug|x64
+		{17543ADB-983C-41C3-96FB-7FC0F35ABC12}.Debug|x86.ActiveCfg = Debug|x64
+		{17543ADB-983C-41C3-96FB-7FC0F35ABC12}.Release|x64.ActiveCfg = Release|x64
+		{17543ADB-983C-41C3-96FB-7FC0F35ABC12}.Release|x64.Build.0 = Release|x64
+		{17543ADB-983C-41C3-96FB-7FC0F35ABC12}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +76,7 @@ Global
 		{79F7370C-9BF0-45DE-B2EB-1159DF437D30} = {E96FBF6D-9278-4759-9007-23F3A4A015AC}
 		{20266605-4D58-4C37-BED7-0C7F96E5443A} = {E32E8EC6-E89A-4D81-8CE7-59F758CAF568}
 		{0FE49453-2484-4166-993A-D87A001E80EB} = {FE1D201D-2F0D-4E1E-8C9D-CAA83EAE384E}
+		{17543ADB-983C-41C3-96FB-7FC0F35ABC12} = {FE1D201D-2F0D-4E1E-8C9D-CAA83EAE384E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B4BA2886-5B55-4E3B-A4E8-E9464461E8B8}
