@@ -24,6 +24,7 @@
     <ProjectGuid>{79f7370c-9bf0-45de-b2eb-1159df437d30}</ProjectGuid>
     <RootNamespace>EncryptDecryptECBMode</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>EncryptDecrypt</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EncryptDecryptAES_ECBMode.h" />
+    <ClInclude Include="EncryptDecryptRSA.h" />
     <ClInclude Include="ICrypt.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
@@ -173,6 +175,7 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EncryptDecryptAES_ECBMode.cpp" />
+    <ClCompile Include="EncryptDecryptRSA.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
