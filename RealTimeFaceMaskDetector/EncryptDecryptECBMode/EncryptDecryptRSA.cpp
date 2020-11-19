@@ -32,7 +32,7 @@ EncryptDecryptRSA::~EncryptDecryptRSA()
 {
 	//logger message
 }
-bool EncryptDecryptRSA::Ecnrypt(const std::string& text, std::string& cipher) const 
+bool EncryptDecryptRSA::Encrypt(const std::string& text, std::string& cipher) const 
 {
 	try
 	{

@@ -13,7 +13,7 @@ public:
 	EncryptDecryptAES_ECBMode();
 	EncryptDecryptAES_ECBMode(unsigned char* key, const std::size_t key_size);
 	virtual ~EncryptDecryptAES_ECBMode();
-	virtual bool Ecnrypt(const std::string& text, std::string& cipher) const override;
+	virtual bool Encrypt(const std::string& text, std::string& cipher) const override;
 	virtual bool Decrypt(const std::string& cipher, std::string& text) const override;
 	virtual void CreateKey(const size_t key_size = 16) override;
 	virtual const unsigned char* get_key() const;

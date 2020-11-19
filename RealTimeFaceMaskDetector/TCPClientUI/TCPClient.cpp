@@ -1,4 +1,5 @@
 #include "TCPClient.h"
+#include "../EncryptDecryptECBMode/EncryptDecryptAES_ECBMode.h"
 
 std::string g_ip;
 int g_port;
@@ -47,13 +48,25 @@ bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& bu
 
 bool TCPClient::SendBinaryMessage(const std::vector<char>& buffer)
 {
-    std::string size = std::to_string(m_size);
-    send(m_socket, size.c_str(), size.length(), 0);
-
-    if (send(m_socket, buffer.data(), buffer.size() - 1, 0))
-        return true;
-    else
+    if (m_size == 0)
         return false;
+    else
+    {
+        std::string size = std::to_string(m_size);
+        EncryptDecryptAES_ECBMode encryptor;
+        encryptor.CreateKey();
+        std::string size_cipher;
+        encryptor.Encrypt(size, size_cipher);
+        send(m_socket, size_cipher.c_str(), size_cipher.length(), 0);
+
+        std::string buffer_cipher;
+        std::string text(buffer.begin(), buffer.end());
+        encryptor.Encrypt(text, buffer_cipher);
+        if (send(m_socket, buffer.data(), buffer.size() - 1, 0))
+            return true;
+        else
+            return false;
+    }
 }
 
 bool TCPClient::CloseSocket()

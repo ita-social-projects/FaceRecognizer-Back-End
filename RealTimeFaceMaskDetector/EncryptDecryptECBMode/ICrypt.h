@@ -20,7 +20,7 @@
 class ENCRYPTDECRYPTECBMODE_API ICrypt
 {
 public:
-	[[nodiscard]]virtual bool Ecnrypt(const std::string& text, std::string& cipher) const = 0;
+	[[nodiscard]]virtual bool Encrypt(const std::string& text, std::string& cipher) const = 0;
 	[[nodiscard]]virtual bool Decrypt(const std::string& cipher, std::string& text) const = 0;
 	[[nodiscard]]virtual void CreateKey(const std::size_t key_size) = 0;
 };

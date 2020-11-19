@@ -65,7 +65,7 @@ bool EncryptDecryptAES_ECBMode::Decrypt(const std::string& cipher, std::string& 
 		return false;
 	}
 }
-bool EncryptDecryptAES_ECBMode::Ecnrypt(const std::string& text, std::string& cipher) const 
+bool EncryptDecryptAES_ECBMode::Encrypt(const std::string& text, std::string& cipher) const 
 {
 	if (text.empty()||!*m_key.get())
 	{
