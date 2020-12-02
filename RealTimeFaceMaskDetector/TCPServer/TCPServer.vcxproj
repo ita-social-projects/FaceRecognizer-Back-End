@@ -21,8 +21,13 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+    <ProjectGuid>{0fe49453-2484-4166-993a-d87a001e80eb}</ProjectGuid>
+    <RootNamespace>FaceRecognition</RootNamespace>
+=======
     <ProjectGuid>{5aec37d4-cf31-4a4c-8f6b-d29f49a203c1}</ProjectGuid>
     <RootNamespace>TCPServer</RootNamespace>
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -72,14 +77,20 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+=======
     <LibraryPath>$(SolutionDir)x64\Debug;$(LibraryPath)</LibraryPath>
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+=======
     <LibraryPath>$(SolutionDir)x64\Debug;$(LibraryPath)</LibraryPath>
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -90,14 +101,20 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+=======
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)..\3rdPartyLibs\easylogging++\src;$(SolutionDir)Logger;$(SolutionDir)EncryptDecryptECBMode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+=======
       <AdditionalDependencies>EncryptDecryptECBMode.lib;Logger.lib;SQLServerDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,7 +125,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+=======
       <LanguageStandard>stdcpp17</LanguageStandard>
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,14 +141,24 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+=======
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>..\..\3rdPartyLibs\SQLAPI\include;$(SolutionDir)SQLServerDLL;$(SolutionDir)EncryptDecryptECBMode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world450d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+=======
       <AdditionalDependencies>EncryptDecryptECBMode.lib;SQLServerDLL.lib;sqlapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
 
@@ -142,15 +172,33 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+=======
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj
+      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world450.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MaskRecognizer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MaskRecognizer.h" />
+=======
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -170,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />
+>>>>>>> Full project added:RealTimeFaceMaskDetector/TCPServer/TCPServer.vcxproj
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
