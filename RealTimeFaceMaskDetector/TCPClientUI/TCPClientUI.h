@@ -4,6 +4,7 @@
 #include <QRegExpValidator>
 
 #include "ui_TCPClientUI.h"
+#include "MaskRecognizer.h"
 
 class TCPClientUI : public QMainWindow
 {
@@ -16,6 +17,6 @@ private slots:
     void Save();
     void Close();
 
-private:
+public:
     Ui::TCPClientUIClass ui;
 };

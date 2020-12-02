@@ -1,10 +1,12 @@
 #pragma once
 #include <memory>
 #include "ICrypt.h"
+
 #include "..\..\3rdPartyLibs\cryptopp820\aes.h"
 #include "..\..\3rdPartyLibs\cryptopp820\modes.h"
 #include "..\..\3rdPartyLibs\cryptopp820\filters.h"
 #include "..\..\3rdPartyLibs\cryptopp820\osrng.h"
+
 
 template class __declspec(dllexport) std::unique_ptr<CryptoPP::byte*>;
 class ENCRYPTDECRYPTECBMODE_API EncryptDecryptAES_ECBMode : public ICrypt

@@ -13,14 +13,13 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Form Files">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{540d686b-4840-40ae-8255-b3f217949225}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,10 +43,46 @@
     <ClCompile Include="TCPClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FaceRecognitionUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MaskRecognizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="easylogging++.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Logger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TCPClient.h">
+    <ClInclude Include="MaskRecognizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="easylogging++.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceRecognitionUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="TCPClient.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="FaceRecognitionUI.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration.conf">
+      <Filter>Logger</Filter>
+    </None>
   </ItemGroup>
 </Project>

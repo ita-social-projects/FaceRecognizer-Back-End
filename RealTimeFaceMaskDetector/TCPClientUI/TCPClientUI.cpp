@@ -19,6 +19,7 @@ TCPClientUI::TCPClientUI(QWidget *parent)
         + "\\." + ip_range + "$");
     QRegExpValidator* ipValidator = new QRegExpValidator(ip_regex, this);
     ui.IP->setValidator(ipValidator);
+    ui.IP->setCursorPosition(0);
 
     connect(ui.Close, &QPushButton::clicked, this, &TCPClientUI::Close);
     connect(ui.Save, &QPushButton::clicked, this, &TCPClientUI::Save);
@@ -46,16 +47,16 @@ void TCPClientUI::Save()
         g_port = ui.Port->text().toInt();
 
         TCPClient client;
-
-        std::ifstream image;
-        std::vector<char> buffer;
-
+        
         client.CreateSocket();
-        client.ConvertImageToBinary(image, buffer);
+        
         client.Connect();
 
         Sleep(1000);
-        client.SendBinaryMessage(buffer);
+        client.m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
+        client.m_face_recognition_ui->show();
+        this->hide();
+        client.m_face_recognition_ui->Recognize(client);
 
         client.CloseSocket();
     }
