@@ -10,30 +10,40 @@
 #include <vector>
 #include <SQLAPI.h>
 
-class SQLSERVER_API SQLServer
+class SQLSERVER_API SQLConnection abstract
 {
 public:
-	struct PhotoType
-	{
-		SAString photoBytes;
-		SAString photoName;
-		SAString photoExtension;
-	};
+    virtual void Connect(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password) abstract;
+    virtual void InsertPhoto(const std::string& photo_path, const std::string& photo_name, const std::string& photo_extension) abstract;
+    virtual void RollBack() abstract;
+    virtual void Disconnect() abstract;
+    virtual void ClearTable() abstract;
+};
 
-	SQLServer() = default;
-	SQLServer(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password);
+class SQLSERVER_API SQLServer : public SQLConnection
+{
+public:
+    struct PhotoType
+    {
+        SAString photoBytes;
+        SAString photoName;
+        SAString photoExtension;
+    };
 
-	~SQLServer();
+    SQLServer() = default;
+    SQLServer(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password);
 
-	void Connect(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password);
-	void InsertPhoto(const std::string& photo_path,	const std::string& photo_name, const std::string& photo_extension);
-	std::vector<PhotoType> GetAllPhotos();
-	void RollBack();
-	void Disconnect();
-	void ClearTable();
+    ~SQLServer();
 
-	static void CreatePhotos(const std::vector<PhotoType>& photos);
+    void Connect(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password);
+    void InsertPhoto(const std::string& photo_path, const std::string& photo_name, const std::string& photo_extension);
+    std::vector<PhotoType> GetAllPhotos();
+    void RollBack();
+    void Disconnect();
+    void ClearTable();
 
-private:
-	SAConnection m_connection;
+    static void CreatePhotos(const std::vector<PhotoType>& photos);
+
+protected:
+    SAConnection m_connection;
 };

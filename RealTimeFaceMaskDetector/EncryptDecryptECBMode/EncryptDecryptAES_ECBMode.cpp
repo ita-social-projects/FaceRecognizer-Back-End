@@ -1,10 +1,13 @@
 #include "pch.h"
 #include "EncryptDecryptAES_ECBMode.h"
+#include <fstream>
 
 EncryptDecryptAES_ECBMode::EncryptDecryptAES_ECBMode() 
 {
 	//logger message
-	m_key = nullptr;
+	unsigned char* key = (unsigned char*)(R"(}8)
+		åµÎðD & :·Ïýýýý)");
+	m_key = std::make_unique<CryptoPP::byte*>(key);
 	m_key_size = 0;
 }
 EncryptDecryptAES_ECBMode::EncryptDecryptAES_ECBMode(unsigned char* key, const std::size_t key_size) 
@@ -110,7 +113,7 @@ void EncryptDecryptAES_ECBMode::CreateKey(const size_t key_size)
 	CryptoPP::byte* key = new CryptoPP::byte[key_size];
 	randomizer.GenerateBlock(key, key_size);
 	m_key = std::make_unique<CryptoPP::byte*>(key);
-
+	
 }
 const unsigned char* EncryptDecryptAES_ECBMode::get_key() const 
 {
@@ -121,8 +124,7 @@ std::size_t EncryptDecryptAES_ECBMode::get_key_size() const
 	return m_key_size;
 }
 bool EncryptDecryptAES_ECBMode::set_key(unsigned char* key, const std::size_t key_size) 
-{
-	
+{	
 	if (!key)
 	{
 		m_key = nullptr;
