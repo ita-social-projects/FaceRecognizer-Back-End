@@ -4,7 +4,7 @@
 INITIALIZE_EASYLOGGINGPP
 
 	const std::filesystem::path		LOG_FOLDER = R"(C:\ProgramData\RTFMD_Logs\)";
-	const std::string				CONFIGURATION_PATH = R"(Configuration.conf)";
+	const std::string				CONFIGURATION_PATH = R"(..\LoggerConfiguration.conf)";
 	const std::string				LOG_NAME = static_cast<std::string>(__DATE__) + "_log";
 	const std::string				LOG_EXTENSION = ".log";
 	const std::string				LOGGER_ID = "RTFMD";
