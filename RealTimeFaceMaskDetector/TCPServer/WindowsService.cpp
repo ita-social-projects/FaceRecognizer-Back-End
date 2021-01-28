@@ -210,6 +210,7 @@ bool Service::Install()
 	}
 	else
 	{
+		std::cout << "Install: succeeded :)\n";
 		LOG_MSG << "Install: succeeded :)";
 		CloseServiceHandle(handle_service);
 	}
@@ -259,6 +260,7 @@ bool Service::Start()
 		else
 		{
 			CreateServer();
+			std::cout << "Start: succeeded :)\n";
 			LOG_MSG << "Start: succeeded :)";
 		}
 
