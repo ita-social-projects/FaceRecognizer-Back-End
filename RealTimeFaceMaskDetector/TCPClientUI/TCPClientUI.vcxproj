@@ -13,8 +13,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{17543ADB-983C-41C3-96FB-7FC0F35ABC12}</ProjectGuid>
     <Keyword>QtVS_v303</Keyword>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0</WindowsTargetPlatformVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -43,12 +43,27 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <LibraryPath>$(SolutionDir)x64\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>EncryptDecryptECBMode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world450d.lib;EncryptDecryptECBMode.lib;$(Qt_LIBS_)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;$(Qt_INCLUDEPATH_);.\</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;$(Qt_INCLUDEPATH_);.\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world450.lib;$(Qt_LIBS_);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
@@ -69,7 +84,7 @@
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Full</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -82,7 +97,7 @@
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -92,14 +107,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="TCPClientUI.qrc" />
+    <QtUic Include="FaceRecognitionUI.ui" />
     <QtUic Include="TCPClientUI.ui" />
     <QtMoc Include="TCPClientUI.h" />
+    <ClCompile Include="easylogging++.cpp" />
+    <ClCompile Include="FaceRecognitionUI.cpp" />
+    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="MaskRecognizer.cpp" />
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TCPClientUI.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TCPClient.h" />
+    <ClInclude Include="FaceRecognitionUI.h" />
+    <ClInclude Include="easylogging++.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="MaskRecognizer.h" />
+    <QtMoc Include="TCPClient.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration.conf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
