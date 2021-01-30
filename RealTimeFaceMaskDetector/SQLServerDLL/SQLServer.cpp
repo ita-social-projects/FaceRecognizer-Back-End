@@ -111,3 +111,9 @@ void SQLServer::CreatePhotos(const std::vector<PhotoType>& photos)
 		fout.close();
 	}
 }
+
+void SQLServer::ExecSQLQuery(const std::string& query)
+{
+	SACommand mquery(&m_connection, _TSA(query.c_str()));
+	mquery.Execute();
+}

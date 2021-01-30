@@ -80,10 +80,10 @@ int  SocketServer::GetMessageLength()
 bool SocketServer::SendMessage()
 {
 	// Connection information:
-		std::string server_name{ "CHYZH" };                     // "" if server exists on your local machine
-		std::string database_name{ "MaskDetektorDataBase" };
-		std::string username{ "" };                          // "" if Windows authentification
-		std::string password{ "" };                          // "" if Windows authentification
+		std::string server_name{ "SSU-SQL" };                     // "" if server exists on your local machine
+		std::string database_name{ "MaskPhotosDatabase" };
+		std::string username{ "Lv-535.DB" };                          // "" if Windows authentification
+		std::string password{ "Lv-535.DB" };                          // "" if Windows authentification
 		std::string database_string = server_name + "@" + database_name; // 1-st parameter of 'Connect' method
 
 		SQLServer sql_server;

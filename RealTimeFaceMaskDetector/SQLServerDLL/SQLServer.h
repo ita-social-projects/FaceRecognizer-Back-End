@@ -18,6 +18,7 @@ public:
     virtual void RollBack() abstract;
     virtual void Disconnect() abstract;
     virtual void ClearTable() abstract;
+    virtual void ExecSQLQuery(const std::string& query) abstract;
 };
 
 class SQLSERVER_API SQLServer : public SQLConnection
@@ -41,6 +42,7 @@ public:
     void RollBack();
     void Disconnect();
     void ClearTable();
+    void ExecSQLQuery(const std::string& query);
 
     static void CreatePhotos(const std::vector<PhotoType>& photos);
 
