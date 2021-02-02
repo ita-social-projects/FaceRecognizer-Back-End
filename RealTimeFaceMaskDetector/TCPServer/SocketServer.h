@@ -25,6 +25,10 @@ private:
 	bool SendMessage();
 	bool SpecifyPathForPhotos();
 	bool OpenParticularFile(std::ofstream& stream);
+	/*This function will take current date & time and 
+	initialise <file_specificator> with converted date*/
+	void CreateFileNameSpecificator();
+	std::filesystem::path GetCurrentPath();
 
 	WSADATA wsaData;
 	int m_func_result;

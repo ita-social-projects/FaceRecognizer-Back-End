@@ -125,26 +125,59 @@ bool SocketServer::SendMessage()
 
 bool SocketServer::SpecifyPathForPhotos()
 {
-	return std::filesystem::create_directory("images");
+	std::filesystem::path current_directory = GetCurrentPath();
+	current_directory += "images";
+
+	return std::filesystem::create_directory(current_directory);
 }
 
 bool SocketServer::OpenParticularFile(std::ofstream& stream)
+{
+	/*file_spesificator variable vill be initialised here*/
+	CreateFileNameSpecificator();
+	
+	std::filesystem::path current_directory = GetCurrentPath();
+	
+	std::string photo_path{ current_directory.string() + "images\\Avatar_" + file_specificator + ".png" };
+	stream.open(photo_path, std::ios::binary);
+	if (!stream.is_open())
+		return false;
+
+	return true;
+}
+
+void SocketServer::CreateFileNameSpecificator()
 {
 	time_t curent_time;
 	time(&curent_time);
 	tm current_date;
 	localtime_s(&current_date, &curent_time);
+	char str[50];
+	asctime_s(str, 50, &current_date);
+	file_specificator = str;
+	file_specificator.erase(file_specificator.size() - 1);
 
-	asctime_s(file_specificator.data(), 50, &current_date);
-	file_specificator.erase(file_specificator.size() - 2);
+	for(auto& symbol : file_specificator)
+	{
+		if(symbol == ' ')
+		{
+			symbol = '_';
+		}
+		else if(symbol == ':')
+		{
+			symbol = '.';
+		}
+	}
+}
 
-	std::string photo_name{ "Avatar" + file_specificator + ".png" };
-
-	stream.open("images\\" + photo_name, std::ios::binary);
-	if (!stream.is_open())
-		return false;
-
-	return true;
+std::filesystem::path SocketServer::GetCurrentPath()
+{
+	wchar_t path[MAX_PATH];
+	GetModuleFileName(nullptr, path, MAX_PATH);
+	std::filesystem::path current_directory(path);
+	current_directory.remove_filename();
+	
+	return current_directory;
 }
 
 bool SocketServer::ReceiveMessage()
@@ -156,9 +189,14 @@ bool SocketServer::ReceiveMessage()
 	int recived_bytes_count = 0;
 	while (server_is_up)
 	{
-		OpenParticularFile(recv_data);
+		if(!OpenParticularFile(recv_data))
+		{
+			/*cannot open file error*/
+		}
 
 		int total_bytes_count = GetMessageLength();
+
+		/*@FIX: The execution doesn't stop even when client is closed*/
 
 		m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
 
@@ -167,7 +205,7 @@ bool SocketServer::ReceiveMessage()
 			recived_bytes_count = m_func_result;
 
 			recv_data.write(m_buffer.data(), m_buffer.size());
-
+			recv_data.close();
 			std::string data;
 			std::string cipher(m_buffer.begin(), m_buffer.end());
 			decryptor.Decrypt(cipher, data);
@@ -181,11 +219,12 @@ bool SocketServer::ReceiveMessage()
 		}
 		else
 		{
+			recv_data.close();
 			closesocket(m_client_socket);
 			WSACleanup();
 			return false;
 		}
-		recv_data.close();
+		
 		LOG_MSG << "Total bytes received: " << recived_bytes_count;
 	}
 

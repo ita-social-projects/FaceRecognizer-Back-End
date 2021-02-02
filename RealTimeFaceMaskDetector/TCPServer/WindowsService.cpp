@@ -262,10 +262,16 @@ bool Service::Start()
 		}
 		else
 		{
-			CreateServer();
-			LOG_MSG << "Start: succeeded :)";
+			if(!CreateServer())
+			{
+				LOG_WARNING << "Start: CreateServer: WARNING" << WSAGetLastError();
+				is_started = false;
+			}
+			else
+			{
+				LOG_MSG << "Start: succeeded :)";
+			}
 		}
-
 		CloseServiceHandle(handle_open_service);
 	}
 	CloseServiceHandle(handle_open_SCM);
