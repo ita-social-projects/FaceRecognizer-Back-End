@@ -1,39 +1,54 @@
 #pragma once
 
-#ifdef SQLSERVER_EXPORTS
-#define SQLSERVER_API __declspec(dllexport)
-#else
-#define SQLSERVER_API __declspec(dllimport)
-#endif
+#include "SQLConnection.h"
+#include "IniParser.h"
 
-#include <string>
-#include <vector>
-#include <SQLAPI.h>
 
-class SQLSERVER_API SQLServer
+class SQLSERVER_API SQLServer : public SQLConnection
 {
 public:
-	struct PhotoType
-	{
-		SAString photoBytes;
-		SAString photoName;
-		SAString photoExtension;
-	};
 
-	SQLServer() = default;
-	SQLServer(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password);
+    struct PhotoType
+    {
+        SAString photoBytes;
+        SAString photoName;
+        SAString photoExtension;
+    };
 
-	~SQLServer();
+    SQLServer() = default;
 
-	void Connect(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password);
-	void InsertPhoto(const std::string& photo_path,	const std::string& photo_name, const std::string& photo_extension);
-	std::vector<PhotoType> GetAllPhotos();
-	void RollBack();
-	void Disconnect();
-	void ClearTable();
+    SQLServer(const ConnectParams& connect_string);
 
-	static void CreatePhotos(const std::vector<PhotoType>& photos);
+    ~SQLServer();
+    void Connect();
+    void Connect(const ConnectParams& connect_string);
+    void InsertPhoto(const Photo& photo);
+    /*Get all photos int the vector*/
+    std::vector<PhotoType> GetAllPhotos();
+    void RollBack();
+    void Disconnect();
+    void ClearTable(std::string table);
+    void DeleteRecord(int id);
+    bool CheckTableExists(std::string table);
+    void GetIniParams(std::string path);
+    void CreatePhotosTable(std::string table);
+    /*create files from the vector of photos*/
+    static void CreatePhotos(const std::vector<PhotoType>& photos);
 
-private:
-	SAConnection m_connection;
+protected:
+    /*Nested class for exceptions*/
+    class SQLServerException :public SQLException
+    {
+    public:
+        SQLServerException() = default;
+        void GetParams(const SAException& ex);
+    };
+    /*Execute query*/
+    void ExecSQLQuery(const std::string& query);
+    /*Get path to .exe file*/
+    std::string ExePath();
+    SAConnection m_connection;
+    SQLServerException sql_error;
+    ConnectParams params;
 };
+
