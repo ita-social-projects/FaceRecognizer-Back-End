@@ -79,6 +79,7 @@ int  SocketServer::GetMessageLength()
 
 bool SocketServer::SendMessage()
 {
+
 	std::shared_ptr<SQLConnection>sql_server(new SQLServer);	
 	try
 	{		
@@ -106,12 +107,15 @@ bool SocketServer::SendMessage()
 	}
 
 	return true;
+
 }
 
 bool SocketServer::ReceiveMessage()
 {
 	std::ofstream recv_data;
-	recv_data.open("Avatar.png", std::ios::binary| std::ios::trunc|std::ios::out);
+
+	recv_data.open("Avatar.png", std::ios::binary);
+
 	if (!recv_data.is_open())
 		return false;
 

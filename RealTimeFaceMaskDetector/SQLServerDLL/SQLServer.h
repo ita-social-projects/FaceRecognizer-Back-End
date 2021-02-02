@@ -3,9 +3,11 @@
 #include "SQLConnection.h"
 #include "IniParser.h"
 
+
 class SQLSERVER_API SQLServer : public SQLConnection
 {
 public:
+
     struct PhotoType
     {
         SAString photoBytes;
@@ -14,6 +16,7 @@ public:
     };
 
     SQLServer() = default;
+
     SQLServer(const ConnectParams& connect_string);
 
     ~SQLServer();
@@ -48,3 +51,4 @@ protected:
     SQLServerException sql_error;
     ConnectParams params;
 };
+
