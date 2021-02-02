@@ -92,7 +92,7 @@ bool SocketServer::SendMessage()
 		photo.path=R"(E:\Tolik\c++\Real-Time-Face-Mask-Detector\RealTimeFaceMaskDetector\TCPServer\)";
 		photo.name= "Avatar" ;
 		photo.extension="png";
-		if (sql_server->CheckTableExists("Photos"))
+		if (!sql_server->CheckTableExists("Photos"))
 		{
 			sql_server->ClearTable("Photos");
 		}
