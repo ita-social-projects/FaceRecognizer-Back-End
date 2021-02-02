@@ -1,3 +1,4 @@
+
 #pragma once
 #include <ws2tcpip.h>
 #include "EncryptDecryptAES_ECBMode.h"
@@ -22,6 +23,8 @@ public:
 
 private:
 	bool SendMessage();
+	bool SpecifyPathForPhotos();
+	bool OpenParticularFile(std::ofstream& stream);
 
 	WSADATA wsaData;
 	int m_func_result;
@@ -30,5 +33,11 @@ private:
 	std::vector<char> m_buffer;
 	addrinfo* m_host_info = nullptr;
 	addrinfo hints;
+
+	/*Holds date & time to be shown in photo file name*/
+	std::string file_specificator;
+	/*When listening socket is created, this variable will be set to <true>.
+	When Server will shut down, varible will be set to <false> */
+	bool server_is_up;
 };
 

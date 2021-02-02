@@ -73,14 +73,14 @@ bool Service::ReportStatus(const unsigned short current_state, const unsigned sh
 		s_service_status.dwControlsAccepted = SERVICE_ACCEPT_STOP;
 	}
 
-	if (current_state == SERVICE_RUNNING ||	current_state == SERVICE_STOPPED)  // Progress for Service operation
+	if (current_state == SERVICE_RUNNING || current_state == SERVICE_STOPPED)  // Progress for Service operation
 	{
 		s_service_status.dwCheckPoint = BEGIN_CHECK_POINT_VALUE;
 	}
 	else
 	{
 		s_service_status.dwCheckPoint = s_check_point++;
-	}	
+	}
 
 	if (!SetServiceStatus(s_service_status_handle, &s_service_status))
 	{
@@ -88,7 +88,7 @@ bool Service::ReportStatus(const unsigned short current_state, const unsigned sh
 		return false;
 	}
 
-	LOG_MSG << "ReportStatus begin";
+	LOG_MSG << "ReportStatus end";
 	return true;
 }
 
@@ -127,7 +127,7 @@ bool Service::CreateServer()
 	bool is_message_received = s_socket_server.ReceiveMessage();
 
 	LOG_MSG << "CreateServer end";
-	return is_server_initialized && 
+	return is_server_initialized &&
 		is_socked_created &&
 		is_listening_started &&
 		is_connection_accepted &&
@@ -136,7 +136,7 @@ bool Service::CreateServer()
 
 bool Service::ShutdownServer()
 {
-	return s_socket_server.ShutdownServer();	
+	return s_socket_server.ShutdownServer();
 }
 
 bool Service::CtrlHandler(const unsigned short request)
@@ -169,12 +169,16 @@ bool Service::Install()
 	SC_HANDLE handle_service = nullptr;
 	wchar_t path[MAX_PATH];
 
-	if (!GetModuleFileName(nullptr, path, MAX_PATH)) // Get the Executable file from SCM
+	/*Get the path to Executable file from SCM.
+	If param 0 is nullptr, writes path to current .exe */
+	if (!GetModuleFileName(nullptr, path, MAX_PATH))
 	{
 		LOG_ERROR << "Install: GetModuleFileName: ERROR " << GetLastError();
 		return false;
 	};
 
+	/*Establishes a connection to the service control manager on the specified computer
+	and opens the specified service control manager database.*/
 	handle_SCM = OpenSCManager(
 		nullptr,					// Local Machine
 		nullptr,					// By default Database 
@@ -223,15 +227,15 @@ bool Service::Start()
 {
 	LOG_MSG << "Start begin";
 
-	SC_HANDLE open_SCM = nullptr;
-	SC_HANDLE open_service = nullptr;
+	SC_HANDLE handle_open_SCM = nullptr;
+	SC_HANDLE handle_open_service = nullptr;
 
-	open_SCM = OpenSCManager(
+	handle_open_SCM = OpenSCManager(
 		nullptr,					// Local Machine
 		nullptr,					// By default Database (SERVICES_ACTIVE_DATABASE)
 		SC_MANAGER_ALL_ACCESS);		// Access Right
 
-	if (!open_SCM)
+	if (!handle_open_SCM)
 	{
 		LOG_ERROR << "Start: OpenSCManager: ERROR " << GetLastError();
 		return false;
@@ -239,19 +243,19 @@ bool Service::Start()
 
 	bool is_opened = true, is_started = true;
 
-	open_service = OpenService(
-		open_SCM,											// SCM Handle
+	handle_open_service = OpenService(
+		handle_open_SCM,									// SCM Handle
 		Service::get_instance().s_service_name.c_str(),		// Service Name
 		SC_MANAGER_ALL_ACCESS);								// Access Right
 
-	if (!open_service)
+	if (!handle_open_service)
 	{
 		LOG_ERROR << "Start: OpenService: ERROR " << GetLastError();
 		is_opened = false;
 	}
 	else if (is_opened)
 	{
-		if (!StartService(open_service, false, nullptr))
+		if (!StartService(handle_open_service, false, nullptr))
 		{
 			LOG_ERROR << "Start: StartService: ERROR " << GetLastError();
 			is_started = false;
@@ -262,9 +266,9 @@ bool Service::Start()
 			LOG_MSG << "Start: succeeded :)";
 		}
 
-		CloseServiceHandle(open_service);
+		CloseServiceHandle(handle_open_service);
 	}
-	CloseServiceHandle(open_SCM);
+	CloseServiceHandle(handle_open_SCM);
 
 	LOG_MSG << "Start end";
 	return is_opened && is_started;

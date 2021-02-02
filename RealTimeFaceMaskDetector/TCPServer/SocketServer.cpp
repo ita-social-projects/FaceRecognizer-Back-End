@@ -4,7 +4,9 @@ bool SocketServer::InitSocketServer()
 {
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
+	{
 		return false;
+	}
 
 	ZeroMemory(&hints, sizeof(hints));
 	hints.ai_family = AF_INET;
@@ -16,6 +18,13 @@ bool SocketServer::InitSocketServer()
 	if (m_func_result != 0)
 	{
 		WSACleanup();
+		return false;
+	}
+
+	m_buffer.resize(DEFAULT_BUFLEN);
+
+	if (!SpecifyPathForPhotos())
+	{
 		return false;
 	}
 	return true;
@@ -30,6 +39,9 @@ bool SocketServer::CreateListeningSocket()
 		WSACleanup();
 		return false;
 	}
+
+	server_is_up = true;
+
 	return true;
 }
 
@@ -80,61 +92,92 @@ int  SocketServer::GetMessageLength()
 bool SocketServer::SendMessage()
 {
 	// Connection information:
-		std::string server_name{ "SAPIK\\SQLEXPRESS" };                     // "" if server exists on your local machine
-		std::string database_name{ "MaskPhotosDatabase" };
-		std::string username{ "" };                          // "" if Windows authentification
-		std::string password{ "" };                          // "" if Windows authentification
-		std::string database_string = server_name + "@" + database_name; // 1-st parameter of 'Connect' method
+	std::string server_name{ "SSU-SQL" };                     // "" if server exists on your local machine
+	std::string database_name{ "MaskPhotosDatabase" };
+	std::string username{ "Lv-535.DB" };                          // "" if Windows authentification
+	std::string password{ "Lv-535.DB" };                          // "" if Windows authentification
+	std::string database_string = server_name + "@" + database_name; // 1-st parameter of 'Connect' method
 
-		SQLServer sql_server;
-		std::cout << database_string << std::endl;
-		try
-		{
-			// -- Connect --
-			sql_server.Connect(database_string, username, password);
+	SQLServer sql_server;
+	std::cout << database_string << std::endl;
+	try
+	{
+		// -- Connect --
+		sql_server.Connect(database_string, username, password);
 
-			// -- Insert photo --
-			std::string photoPath{ R"(D:\Learning\SoftServe Project\RTFMD\RealTimeFaceMaskDetector\x64\Debug\)" };
-			std::string photoName{ "Avatar" };
-			std::string photoExtension{ "png" };
-			sql_server.InsertPhoto(photoPath, photoName, photoExtension);
+		// -- Insert photo --
+		std::string photoPath{ R"(D:\Programing\Real-Time-Face-Mask-Detector-Server\RealTimeFaceMaskDetector\x64\Debug\images\)" };
+		std::string photoName{ "Avatar" + file_specificator };
+		std::string photoExtension{ "png" };
+		sql_server.InsertPhoto(photoPath, photoName, photoExtension);
 
-			// -- Disconnect --
-			sql_server.Disconnect();
-		}
-		catch (const SAException& ex)
-		{
-			sql_server.RollBack();
-			std::cout << ex.ErrText().GetMultiByteChars() << std::endl;
-		}
+		// -- Disconnect --
+		sql_server.Disconnect();
+	}
+	catch (const SAException& ex)
+	{
+		sql_server.RollBack();
+		std::cout << ex.ErrText().GetMultiByteChars() << std::endl;
+	}
 
-		return true;
+	return true;
+}
+
+bool SocketServer::SpecifyPathForPhotos()
+{
+	return std::filesystem::create_directory("images");
+}
+
+bool SocketServer::OpenParticularFile(std::ofstream& stream)
+{
+	time_t curent_time;
+	time(&curent_time);
+	tm current_date;
+	localtime_s(&current_date, &curent_time);
+
+	asctime_s(file_specificator.data(), 50, &current_date);
+	file_specificator.erase(file_specificator.size() - 2);
+
+	std::string photo_name{ "Avatar" + file_specificator + ".png" };
+
+	stream.open("images\\" + photo_name, std::ios::binary);
+	if (!stream.is_open())
+		return false;
+
+	return true;
 }
 
 bool SocketServer::ReceiveMessage()
 {
+	EncryptDecryptAES_ECBMode decryptor;
+
+	/*change cycle to receive more than one photo*/
 	std::ofstream recv_data;
-	recv_data.open("Avatar.png", std::ios::binary);
-	if (!recv_data.is_open())
-		return false;
-
-	int total_bytes_count = GetMessageLength();
 	int recived_bytes_count = 0;
-	std::vector<char>temp_buffer{};
-
-	do
+	while (server_is_up)
 	{
-		temp_buffer.clear();
-		temp_buffer.resize(DEFAULT_BUFLEN);
-		m_func_result = recv(m_client_socket, &temp_buffer[0], temp_buffer.size(), 0);
+		OpenParticularFile(recv_data);
+
+		int total_bytes_count = GetMessageLength();
+
+		m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
+
 		if (m_func_result > 0)
 		{
-			recived_bytes_count += m_func_result;
-			m_buffer.insert(end(m_buffer), begin(temp_buffer), end(temp_buffer));
+			recived_bytes_count = m_func_result;
+
+			recv_data.write(m_buffer.data(), m_buffer.size());
+
+			std::string data;
+			std::string cipher(m_buffer.begin(), m_buffer.end());
+			decryptor.Decrypt(cipher, data);
+			SendMessage();
 		}
 		else if (m_func_result == 0)
 		{
+			recv_data.close();
 			LOG_MSG << "Connection closing...";
+			break;
 		}
 		else
 		{
@@ -142,23 +185,17 @@ bool SocketServer::ReceiveMessage()
 			WSACleanup();
 			return false;
 		}
-	} while (recived_bytes_count < total_bytes_count);
+		recv_data.close();
+		LOG_MSG << "Total bytes received: " << recived_bytes_count;
+	}
 
-	recv_data.write(m_buffer.data(), m_buffer.size());
-	recv_data.close(); 
-
-	EncryptDecryptAES_ECBMode decryptor;
-	std::string data;
-	std::string cipher(m_buffer.begin(), m_buffer.end());
-	decryptor.Decrypt(cipher, data);
-
-	LOG_MSG << "Total bytes received: " << recived_bytes_count;
-	SendMessage();
 	return true;
 }
 
 bool SocketServer::ShutdownServer()
 {
+	server_is_up = false;
+
 	m_func_result = shutdown(m_client_socket, SD_SEND);
 	if (m_func_result == SOCKET_ERROR)
 	{
