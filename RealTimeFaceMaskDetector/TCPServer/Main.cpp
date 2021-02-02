@@ -15,7 +15,7 @@ bool InteractWithServiceUsingSCM(const SERVICE_TABLE_ENTRY* const service_table)
 
 int wmain(unsigned argc, wchar_t* argv[])
 {
-	Service::set_service_name(L"AA_Server");
+	Service::set_service_name(L"A_Server");
 
 	if (!InteractWithServiceUsingCommandPrompt(argc, argv))
 	{
