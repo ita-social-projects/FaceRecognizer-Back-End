@@ -27,11 +27,11 @@ public:
     std::vector<PhotoType> GetAllPhotos();
     void RollBack();
     void Disconnect();
-    void ClearTable(std::string table);
+    void ClearTable(const std::string& table);
     void DeleteRecord(int id);
-    bool CheckTableExists(std::string table);
-    void GetIniParams(std::string path);
-    void CreatePhotosTable(std::string table);
+    bool CheckTableExists(const std::string& table);
+    void GetIniParams(const std::string& path);
+    void CreatePhotosTable(const std::string& table);
     /*create files from the vector of photos*/
     static void CreatePhotos(const std::vector<PhotoType>& photos);
 
