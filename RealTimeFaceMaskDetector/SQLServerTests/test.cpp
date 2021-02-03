@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "../SQLServerDLL/IniParser.cpp"
-#include "../SQLServerDLL/SQLServer.cpp"
 #include <fstream>
 
 TEST(TestIniParser, TestParse) 
@@ -21,4 +20,5 @@ TEST(TestIniParser, TestParse)
 	ASSERT_EQ("val2", parser.GetParam("Section1", "par2"));
 	ASSERT_EQ("val3", parser.GetParam("Section2", "par3"));
 	ASSERT_EQ("No such parameter", parser.GetParam("Section2", "par4"));
+	remove("Test.txt");
 }
