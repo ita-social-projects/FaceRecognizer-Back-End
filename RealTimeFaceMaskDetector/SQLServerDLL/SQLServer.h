@@ -1,5 +1,5 @@
 #pragma once
-#define CONFIG_FILE "config.ini"
+
 #include "SQLConnection.h"
 #include "IniParser.h"
 
