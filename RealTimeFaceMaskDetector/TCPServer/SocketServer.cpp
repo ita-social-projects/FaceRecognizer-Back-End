@@ -83,7 +83,7 @@ bool SocketServer::SendMessage()
 	std::shared_ptr<SQLConnection>sql_server(new SQLServer);	
 	try
 	{		
-		sql_server->GetIniParams("config.ini");
+		sql_server->GetIniParams(CONFIG_FILE);
 		// -- Connect --
 		sql_server->Connect();
 
