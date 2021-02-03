@@ -41,13 +41,13 @@ public:
     /*Disconnect from the server*/
     virtual void Disconnect() abstract;
     /*Delete all records from the Photos table*/
-    virtual void ClearTable(std::string table) abstract;
+    virtual void ClearTable(const std::string& table) abstract;
     /*Delete one record from the Photos table*/
     virtual void DeleteRecord(int id) abstract;
     /*Check if the table for Photos exists*/
-    virtual bool CheckTableExists(std::string table) abstract;
+    virtual bool CheckTableExists(const std::string& table) abstract;
     /*Create the table for Photos*/
-    virtual void CreatePhotosTable(std::string table) abstract;
+    virtual void CreatePhotosTable(const std::string& table) abstract;
     /*Get connection parameters from ini file in the application folder*/
-    virtual void GetIniParams(std::string path) abstract;
+    virtual void GetIniParams(const std::string& path) abstract;
 };

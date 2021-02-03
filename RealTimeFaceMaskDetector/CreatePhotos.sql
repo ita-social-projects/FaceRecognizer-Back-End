@@ -1,4 +1,4 @@
-USE [MaskDetektorDataBase]
+USE [$DATABASE$]
 
 CREATE TABLE [dbo].[$TAB$](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
