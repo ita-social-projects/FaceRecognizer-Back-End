@@ -20,17 +20,17 @@ public:
     SQLServer(const ConnectParams& connect_string);
 
     ~SQLServer();
-    void Connect();
-    void Connect(const ConnectParams& connect_string);
-    void InsertPhoto(const Photo& photo);
+    void Connect() override;
+    void Connect(const ConnectParams& connect_string) override;
+    void InsertPhoto(const Photo& photo) override;
     /*Get all photos int the vector*/
     std::vector<PhotoType> GetAllPhotos();
-    void RollBack();
-    void Disconnect();
-    void ClearTable(const std::string& table);
-    void DeleteRecord(int id);
-    bool CheckTableExists(const std::string& table);
-    void GetIniParams(const std::string& path);
+    void RollBack() override;
+    void Disconnect() override;
+    void ClearTable(const std::string& table) override;
+    void DeleteRecord(int id) override;
+    bool CheckTableExists(const std::string& table) override;
+    void GetIniParams(const std::string& path) override;
     void CreatePhotosTable(const std::string& table);
     /*create files from the vector of photos*/
     static void CreatePhotos(const std::vector<PhotoType>& photos);
