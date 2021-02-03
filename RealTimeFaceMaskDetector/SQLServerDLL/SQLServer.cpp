@@ -27,6 +27,7 @@ void SQLServer::Connect(const ConnectParams& connect_string)
 	try
 	{
 		Disconnect();
+		params = connect_string;
 		std::string con = connect_string.server + "@" + connect_string.database;
 		m_connection.Connect(_TSA(con.c_str()), _TSA(connect_string.username.c_str()), _TSA(connect_string.password.c_str()), SA_SQLServer_Client);
 	}
@@ -162,7 +163,7 @@ void SQLServer::Disconnect()
 
 }
 
-void SQLServer::ClearTable(std::string table)
+void SQLServer::ClearTable(const std::string& table)
 {
 	try
 	{
@@ -225,7 +226,7 @@ void SQLServer::DeleteRecord(int id)
 	}
 }
 
-bool SQLServer::CheckTableExists(std::string table)
+bool SQLServer::CheckTableExists(const std::string& table)
 {
 	try
 	{
@@ -246,7 +247,7 @@ bool SQLServer::CheckTableExists(std::string table)
 	}
 }
 
-void SQLServer::GetIniParams(std::string path)
+void SQLServer::GetIniParams(const std::string& path)
 {
 	IniParser parser(path);
 	params.server = parser.GetParam("Server", "name");                    // "" if server exists on your local machine
@@ -265,7 +266,7 @@ std::string SQLServer::ExePath()
 	return result;
 }
 
-void SQLServer::CreatePhotosTable(std::string table)
+void SQLServer::CreatePhotosTable(const std::string& table)
 {
 	std::ifstream file(ExePath() + "\\CreatePhotos.sql");
 
@@ -281,6 +282,13 @@ void SQLServer::CreatePhotosTable(std::string table)
 
 		/* Advance index forward so the next iteration doesn't pick it up as well. */
 		index += 3;
+	}
+	index = 0;
+	while (true) {
+		index = query.find("$DATABASE$", index);
+		if (index == std::string::npos) break;
+		query.replace(index, 10, params.database);
+		index += 10;
 	}
 	ExecSQLQuery(query);
 }

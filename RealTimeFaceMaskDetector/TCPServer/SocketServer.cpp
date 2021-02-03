@@ -82,8 +82,8 @@ bool SocketServer::SendMessage()
 
 	std::shared_ptr<SQLConnection>sql_server(new SQLServer);	
 	try
-	{		
-		sql_server->GetIniParams("config.ini");
+	{	
+		sql_server->GetIniParams(CONFIG_FILE);
 		// -- Connect --
 		sql_server->Connect();
 
@@ -92,7 +92,7 @@ bool SocketServer::SendMessage()
 		photo.path=R"(E:\Tolik\c++\Real-Time-Face-Mask-Detector\RealTimeFaceMaskDetector\TCPServer\)";
 		photo.name= "Avatar" ;
 		photo.extension="png";
-		if (sql_server->CheckTableExists("Photos"))
+		if (!sql_server->CheckTableExists("Photos"))
 		{
 			sql_server->ClearTable("Photos");
 		}
