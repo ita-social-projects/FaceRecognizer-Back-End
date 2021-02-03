@@ -125,7 +125,12 @@ bool Service::CreateServer()
 	bool is_listening_started = s_socket_server.StartListening();
 	bool is_connection_accepted = s_socket_server.AcceptConnection();
 	bool is_message_received = s_socket_server.ReceiveMessage();
-
+	
+	if(!is_message_received)
+	{
+		ShutdownServer();
+	}
+	
 	LOG_MSG << "CreateServer end";
 	return is_server_initialized &&
 		is_socked_created &&
@@ -264,7 +269,7 @@ bool Service::Start()
 		{
 			if(!CreateServer())
 			{
-				LOG_WARNING << "Start: CreateServer: WARNING" << WSAGetLastError();
+				LOG_WARNING << "Start: CreateServer: ERROR " << GetLastError();
 				is_started = false;
 			}
 			else

@@ -23,10 +23,7 @@ bool SocketServer::InitSocketServer()
 
 	m_buffer.resize(DEFAULT_BUFLEN);
 
-	if (!SpecifyPathForPhotos())
-	{
-		return false;
-	}
+	SpecifyPathForPhotos();
 	return true;
 }
 
@@ -157,6 +154,8 @@ void SocketServer::CreateFileNameSpecificator()
 	file_specificator = str;
 	file_specificator.erase(file_specificator.size() - 1);
 
+	/*Date format contains symbols like ' ' and ':'.
+	Replace them to avoid forbidden symbols in filename */
 	for(auto& symbol : file_specificator)
 	{
 		if(symbol == ' ')
@@ -165,7 +164,7 @@ void SocketServer::CreateFileNameSpecificator()
 		}
 		else if(symbol == ':')
 		{
-			symbol = '.';
+			symbol = '_';
 		}
 	}
 }
@@ -180,52 +179,85 @@ std::filesystem::path SocketServer::GetCurrentPath()
 	return current_directory;
 }
 
-bool SocketServer::ReceiveMessage()
+bool SocketServer::ReceiveFullMessage()
 {
-	EncryptDecryptAES_ECBMode decryptor;
-
-	/*change cycle to receive more than one photo*/
-	std::ofstream recv_data;
+	int total_bytes_count = GetMessageLength();
+	
+/*
+	std::vector<char> temp_buffer{};
 	int recived_bytes_count = 0;
-	while (server_is_up)
+	do
 	{
-		if(!OpenParticularFile(recv_data))
-		{
-			/*cannot open file error*/
-		}
-
-		int total_bytes_count = GetMessageLength();
-
-		/*@FIX: The execution doesn't stop even when client is closed*/
-
-		m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
+		temp_buffer.clear();
+		temp_buffer.resize(DEFAULT_BUFLEN);
+		m_func_result = recv(m_client_socket, &temp_buffer[0], temp_buffer.size(), MSG_WAITALL);
 
 		if (m_func_result > 0)
 		{
-			recived_bytes_count = m_func_result;
-
-			recv_data.write(m_buffer.data(), m_buffer.size());
-			recv_data.close();
-			std::string data;
-			std::string cipher(m_buffer.begin(), m_buffer.end());
-			decryptor.Decrypt(cipher, data);
-			SendMessage();
+			recived_bytes_count += m_func_result;
+			m_buffer.insert(end(m_buffer), begin(temp_buffer), end(temp_buffer));
 		}
 		else if (m_func_result == 0)
 		{
-			recv_data.close();
 			LOG_MSG << "Connection closing...";
-			break;
+			return false;
 		}
 		else
 		{
-			recv_data.close();
 			closesocket(m_client_socket);
 			WSACleanup();
 			return false;
 		}
+	} while (recived_bytes_count < total_bytes_count);*/
+	m_buffer.resize(total_bytes_count + 1);
+
+	m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
+	if (m_func_result > 0)
+	{
+		LOG_MSG << "Total bytes: "<< total_bytes_count <<" Received: " << m_func_result;
+	}
+	else if (m_func_result == 0)
+	{
+		LOG_MSG << "Connection closing...";
+		return false;
+	}
+	else
+	{
+		closesocket(m_client_socket);
+		WSACleanup();
+		throw std::string("Receive ERROR");
+	}
+	return true;
+}
+
+bool SocketServer::ReceiveMessage()
+{	
+	EncryptDecryptAES_ECBMode decryptor;
+	std::ofstream recv_data;
+
+	while (server_is_up)
+	{
+		m_buffer.clear();
+		try
+		{
+			if(ReceiveFullMessage())
+			{
+				if (!OpenParticularFile(recv_data))
+				{ /*cannot open file error*/}
+
+				recv_data.write(m_buffer.data(), m_buffer.size());
+				recv_data.close();
+				/*std::string data;
+				std::string cipher(m_buffer.begin(), m_buffer.end());
+				decryptor.Decrypt(cipher, data);
+				SendMessage();*/
+			}
 		
-		LOG_MSG << "Total bytes received: " << recived_bytes_count;
+		}catch(const std::string& msg)
+		{
+			LOG_ERROR << msg;
+			return false;
+		}
 	}
 
 	return true;

@@ -23,12 +23,21 @@ public:
 
 private:
 	bool SendMessage();
+
+	/*return path to TCPServer.exe file*/
+	std::filesystem::path GetCurrentPath();
+	
+	/*Creates directory for received images*/
 	bool SpecifyPathForPhotos();
+
+	/*Creates and opens .png file with specific filename*/
 	bool OpenParticularFile(std::ofstream& stream);
+
 	/*This function will take current date & time and 
 	initialise <file_specificator> with converted date*/
 	void CreateFileNameSpecificator();
-	std::filesystem::path GetCurrentPath();
+
+	bool ReceiveFullMessage();
 
 	WSADATA wsaData;
 	int m_func_result;
