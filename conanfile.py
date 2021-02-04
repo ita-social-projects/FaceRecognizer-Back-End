@@ -39,6 +39,6 @@ class RealTimeFaceMaskDetector(ConanFile):
         self.copy(pattern="*.dll", src="C:\\SQLAPI\\vs2019\\x86_64\\bin", dst="RealTimeFaceMaskDetector\\x64\\Debug", keep_path=False)
         self.copy(pattern="*.lib", dst="..\\RealTimeFaceMaskDetector\\EncryptDecryptECBMode", root_package="cryptopp", keep_path=False)
         self.copy(pattern="*", dst="..\\3rdPartyLibs\\cryptopp820", root_package="cryptopp", keep_path=True)
-        self.copy(pattern="*", dst="..\\3rdPartyLibs\\Qt", root_package="qt", keep_path=True)
+        self.copy(pattern="*", dst="C:\\Qt", root_package="qt", keep_path=True)
         self.copy(pattern="*", dst="..\\3rdPartyLibs\\opencv", root_package="opencv", keep_path=True)
         self.copy(pattern="*/platforms/*", dst="..\\RealTimeFaceMaskDetector\\x64\\Debug\\platforms", root_package="qt", keep_path=False)
