@@ -18,7 +18,15 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+<<<<<<< HEAD:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32_Multithreaded/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
     <ClCompile Include="easylogging++.cc">
+=======
+    <ClCompile Include="easylogging++.cpp">
+>>>>>>> 150391aee555e8ae6ccd79b7faefdbc6dd5c8ae4:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
+=======
+    <ClCompile Include="easylogging++.cc">
+>>>>>>> 150391aee555e8ae6ccd79b7faefdbc6dd5c8ae4
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

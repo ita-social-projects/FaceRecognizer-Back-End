@@ -23,22 +23,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj.filters
+    <ClCompile Include="MaskRecognizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+=======
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
-    <ClCompile Include="easylogging++.cpp">
-=======
-<<<<<<< HEAD
 <<<<<<< HEAD:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32_Multithreaded/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
     <ClCompile Include="easylogging++.cc">
 =======
     <ClCompile Include="easylogging++.cpp">
->>>>>>> 150391aee555e8ae6ccd79b7faefdbc6dd5c8ae4:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
-=======
-    <ClCompile Include="easylogging++.cc">
->>>>>>> 150391aee555e8ae6ccd79b7faefdbc6dd5c8ae4
->>>>>>> 8f88bd2dfda7a504da747ba3f30a64363f33abeb:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32_Multithreaded/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters~merged
+>>>>>>> Full project added:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

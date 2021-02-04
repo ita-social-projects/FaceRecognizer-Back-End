@@ -21,8 +21,6 @@ bool SocketServer::InitSocketServer()
 		return false;
 	}
 
-	m_buffer.resize(DEFAULT_BUFLEN);
-
 	SpecifyPathForPhotos();
 	return true;
 }
@@ -69,6 +67,26 @@ bool SocketServer::AcceptConnection()
 	return true;
 }
 
+void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
+{
+
+	if (AcceptConnection())
+	{
+		StartMessagingWintClient(ret_value);
+	}
+	else
+	{
+		ret_value = false;
+	}
+}
+
+void SocketServer::StartMessagingWintClient(bool& ret_value)
+{
+	std::thread th = std::thread([&]() {ReceiveMessage(ret_value); });
+	if (th.joinable())
+		th.detach();
+}
+
 bool SocketServer::StartListening(bool& ret_value)
 {
 	ret_value = BindListeningSocket();
@@ -81,17 +99,9 @@ bool SocketServer::StartListening(bool& ret_value)
 	{
 		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
 		{
-			if (AcceptConnection())
-			{
-				std::thread th = std::thread([&]() {ReceiveMessage(ret_value);});
-				if(th.joinable())
-					th.detach();
-			}
-			else
-			{
-				ret_value =  false;
+			TryAcceptAndStartMessaging(ret_value);
+			if (!ret_value) 
 				break;
-			}
 		}
 		else 
 		{
@@ -105,37 +115,6 @@ bool SocketServer::StartListening(bool& ret_value)
 	return ret_value;
 }
 
-bool SocketServer::SendMessage()
-{
-	std::shared_ptr<SQLConnection>sql_server(new SQLServer);
-	try
-	{
-		sql_server->GetIniParams(CONFIG_FILE);
-		// -- Connect --
-		sql_server->Connect();
-
-		// -- Insert photo --
-		Photo photo;
-		photo.path = R"(E:\Tolik\c++\Real-Time-Face-Mask-Detector\RealTimeFaceMaskDetector\TCPServer\)";
-		photo.name = "Avatar";
-		photo.extension = "png";
-		if (!sql_server->CheckTableExists("Photos"))
-		{
-			sql_server->ClearTable("Photos");
-		}
-		sql_server->InsertPhoto(photo);
-
-		// -- Disconnect --
-		sql_server->Disconnect();
-	}
-	catch (const SQLException& e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-
-	return true;
-}
-
 int  SocketServer::GetMessageLength()
 {
 	std::vector<char> bytes_number;
@@ -145,71 +124,11 @@ int  SocketServer::GetMessageLength()
 	return atoi(bytes_number.data());
 }
 
-std::filesystem::path SocketServer::GetCurrentPath()
-{
-	wchar_t path[MAX_PATH];
-	GetModuleFileName(nullptr, path, MAX_PATH);
-	std::filesystem::path current_directory(path);
-	current_directory.remove_filename();
-
-	return current_directory;
-}
-
-bool SocketServer::SpecifyPathForPhotos()
-{
-	std::filesystem::path current_directory = GetCurrentPath();
-	current_directory += "images";
-
-	return std::filesystem::create_directory(current_directory);
-}
-
-bool SocketServer::OpenParticularFile(std::ofstream& stream)
-{
-	/*file_spesificator variable vill be initialised here*/
-	CreateFileNameSpecificator();
-	
-	std::filesystem::path current_directory = GetCurrentPath();
-	
-	std::string photo_path{ current_directory.string() + "images\\Avatar_" + file_specificator + ".png" };
-	stream.open(photo_path, std::ios::binary);
-	if (!stream.is_open())
-		return false;
-
-	return true;
-}
-
-void SocketServer::CreateFileNameSpecificator()
-{
-	time_t curent_time;
-	time(&curent_time);
-	tm current_date;
-	localtime_s(&current_date, &curent_time);
-	char str[50];
-	asctime_s(str, 50, &current_date);
-	file_specificator = str;
-	file_specificator.erase(file_specificator.size() - 1);
-
-	/*Date format contains symbols like ' ' and ':'.
-	Replace them to avoid forbidden symbols in filename */
-	for(auto& symbol : file_specificator)
-	{
-		if(symbol == ' ')
-		{
-			symbol = '_';
-		}
-		else if(symbol == ':')
-		{
-			symbol = '_';
-		}
-	}
-}
-
-
 
 bool SocketServer::ReceiveFullMessage()
 {
 	int total_bytes_count = GetMessageLength();
-	
+
 	m_buffer.resize(total_bytes_count + 1);
 
 	m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
@@ -231,12 +150,21 @@ bool SocketServer::ReceiveFullMessage()
 	return true;
 }
 
+void SocketServer::TryReceiveAndSendMessage(bool& client_connected)
+{
+	if (ReceiveFullMessage())
+	{
+		SaveAndSendData();
+	}
+	else
+	{
+		client_connected = false;
+	}
+}
+
 bool SocketServer::ReceiveMessage(bool& ret_value)
 {	
 	ret_value = true;
-
-	EncryptDecryptAES_ECBMode decryptor;
-	std::ofstream recv_data;
 	bool client_connected = true;
 
 	while (client_connected)
@@ -244,26 +172,9 @@ bool SocketServer::ReceiveMessage(bool& ret_value)
 		m_buffer.clear();
 		try
 		{
-			if(ReceiveFullMessage())
-			{
-				if (!OpenParticularFile(recv_data))
-				{ 
-					/*cannot open file error*/
-				}
-				recv_data.write(m_buffer.data(), m_buffer.size());
-				recv_data.close();
-
-				//Writing in database
-				/*std::string data;
-				std::string cipher(m_buffer.begin(), m_buffer.end());
-				decryptor.Decrypt(cipher, data);
-				SendMessage();*/
-			}
-			else
-			{
-				client_connected = false;
-			}
-		}catch(const std::string& msg)
+			TryReceiveAndSendMessage(client_connected);
+		}
+		catch(const std::string& msg)
 		{
 			LOG_ERROR << msg;
 			ret_value = false;
@@ -271,6 +182,57 @@ bool SocketServer::ReceiveMessage(bool& ret_value)
 		}
 	}
 	return ret_value;
+}
+
+void SocketServer::SaveAndSendData()
+{
+	EncryptDecryptAES_ECBMode decryptor;
+	std::ofstream recv_data;
+
+	if (!OpenParticularFile(recv_data))
+	{
+		/*cannot open file error*/
+	}
+	recv_data.write(m_buffer.data(), m_buffer.size());
+	recv_data.close();
+
+	//Writing in database
+	std::string data;
+	std::string cipher(m_buffer.begin(), m_buffer.end());
+	decryptor.Decrypt(cipher, data);
+	SendMessage();
+}
+
+bool SocketServer::SendMessage()
+{
+	std::shared_ptr<SQLConnection>sql_server(new SQLServer);
+	try
+	{
+		sql_server->GetIniParams(CONFIG_FILE);
+
+		// -- Connect --
+		sql_server->Connect();
+
+		CreateTableIfNeeded(sql_server);
+		sql_server->InsertPhoto(m_photo_to_send);
+
+		// -- Disconnect --
+		sql_server->Disconnect();
+	}
+	catch (const SQLException& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+
+	return true;
+}
+
+void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server)
+{
+	if (!sql_server->CheckTableExists("Photos"))
+	{
+		sql_server->CreatePhotosTable("Photos");
+	}
 }
 
 bool SocketServer::ShutdownServer()
@@ -290,4 +252,76 @@ bool SocketServer::ShutdownServer()
 	WSACleanup();
 
 	return true;
+}
+
+/*Functions for making directory for photos, 
+and creating particular name for each photo,
+containing date and time
+*/
+std::filesystem::path SocketServer::GetCurrentPath()
+{
+	wchar_t path[MAX_PATH];
+	GetModuleFileName(nullptr, path, MAX_PATH);
+	std::filesystem::path current_directory(path);
+	current_directory.remove_filename();
+
+	return current_directory;
+}
+
+bool SocketServer::SpecifyPathForPhotos()
+{
+	std::filesystem::path current_directory = GetCurrentPath();
+	current_directory += "images";
+
+	return std::filesystem::create_directory(current_directory);
+}
+
+bool SocketServer::OpenParticularFile(std::ofstream& stream)
+{
+	std::string file_creation_date;
+	CreateFileNameSpecificator(file_creation_date);
+
+	std::filesystem::path photos_directory = GetCurrentPath() / "images";
+	m_photo_to_send.path = photos_directory.string() + "\\";
+	m_photo_to_send.name = "Avatar_" + file_creation_date;
+	m_photo_to_send.extension = "png";
+
+	std::string photo_path{ m_photo_to_send.path +
+							m_photo_to_send.name + "." +
+							m_photo_to_send.extension };
+	stream.open(photo_path, std::ios::binary);
+	if (!stream.is_open())
+		return false;
+
+	return true;
+}
+
+void SocketServer::CreateFileNameSpecificator(std::string& file_specificator)
+{
+	time_t curent_time;
+	time(&curent_time);
+	tm current_date;
+	localtime_s(&current_date, &curent_time);
+	m_photo_to_send.date = current_date;
+
+	/*converting date to string*/
+	char str[50];
+	asctime_s(str, 50, &current_date);
+	file_specificator = str;
+	file_specificator.erase(file_specificator.size() - 1);
+
+	/*Date format contains symbols like ' ' and ':'.
+	Replace them to avoid forbidden symbols in filename */
+	for (auto& symbol : file_specificator)
+	{
+		ReplaceForbiddenSymbol(symbol);
+	}
+}
+
+void SocketServer::ReplaceForbiddenSymbol(char& symbol)
+{
+	if (symbol == ' ' || symbol == ':')
+	{
+		symbol = '_';
+	}
 }
