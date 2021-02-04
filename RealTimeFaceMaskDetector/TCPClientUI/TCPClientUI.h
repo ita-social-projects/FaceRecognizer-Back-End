@@ -1,7 +1,7 @@
 #pragma once
 #include <QtWidgets/QMainWindow>
-#include <qmessagebox.h>
-#include <QRegExpValidator>
+#include <QtWidgets/qmessagebox.h>
+#include <QtGui/QRegExpValidator>
 
 #include "ui_TCPClientUI.h"
 #include "MaskRecognizer.h"

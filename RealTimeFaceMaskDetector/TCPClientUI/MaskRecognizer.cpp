@@ -2,9 +2,9 @@
 
 MaskRecognizer::MaskRecognizer()
 {
-    const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
-    const std::string mouth_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_mcs_mouth.xml";
-    const std::string nose_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_mcs_nose.xml";
+    const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_frontalface_alt.xml";
+    const std::string mouth_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_mcs_mouth.xml";
+    const std::string nose_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_mcs_nose.xml";
 
     LoadCascades(face_cascade_path, mouth_cascade_path, nose_cascade_path);
     int camera_id = 0;
