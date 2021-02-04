@@ -259,6 +259,7 @@ bool Service::Start()
 		else
 		{
 			CreateServer();
+
 			LOG_MSG << "Start: succeeded :)";
 		}
 
