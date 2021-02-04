@@ -31,7 +31,7 @@ bool TCPClient::Connect()
 bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer)
 {
     image.open("image_face.png", std::ios::in | std::ios::binary);
-    
+
     char byte_image = '\0';
 
     while (!image.eof())

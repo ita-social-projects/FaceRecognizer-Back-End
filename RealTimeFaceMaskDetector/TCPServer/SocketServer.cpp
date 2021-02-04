@@ -107,33 +107,30 @@ bool SocketServer::StartListening(bool& ret_value)
 
 bool SocketServer::SendMessage()
 {
-	// Connection information:
-	std::string server_name{ "SSU-SQL" };                     // "" if server exists on your local machine
-	std::string database_name{ "MaskPhotosDatabase" };
-	std::string username{ "Lv-535.DB" };                          // "" if Windows authentification
-	std::string password{ "Lv-535.DB" };                          // "" if Windows authentification
-	std::string database_string = server_name + "@" + database_name; // 1-st parameter of 'Connect' method
-
-	SQLServer sql_server;
-	std::cout << database_string << std::endl;
+	std::shared_ptr<SQLConnection>sql_server(new SQLServer);
 	try
 	{
+		sql_server->GetIniParams(CONFIG_FILE);
 		// -- Connect --
-		sql_server.Connect(database_string, username, password);
+		sql_server->Connect();
 
 		// -- Insert photo --
-		std::string photoPath{ R"(D:\Programing\Real-Time-Face-Mask-Detector-Server\RealTimeFaceMaskDetector\x64\Debug\images\)" };
-		std::string photoName{ "Avatar" + file_specificator };
-		std::string photoExtension{ "png" };
-		sql_server.InsertPhoto(photoPath, photoName, photoExtension);
+		Photo photo;
+		photo.path = R"(E:\Tolik\c++\Real-Time-Face-Mask-Detector\RealTimeFaceMaskDetector\TCPServer\)";
+		photo.name = "Avatar";
+		photo.extension = "png";
+		if (!sql_server->CheckTableExists("Photos"))
+		{
+			sql_server->ClearTable("Photos");
+		}
+		sql_server->InsertPhoto(photo);
 
 		// -- Disconnect --
-		sql_server.Disconnect();
+		sql_server->Disconnect();
 	}
-	catch (const SAException& ex)
+	catch (const SQLException& e)
 	{
-		sql_server.RollBack();
-		std::cout << ex.ErrText().GetMultiByteChars() << std::endl;
+		std::cout << e.what() << std::endl;
 	}
 
 	return true;

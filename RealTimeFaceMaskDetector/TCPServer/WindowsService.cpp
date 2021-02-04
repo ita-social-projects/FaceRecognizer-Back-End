@@ -80,7 +80,7 @@ bool Service::ReportStatus(const unsigned short current_state, const unsigned sh
 	else
 	{
 		s_service_status.dwCheckPoint = s_check_point++;
-	}
+	}	
 
 	if (!SetServiceStatus(s_service_status_handle, &s_service_status))
 	{
@@ -131,14 +131,14 @@ bool Service::CreateServer()
 	}
 
 	LOG_MSG << "CreateServer end";
-	return is_server_initialized &&
+	return is_server_initialized && 
 		is_socked_created &&
 		is_listening_started;
 }
 
 bool Service::ShutdownServer()
 {
-	return s_socket_server.ShutdownServer();
+	return s_socket_server.ShutdownServer();	
 }
 
 bool Service::CtrlHandler(const unsigned short request)
@@ -271,8 +271,8 @@ bool Service::Start()
 			}
 			else
 			{
-				LOG_MSG << "Start: succeeded :)";
-			}
+			LOG_MSG << "Start: succeeded :)";
+		}
 		}
 		CloseServiceHandle(handle_open_service);
 	}

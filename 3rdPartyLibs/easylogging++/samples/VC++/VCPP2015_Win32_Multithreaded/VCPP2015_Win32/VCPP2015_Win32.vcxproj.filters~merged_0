@@ -3,19 +3,11 @@
   <ItemGroup>
     <Filter Include="Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj.filters
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-=======
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
->>>>>>> Full project added:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
     </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -26,9 +18,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
-    <ClCompile Include="easylogging++.cpp">
-=======
 <<<<<<< HEAD
 <<<<<<< HEAD:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32_Multithreaded/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
     <ClCompile Include="easylogging++.cc">
@@ -38,16 +27,11 @@
 =======
     <ClCompile Include="easylogging++.cc">
 >>>>>>> 150391aee555e8ae6ccd79b7faefdbc6dd5c8ae4
->>>>>>> 8f88bd2dfda7a504da747ba3f30a64363f33abeb:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32_Multithreaded/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters~merged
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD:RealTimeFaceMaskDetector/FaceRecognition/FaceRecognition.vcxproj.filters
-    <ClInclude Include="MaskRecognizer.h">
-=======
     <ClInclude Include="easylogging++.h">
->>>>>>> Full project added:3rdPartyLibs/easylogging++/samples/VC++/VCPP2015_Win32/VCPP2015_Win32/VCPP2015_Win32.vcxproj.filters
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
