@@ -42,7 +42,7 @@ bool SocketServer::CreateListeningSocket()
 	return true;
 }
 
-bool SocketServer::StartListening()
+bool SocketServer::BindListeningSocket()
 {
 	m_func_result = bind(m_listen_socket, m_host_info->ai_addr, (int)m_host_info->ai_addrlen);
 	if (m_func_result == SOCKET_ERROR)
@@ -50,16 +50,7 @@ bool SocketServer::StartListening()
 		freeaddrinfo(m_host_info);
 		closesocket(m_listen_socket);
 		WSACleanup();
-		return false;
-	}
-
-	freeaddrinfo(m_host_info);
-
-	m_func_result = listen(m_listen_socket, SOMAXCONN);
-	if (m_func_result == SOCKET_ERROR)
-	{
-		closesocket(m_listen_socket);
-		WSACleanup();
+		LOG_ERROR << "BindListeningSocket ERROR: faild to bind socket";
 		return false;
 	}
 	return true;
@@ -72,18 +63,46 @@ bool SocketServer::AcceptConnection()
 	{
 		closesocket(m_listen_socket);
 		WSACleanup();
+		LOG_WARNING << "AcceptConnection: failed to accept client";
 		return false;
 	}
 	return true;
 }
 
-int  SocketServer::GetMessageLength()
+bool SocketServer::StartListening(bool& ret_value)
 {
-	std::vector<char> bytes_number;
-	bytes_number.resize(DEFAULT_BUFLEN);
-	recv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
+	ret_value = BindListeningSocket();
+	if (!ret_value)
+		return ret_value;
 
-	return atoi(bytes_number.data());
+	freeaddrinfo(m_host_info);
+
+	while(server_is_up)
+	{
+		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
+		{
+			if (AcceptConnection())
+			{
+				std::thread th = std::thread([&]() {ReceiveMessage(ret_value);});
+				if(th.joinable())
+					th.detach();
+			}
+			else
+			{
+				ret_value =  false;
+				break;
+			}
+		}
+		else 
+		{
+			LOG_ERROR << "StartListening: failed to listen socket";
+			closesocket(m_listen_socket);
+			WSACleanup();
+			ret_value = false;
+			break;
+		}
+	}
+	return ret_value;
 }
 
 bool SocketServer::SendMessage()
@@ -118,6 +137,25 @@ bool SocketServer::SendMessage()
 	}
 
 	return true;
+}
+
+int  SocketServer::GetMessageLength()
+{
+	std::vector<char> bytes_number;
+	bytes_number.resize(DEFAULT_BUFLEN);
+	recv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
+
+	return atoi(bytes_number.data());
+}
+
+std::filesystem::path SocketServer::GetCurrentPath()
+{
+	wchar_t path[MAX_PATH];
+	GetModuleFileName(nullptr, path, MAX_PATH);
+	std::filesystem::path current_directory(path);
+	current_directory.remove_filename();
+
+	return current_directory;
 }
 
 bool SocketServer::SpecifyPathForPhotos()
@@ -169,59 +207,25 @@ void SocketServer::CreateFileNameSpecificator()
 	}
 }
 
-std::filesystem::path SocketServer::GetCurrentPath()
-{
-	wchar_t path[MAX_PATH];
-	GetModuleFileName(nullptr, path, MAX_PATH);
-	std::filesystem::path current_directory(path);
-	current_directory.remove_filename();
-	
-	return current_directory;
-}
+
 
 bool SocketServer::ReceiveFullMessage()
 {
 	int total_bytes_count = GetMessageLength();
 	
-/*
-	std::vector<char> temp_buffer{};
-	int recived_bytes_count = 0;
-	do
-	{
-		temp_buffer.clear();
-		temp_buffer.resize(DEFAULT_BUFLEN);
-		m_func_result = recv(m_client_socket, &temp_buffer[0], temp_buffer.size(), MSG_WAITALL);
-
-		if (m_func_result > 0)
-		{
-			recived_bytes_count += m_func_result;
-			m_buffer.insert(end(m_buffer), begin(temp_buffer), end(temp_buffer));
-		}
-		else if (m_func_result == 0)
-		{
-			LOG_MSG << "Connection closing...";
-			return false;
-		}
-		else
-		{
-			closesocket(m_client_socket);
-			WSACleanup();
-			return false;
-		}
-	} while (recived_bytes_count < total_bytes_count);*/
 	m_buffer.resize(total_bytes_count + 1);
 
 	m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
-	if (m_func_result > 0)
+	if (m_func_result > 0) // correctrly receided message
 	{
 		LOG_MSG << "Total bytes: "<< total_bytes_count <<" Received: " << m_func_result;
 	}
-	else if (m_func_result == 0)
+	else if (m_func_result == 0) // client closed connection
 	{
 		LOG_MSG << "Connection closing...";
 		return false;
 	}
-	else
+	else // error when receiving message. <Check possible errors in documentation for 'recv' function>
 	{
 		closesocket(m_client_socket);
 		WSACleanup();
@@ -230,12 +234,15 @@ bool SocketServer::ReceiveFullMessage()
 	return true;
 }
 
-bool SocketServer::ReceiveMessage()
+bool SocketServer::ReceiveMessage(bool& ret_value)
 {	
+	ret_value = true;
+
 	EncryptDecryptAES_ECBMode decryptor;
 	std::ofstream recv_data;
+	bool client_connected = true;
 
-	while (server_is_up)
+	while (client_connected)
 	{
 		m_buffer.clear();
 		try
@@ -243,24 +250,30 @@ bool SocketServer::ReceiveMessage()
 			if(ReceiveFullMessage())
 			{
 				if (!OpenParticularFile(recv_data))
-				{ /*cannot open file error*/}
-
+				{ 
+					/*cannot open file error*/
+				}
 				recv_data.write(m_buffer.data(), m_buffer.size());
 				recv_data.close();
+
+				//Writing in database
 				/*std::string data;
 				std::string cipher(m_buffer.begin(), m_buffer.end());
 				decryptor.Decrypt(cipher, data);
 				SendMessage();*/
 			}
-		
+			else
+			{
+				client_connected = false;
+			}
 		}catch(const std::string& msg)
 		{
 			LOG_ERROR << msg;
-			return false;
+			ret_value = false;
+			break;
 		}
 	}
-
-	return true;
+	return ret_value;
 }
 
 bool SocketServer::ShutdownServer()

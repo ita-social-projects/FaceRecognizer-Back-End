@@ -1,5 +1,5 @@
 #include "WindowsService.h"
-
+#include <thread>
 #pragma region Variables
 
 SocketServer Service::s_socket_server{};
@@ -122,21 +122,18 @@ bool Service::CreateServer()
 	LOG_MSG << "CreateServer begin";
 	bool is_server_initialized = s_socket_server.InitSocketServer();
 	bool is_socked_created = s_socket_server.CreateListeningSocket();
-	bool is_listening_started = s_socket_server.StartListening();
-	bool is_connection_accepted = s_socket_server.AcceptConnection();
-	bool is_message_received = s_socket_server.ReceiveMessage();
-	
-	if(!is_message_received)
+	bool is_listening_started;
+
+	std::thread listen_multiple_clients([&]() {s_socket_server.StartListening(is_listening_started); });
+	if (listen_multiple_clients.joinable())
 	{
-		ShutdownServer();
+		listen_multiple_clients.detach();
 	}
-	
+
 	LOG_MSG << "CreateServer end";
 	return is_server_initialized &&
 		is_socked_created &&
-		is_listening_started &&
-		is_connection_accepted &&
-		is_message_received;
+		is_listening_started;
 }
 
 bool Service::ShutdownServer()

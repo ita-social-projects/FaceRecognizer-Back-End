@@ -15,13 +15,14 @@ class SocketServer
 public:
 	bool InitSocketServer();
 	bool CreateListeningSocket();
-	bool StartListening();
-	bool AcceptConnection();
-	bool ReceiveMessage();
+	bool StartListening(bool& ret_value);
+	bool ReceiveMessage(bool& ret_value);
 	bool ShutdownServer();
 	int GetMessageLength();
 
 private:
+	bool BindListeningSocket();
+	bool AcceptConnection();
 	bool SendMessage();
 
 	/*return path to TCPServer.exe file*/
