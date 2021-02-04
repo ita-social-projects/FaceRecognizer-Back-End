@@ -272,7 +272,8 @@ void SQLServer::CreatePhotosTable(const std::string& table)
 
 	std::string query((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 	size_t index = 0;
-	while (true) {
+	while (true) 
+	{
 		/* Locate the substring to replace. */
 		index = query.find("$TAB$", index);
 		if (index == std::string::npos) break;
@@ -284,7 +285,8 @@ void SQLServer::CreatePhotosTable(const std::string& table)
 		index += 3;
 	}
 	index = 0;
-	while (true) {
+	while (true) 
+	{
 		index = query.find("$DATABASE$", index);
 		if (index == std::string::npos) break;
 		query.replace(index, 10, params.database);
