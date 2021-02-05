@@ -25,10 +25,10 @@ class RealTimeFaceMaskDetector(ConanFile):
     def package(self):
         # Copy the executable
         self.copy(pattern="tool_a*", dst="bin", keep_path=False)
-
         # Copy the labraries
         if self.options.shared:
             self.copy(pattern="*.dll", dst="..\\RealTimeFaceMaskDetector\\x64\\Debug", keep_path=False)
+            self.copy(pattern="*.lib", dst="..\\RealTimeFaceMaskDetector\\x64\\Debug", keep_path=False)
         else:
             self.copy("*.h", dst="include", src="src")
             self.copy("*.lib", dst="lib", keep_path=False)
@@ -36,7 +36,7 @@ class RealTimeFaceMaskDetector(ConanFile):
     def imports(self):
         self.copy(pattern="*.dll", dst="..\\RealTimeFaceMaskDetector\\x64\\Debug", keep_path=False)
         self.copy(pattern="*.lib", dst="..\\RealTimeFaceMaskDetector\\x64\\Debug", keep_path=False)
-        self.copy(pattern="*.dll", src="C:\\SQLAPI\\vs2019\\x86_64\\bin", dst="RealTimeFaceMaskDetector\\x64\\Debug", keep_path=False)
+        self.copy(pattern="*.dll", src="C:\\SQLAPI\\vs2019\\x86_64\\bin", dst="..\\RealTimeFaceMaskDetector\\x64\\Debug", keep_path=False)
         self.copy(pattern="*.lib", dst="..\\RealTimeFaceMaskDetector\\EncryptDecryptECBMode", root_package="cryptopp", keep_path=False)
         self.copy(pattern="*", dst="..\\3rdPartyLibs\\cryptopp820", root_package="cryptopp", keep_path=True)
         self.copy(pattern="*", dst="C:\\Qt", root_package="qt", keep_path=True)

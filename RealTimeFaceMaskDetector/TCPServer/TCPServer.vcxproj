@@ -131,8 +131,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>EncryptDecryptECBMode.lib;SQLServerDLL.lib;sqlapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalLibraryDirectories>C:\SQLAPI\vs2019\x86_64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\SQLAPI\vs2019\x86_64\lib;..\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
