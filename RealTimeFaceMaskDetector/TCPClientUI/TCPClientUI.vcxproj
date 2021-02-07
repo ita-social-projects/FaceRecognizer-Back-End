@@ -54,7 +54,7 @@
     </Link>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\EncryptDecryptECBMode;..\..\3rdPartyLibs\cryptopp820\include;..\..\3rdPartyLibs\opencv\include;C:\Qt\include;.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>x64\Debug\uic;..\EncryptDecryptECBMode;..\..\3rdPartyLibs\cryptopp820\include;..\..\3rdPartyLibs\opencv\include;C:\Qt\include;.\</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
