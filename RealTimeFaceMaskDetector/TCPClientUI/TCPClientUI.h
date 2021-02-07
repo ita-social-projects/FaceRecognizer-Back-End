@@ -1,5 +1,5 @@
 #pragma once
-#include <QtWidgets/QMainWindow>
+
 #include <qmessagebox.h>
 #include <QRegExpValidator>
 

@@ -46,33 +46,36 @@
     <LibraryPath>$(SolutionDir)x64\Debug;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)x64\Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>opencv_world450d.lib;EncryptDecryptECBMode.lib;$(Qt_LIBS_)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world450d.lib;EncryptDecryptECBMode.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\mac\source\repos\Real-Time-Face-Mask-Detector-Server\RealTimeFaceMaskDetector\x64\Debug;$(SolutionDir)..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories);C:\Qt\5.15.1\msvc2019_64\lib;%(AdditionalLibraryDirectories);C:\Real-Time-Face-Mask-Detector-Server-development\3rdPartyLibs\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;$(Qt_INCLUDEPATH_);.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;$(Qt_INCLUDEPATH_);.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;.\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_world450.lib;$(Qt_LIBS_);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\mac\source\repos\Real-Time-Face-Mask-Detector-Server\RealTimeFaceMaskDetector\x64\Debug;$(SolutionDir)..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_);;C:\Qt\5.15.1\msvc2019_64\lib;%(AdditionalLibraryDirectories);C:\Real-Time-Face-Mask-Detector-Server-development\3rdPartyLibs\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_world450d.lib;EncryptDecryptECBMode.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>msvc2015_64</QtInstall>
+    <QtInstall>msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>msvc2015_64</QtInstall>
+    <QtInstall>msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
@@ -98,7 +101,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
