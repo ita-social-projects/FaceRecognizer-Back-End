@@ -2,7 +2,7 @@ USE [$DATABASE$]
 
 CREATE TABLE [dbo].[$TAB$](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Photo] [image] NULL,
+	[PhotoPath] [nvarchar](255) NULL,
 	[PhotoName] [nvarchar](255) NULL,
 	[PhotoExtension] [nvarchar](20) NULL,
 	[Date] [datetime] NULL,
