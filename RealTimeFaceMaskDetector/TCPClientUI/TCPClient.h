@@ -11,7 +11,6 @@
 
 #include <QWidget>
 #include <QImage>
-#include <QDebug>
 
 #include "MaskRecognizer.h"
 

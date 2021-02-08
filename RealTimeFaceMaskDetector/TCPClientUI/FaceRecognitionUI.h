@@ -1,8 +1,4 @@
 #pragma once
-#include <vector>
-
-#include <QWidget>
-#include <QImage>
 
 #include "ui_FaceRecognitionUI.h"
 #include "MaskRecognizer.h"

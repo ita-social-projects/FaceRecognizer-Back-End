@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QRegExpValidator>
 #include "ui_TCPClientUI.h"
 
 class TCPClientUI : public QMainWindow

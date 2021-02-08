@@ -13,7 +13,6 @@ void FaceRecognitionUI::onExitButtonClicked()
 {
     m_exit_button_clicked = true;
     close();
-
     qDebug() << "QQQQ!!!";
 };
 
