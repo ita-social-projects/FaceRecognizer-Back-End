@@ -1,6 +1,8 @@
 #include "TCPClientUI.h"
 #include "TCPClient.h"
 
+#include <qmessagebox>
+
 extern std::string g_ip;
 extern int g_port;
 
@@ -9,15 +11,15 @@ TCPClientUI::TCPClientUI(QWidget *parent)
 {
     ui.setupUi(this);
 
-    QIcon winIcon("icon.png");
+    const QIcon winIcon("icon.png");
     this->setWindowIcon(winIcon);
 
-    QString ip_range = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
-    QRegExp ip_regex("^" + ip_range
+    const QString ip_range = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
+    const QRegExp ip_regex("^" + ip_range
         + "\\." + ip_range
         + "\\." + ip_range
         + "\\." + ip_range + "$");
-    QRegExpValidator* ipValidator = new QRegExpValidator(ip_regex, this);
+    auto* ipValidator = new QRegExpValidator(ip_regex, this);
     ui.IP->setValidator(ipValidator);
     ui.IP->setCursorPosition(0);
 
@@ -27,8 +29,8 @@ TCPClientUI::TCPClientUI(QWidget *parent)
 
 void TCPClientUI::Save()
 {
-    QString ip = ui.IP->text();
-    QString port = ui.Port->text();
+    const QString ip = ui.IP->text();
+    const QString port = ui.Port->text();
     QMessageBox msgBox;
 
     if (ip.isEmpty())

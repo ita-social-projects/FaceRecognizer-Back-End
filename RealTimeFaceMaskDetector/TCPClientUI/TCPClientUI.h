@@ -1,10 +1,7 @@
 #pragma once
 
-#include <qmessagebox.h>
 #include <QRegExpValidator>
-
 #include "ui_TCPClientUI.h"
-#include "MaskRecognizer.h"
 
 class TCPClientUI : public QMainWindow
 {
