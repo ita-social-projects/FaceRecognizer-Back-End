@@ -2,6 +2,8 @@
 #include "TCPClient.h"
 #include "FaceRecognitionUI.h"
 
+
+#include <QRegExpValidator>
 #include <qmessagebox>
 
 extern std::string g_ip;
@@ -20,7 +22,11 @@ TCPClientUI::TCPClientUI(QWidget *parent)
         + "\\." + ip_range
         + "\\." + ip_range
         + "\\." + ip_range + "$");
+    const QRegExp port_regex("[1-9]\\d{4}");
+    auto* portValidator = new QRegExpValidator(port_regex, this);
     auto* ipValidator = new QRegExpValidator(ip_regex, this);
+    ui.Port->setValidator(portValidator);
+    ui.Port->setCursorPosition(0);
     ui.IP->setValidator(ipValidator);
     ui.IP->setCursorPosition(0);
 
