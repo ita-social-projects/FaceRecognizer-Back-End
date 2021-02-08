@@ -292,6 +292,13 @@ void SQLServer::CreatePhotosTable(const std::string& table)
 		query.replace(index, 10, params.database);
 		index += 10;
 	}
+	index = 0;
+	while (true) {
+		index = query.find("$DATABASE$", index);
+		if (index == std::string::npos) break;
+		query.replace(index, 10, params.database);
+		index += 10;
+	}
 	ExecSQLQuery(query);
 }
 
