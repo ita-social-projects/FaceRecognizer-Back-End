@@ -18,8 +18,15 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQLServerDLL", "SQLServerDLL\SQLServerDLL.vcxproj", "{FDC531F1-1A32-43F3-B452-487A29AAB5B0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPServer", "TCPServer\TCPServer.vcxproj", "{5AEC37D4-CF31-4A4C-8F6B-D29F49A203C1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{79F7370C-9BF0-45DE-B2EB-1159DF437D30} = {79F7370C-9BF0-45DE-B2EB-1159DF437D30}
+		{FDC531F1-1A32-43F3-B452-487A29AAB5B0} = {FDC531F1-1A32-43F3-B452-487A29AAB5B0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPClientUI", "TCPClientUI\TCPClientUI.vcxproj", "{17543ADB-983C-41C3-96FB-7FC0F35ABC12}"
+	ProjectSection(ProjectDependencies) = postProject
+		{79F7370C-9BF0-45DE-B2EB-1159DF437D30} = {79F7370C-9BF0-45DE-B2EB-1159DF437D30}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
