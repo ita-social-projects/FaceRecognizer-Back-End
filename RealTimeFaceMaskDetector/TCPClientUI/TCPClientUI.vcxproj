@@ -122,11 +122,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FaceRecognitionUI.h" />
+    <QtMoc Include="FaceRecognitionUI.h" />
     <ClInclude Include="easylogging++.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MaskRecognizer.h" />
-    <QtMoc Include="TCPClient.h" />
+    <ClInclude Include="TCPClient.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />

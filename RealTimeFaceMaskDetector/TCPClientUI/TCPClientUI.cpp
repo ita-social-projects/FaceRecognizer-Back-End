@@ -1,5 +1,6 @@
 #include "TCPClientUI.h"
 #include "TCPClient.h"
+#include "FaceRecognitionUI.h"
 
 #include <qmessagebox>
 

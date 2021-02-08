@@ -1,4 +1,6 @@
-#include "TCPClient.h"
+#include "FaceRecognitionUI.h"
+
+#include <QDebug>
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
@@ -11,7 +13,6 @@ void FaceRecognitionUI::onExitButtonClicked()
 {
     m_exit_button_clicked = true;
     close();
-
 
     qDebug() << "QQQQ!!!";
 };
