@@ -80,7 +80,7 @@ int  SocketServer::GetMessageLength()
 bool SocketServer::SendMessage()
 {
 
-	std::shared_ptr<SQLConnection>sql_server(new SQLServer);	
+	std::shared_ptr<SQLConnection>sql_server=std::make_shared<SQLServer>();	
 	try
 	{	
 		sql_server->GetIniParams(CONFIG_FILE);

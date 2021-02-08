@@ -2,7 +2,7 @@
 
 #include "SQLConnection.h"
 #include "IniParser.h"
-
+#define CONFIG_FILE "config.ini"
 
 class SQLSERVER_API SQLServer : public SQLConnection
 {
@@ -34,7 +34,7 @@ public:
     void CreatePhotosTable(const std::string& table);
     /*create files from the vector of photos*/
     static void CreatePhotos(const std::vector<PhotoType>& photos);
-
+    void DeleteTable(const std::string& table) override;
 protected:
     /*Nested class for exceptions*/
     class SQLServerException :public SQLException

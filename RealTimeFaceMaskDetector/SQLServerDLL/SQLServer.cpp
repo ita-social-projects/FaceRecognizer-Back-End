@@ -282,7 +282,7 @@ void SQLServer::CreatePhotosTable(const std::string& table)
 		query.replace(index, 5, table);
 
 		/* Advance index forward so the next iteration doesn't pick it up as well. */
-		index += 3;
+		index += 5;
 	}
 	index = 0;
 	while (true) 
@@ -293,4 +293,20 @@ void SQLServer::CreatePhotosTable(const std::string& table)
 		index += 10;
 	}
 	ExecSQLQuery(query);
+}
+
+void SQLServer::DeleteTable(const std::string& table)
+{
+	try
+	{
+		using namespace std::string_literals;
+		std::string query = "drop table "s + table;
+		ExecSQLQuery(query);
+	}
+	catch (const SAException& ex)
+	{
+		RollBack();
+		sql_error.GetParams(ex);
+		throw sql_error;
+	}	
 }

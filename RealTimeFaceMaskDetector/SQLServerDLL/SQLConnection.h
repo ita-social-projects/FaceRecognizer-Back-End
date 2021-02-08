@@ -1,4 +1,5 @@
 #pragma once
+
 #ifdef SQLSERVER_EXPORTS
 #define SQLSERVER_API __declspec(dllexport)
 #else
@@ -50,4 +51,6 @@ public:
     virtual void CreatePhotosTable(const std::string& table) abstract;
     /*Get connection parameters from ini file in the application folder*/
     virtual void GetIniParams(const std::string& path) abstract;
+    /*Remove a table from the database*/
+    virtual void DeleteTable(const std::string& table) abstract;
 };
