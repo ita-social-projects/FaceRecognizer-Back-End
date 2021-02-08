@@ -19,7 +19,9 @@ class RealTimeFaceMaskDetector(ConanFile):
     def build(self):
         msbuild = MSBuild(self)
         msbuild.build_env.include_paths.append("C:\\SQLAPI\\include")
+        msbuild.build_env.include_paths.append("C:\\Qt\\include")
         msbuild.build_env.lib_paths.append("C:\\SQLAPI\\vs2019\\x86_64\\lib")
+        msbuild.build_env.lib_paths.append("C:\\Qt\\lib")
         msbuild.build("..\\RealTimeFaceMaskDetector\\RealTimeFaceMaskDetector.sln")
 
     def package(self):
