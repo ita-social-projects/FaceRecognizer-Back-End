@@ -18,9 +18,6 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Logger">
-      <UniqueIdentifier>{540d686b-4840-40ae-8255-b3f217949225}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="TCPClientUI.qrc">
@@ -49,22 +46,10 @@
     <ClCompile Include="MaskRecognizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="easylogging++.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MaskRecognizer.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="easylogging++.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Logger</Filter>
     </ClInclude>
     <ClInclude Include="FaceRecognitionUI.h">
       <Filter>Header Files</Filter>
@@ -79,10 +64,5 @@
     <QtUic Include="FaceRecognitionUI.ui">
       <Filter>Resource Files</Filter>
     </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Configuration.conf">
-      <Filter>Logger</Filter>
-    </None>
   </ItemGroup>
 </Project>

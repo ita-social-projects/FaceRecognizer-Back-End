@@ -38,5 +38,7 @@ TEST(TestSQLServer, TestCreateTable)
 	sql_server->DeleteTable(table);
 
 	ASSERT_EQ(false, sql_server->CheckTableExists(table));
-	remove("Test.txt");
+	sql_server->Disconnect();
 }
+
+

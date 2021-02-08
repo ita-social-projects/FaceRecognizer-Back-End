@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Logger.h"
 
 el::Configurations Logger::s_configuration{};
