@@ -35,7 +35,7 @@ void FaceRecognitionUI::Recognize(TCPClient &client)
         client.ConvertImageToBinary(image_face_send, buffer);
         client.SendBinaryMessage(buffer);
 
-        Sleep(2000);
+        // Sleep(2000);
         qDebug() << "QQQQ\n   ";
     }
 }
