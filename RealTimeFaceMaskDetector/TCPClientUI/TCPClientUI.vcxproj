@@ -54,7 +54,7 @@
     </Link>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>x64\Debug\uic;..\EncryptDecryptECBMode;..\..\3rdPartyLibs\cryptopp820\include;..\..\3rdPartyLibs\opencv\include;C:\Qt\include;.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\EncryptDecryptECBMode;..\..\3rdPartyLibs\cryptopp820\include;..\..\3rdPartyLibs\opencv\include;C:\Qt\include;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,6 +128,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EncryptDecryptECBMode\EncryptDecryptECBMode.vcxproj">
+      <Project>{79f7370c-9bf0-45de-b2eb-1159df437d30}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
