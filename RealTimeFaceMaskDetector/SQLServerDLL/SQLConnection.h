@@ -17,7 +17,7 @@ struct Photo
     std::string name;
     std::string path;
     std::string extension;
-    tm date;
+    std::string date;
 };
 /*Parameters needed to connect to the server*/
 struct ConnectParams

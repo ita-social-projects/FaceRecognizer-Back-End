@@ -205,7 +205,7 @@ void SocketServer::SaveAndSendData()
 
 bool SocketServer::SendMessage()
 {
-	std::shared_ptr<SQLConnection>sql_server(new SQLServer);
+	std::shared_ptr<SQLConnection>sql_server = std::make_shared<SQLServer>();
 	try
 	{
 		sql_server->GetIniParams(CONFIG_FILE);
@@ -280,10 +280,16 @@ bool SocketServer::OpenParticularFile(std::ofstream& stream)
 {
 	std::string file_creation_date;
 	CreateFileNameSpecificator(file_creation_date);
-
+	m_photo_to_send.date = file_creation_date;
+	/*Date format contains symbols like ' ' and ':'.
+	Replace them to avoid forbidden symbols in filename */
+	for (auto& symbol : file_creation_date)
+	{
+		ReplaceForbiddenSymbol(symbol);
+	}
 	std::filesystem::path photos_directory = GetCurrentPath() / "images";
 	m_photo_to_send.path = photos_directory.string() + "\\";
-	m_photo_to_send.name = "Avatar_" + file_creation_date;
+	m_photo_to_send.name = "Photo_" + file_creation_date;
 	m_photo_to_send.extension = "png";
 
 	std::string photo_path{ m_photo_to_send.path +
@@ -302,20 +308,11 @@ void SocketServer::CreateFileNameSpecificator(std::string& file_specificator)
 	time(&curent_time);
 	tm current_date;
 	localtime_s(&current_date, &curent_time);
-	m_photo_to_send.date = current_date;
 
 	/*converting date to string*/
 	char str[50];
-	asctime_s(str, 50, &current_date);
+	strftime(str, 50, "%Y-%m-%d %H:%M:%S", &current_date);
 	file_specificator = str;
-	file_specificator.erase(file_specificator.size() - 1);
-
-	/*Date format contains symbols like ' ' and ':'.
-	Replace them to avoid forbidden symbols in filename */
-	for (auto& symbol : file_specificator)
-	{
-		ReplaceForbiddenSymbol(symbol);
-	}
 }
 
 void SocketServer::ReplaceForbiddenSymbol(char& symbol)

@@ -43,7 +43,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Configuration.conf">
+    <None Include="..\x64\Debug\Configuration.conf">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
