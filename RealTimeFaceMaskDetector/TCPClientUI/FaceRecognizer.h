@@ -17,7 +17,7 @@ class FaceRecognizer
 public:
 	FaceRecognizer(int camera = 0);
 
-	void runAnalysis(ImageData& img_data);
+  void runAnalysis(ImageData& img_data);
 
 private:
 	cv::CascadeClassifier m_face_cascade;
@@ -26,5 +26,5 @@ private:
 
 	cv::VideoCapture m_camera;
 
-	ImageData m_data; // ця штука локальна, вона ніяк не впливає на ImageData в FaceRecognitionUI
+	ImageData m_data; // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ ImageData пїЅ FaceRecognitionUI
 };

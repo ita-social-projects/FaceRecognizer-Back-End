@@ -20,7 +20,7 @@ class ImageData
 
 public:
 
-	void SetData(cv::Mat& image, faceInfo& faces);
+	void SetData(cv::Mat image, faceInfo faces);
 
 	void GetData(cv::Mat& image, faceInfo& faces);
 
