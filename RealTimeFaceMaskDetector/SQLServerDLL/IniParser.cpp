@@ -20,6 +20,10 @@ void IniParser::Parse()
         {
             continue;
         }
+        if (text.find(";") == 0)
+        {
+            continue;
+        }
         if (text.find("[") == 0)
         {
             size_t last = text.find(']');

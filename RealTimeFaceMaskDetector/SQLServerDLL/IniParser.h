@@ -5,7 +5,7 @@
 #include <vector>
 #include <fstream>
 
-#ifdef INIPARSER_EXPORTS
+#ifdef SQLSERVER_EXPORTS
 #define INIPARSER_API __declspec(dllexport)
 #else
 #define INIPARSER_API __declspec(dllimport)
