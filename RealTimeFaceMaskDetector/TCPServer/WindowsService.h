@@ -37,7 +37,13 @@ private:
 		const unsigned short current_state,
 		const unsigned short win32_exit_code,
 		const unsigned short wait_hint);
+	static void StartServerWork(bool&);
 	static bool CreateServer();
+	static void TryCreateServer(bool& is_started);
+	static void TryStopService(SC_HANDLE handle_open_service, SERVICE_STATUS_PROCESS status_process, bool& is_stopped);
+	static void TryDeleteService(SC_HANDLE handle_service, bool& is_deleted);
+	static void TryStartService(SC_HANDLE handle_open_service ,bool& is_started);
+
 	static bool ShutdownServer();
 
 	static SocketServer s_socket_server;

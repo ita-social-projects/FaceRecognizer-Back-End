@@ -47,27 +47,19 @@ bool MaskRecognizer::SetPanelText(cv::Mat& image, const bool& face_is_visible)
     return are_equal;
 }
 
-bool MaskRecognizer::FaceIsVisible(const std::vector<cv::Rect>& faces, const std::vector<cv::Rect>& faces_bw)
-{
-    if ((faces.size() == 0) && (faces_bw.size() == 0)) return false;
-    return true;
-}
-
 void MaskRecognizer::StartRecognition()
 {
-        cv::Mat img, gray_img, bw_img;
-        std::vector<cv::Rect> faces, faces_bw, mouths, noses;
+        cv::Mat img, gray_img;
+        std::vector<cv::Rect> faces, mouths, noses;
         m_camera >> img;
         flip(img, img, 1);
         cvtColor(img, gray_img, cv::COLOR_BGR2GRAY);
         int bw_treshold = 80;
-        threshold(gray_img, bw_img, bw_treshold, 255, cv::THRESH_BINARY);
         m_face_cascade.detectMultiScale(gray_img, faces, 1.1, 4);
-        m_face_cascade.detectMultiScale(bw_img, faces_bw, 1.1, 4);
         for (auto& face : faces)
         {
-            m_mouth_cascade.detectMultiScale(gray_img, mouths, 1.5, 5);
-            m_nose_cascade.detectMultiScale(gray_img, noses, 1.5, 5);
+            m_mouth_cascade.detectMultiScale(cv::Mat(gray_img, face), mouths, 1.5, 5);
+            m_nose_cascade.detectMultiScale(cv::Mat(gray_img, face), noses, 1.5, 5);
             if (mouths.size() == 0 || noses.size() == 0) m_color = cv::Scalar(0, 255, 0); else m_color = cv::Scalar(0, 0, 255);
             rectangle(img,
                 cv::Point(cvRound(face.x * m_scale), cvRound(face.y * m_scale)),
@@ -76,7 +68,7 @@ void MaskRecognizer::StartRecognition()
 
         }
 
-        SetPanelText(img, FaceIsVisible(faces, faces_bw));
+        SetPanelText(img, faces.size() == 0);
         m_image = img;
         
     

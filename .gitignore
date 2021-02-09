@@ -2,6 +2,18 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,c++,qt,opencv
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,c++,qt,opencv
 
+
+## photos
+*.png
+*.jpeg
+
+### Configuration files ###
+*.ini
+
+## additional directories
+3rdPartyLibs/
+conafiles/
+
 ### C++ ###
 # Prerequisites
 *.d
