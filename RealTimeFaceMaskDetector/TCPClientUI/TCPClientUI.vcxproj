@@ -70,7 +70,7 @@
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtDeploy>false</QtDeploy>
-    <QtInstall>Qt</QtInstall>
+    <QtInstall>Qt_vs</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>Qt</QtInstall>
