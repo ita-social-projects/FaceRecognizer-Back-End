@@ -94,7 +94,7 @@ std::vector<SQLServer::PhotoType> SQLServer::GetAllPhotos()
 {
 	try
 	{
-		std::string table_name{ "Photos" };
+		std::string table_name{ params.table };
 		std::string column_name_photo{ "Photo" };
 		std::string column_name_photo_name{ "PhotoName" };
 		std::string column_name_photo_extension{ "PhotoExtension" };
