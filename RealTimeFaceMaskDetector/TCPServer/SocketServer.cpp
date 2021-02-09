@@ -94,7 +94,7 @@ bool SocketServer::SendMessage()
 			sql_server.Connect(database_string, username, password);
 
 			// -- Insert photo --
-			std::string photoPath{ R"(D:\Learning\SoftServe Project\RTFMD\RealTimeFaceMaskDetector\x64\Debug\)" };
+			std::string photoPath{ R"(Photos)" };
 			std::string photoName{ "Avatar" };
 			std::string photoExtension{ "png" };
 			sql_server.InsertPhoto(photoPath, photoName, photoExtension);

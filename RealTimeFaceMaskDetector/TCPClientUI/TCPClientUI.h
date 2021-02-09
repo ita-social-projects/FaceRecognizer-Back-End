@@ -20,3 +20,5 @@ private slots:
 public:
     Ui::TCPClientUIClass ui;
 };
+
+extern std::unique_ptr<MaskRecognizer> m_mask_recognizer;

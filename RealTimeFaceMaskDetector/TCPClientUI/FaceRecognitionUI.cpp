@@ -1,4 +1,4 @@
-#include "TCPClient.h"
+#include "FaceRecognitionUI.h"
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)

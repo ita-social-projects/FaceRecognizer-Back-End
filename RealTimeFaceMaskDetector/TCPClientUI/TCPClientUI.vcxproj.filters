@@ -66,14 +66,9 @@
     <ClInclude Include="Logger.h">
       <Filter>Logger</Filter>
     </ClInclude>
-    <ClInclude Include="FaceRecognitionUI.h">
+    <ClInclude Include="TCPClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="TCPClient.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="FaceRecognitionUI.ui">
@@ -84,5 +79,10 @@
     <None Include="Configuration.conf">
       <Filter>Logger</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="FaceRecognitionUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

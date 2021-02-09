@@ -49,7 +49,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>opencv_world450d.lib;EncryptDecryptECBMode.lib;$(Qt_LIBS_)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world451d.lib;EncryptDecryptECBMode.lib;$(Qt_LIBS_)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
@@ -67,7 +67,7 @@
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>msvc2015_64</QtInstall>
+    <QtInstall>msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
@@ -119,11 +119,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FaceRecognitionUI.h" />
+    <QtMoc Include="FaceRecognitionUI.h" />
     <ClInclude Include="easylogging++.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MaskRecognizer.h" />
-    <QtMoc Include="TCPClient.h" />
+    <ClInclude Include="TCPClient.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />
