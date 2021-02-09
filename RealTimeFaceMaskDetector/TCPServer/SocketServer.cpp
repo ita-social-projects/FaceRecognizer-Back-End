@@ -229,9 +229,9 @@ bool SocketServer::SendMessage()
 
 void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server)
 {
-	if (!sql_server->CheckTableExists("Photos"))
+	if (!sql_server->CheckTableExists())
 	{
-		sql_server->CreatePhotosTable("Photos");
+		sql_server->CreatePhotosTable();
 	}
 }
 

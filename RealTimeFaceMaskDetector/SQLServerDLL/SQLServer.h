@@ -29,9 +29,9 @@ public:
     void Disconnect() override;
     void ClearTable(const std::string& table) override;
     void DeleteRecord(int id) override;
-    bool CheckTableExists(const std::string& table) override;
+    bool CheckTableExists() override;
     void GetIniParams(const std::string& path) override;
-    void CreatePhotosTable(const std::string& table);
+    void CreatePhotosTable();
     /*create files from the vector of photos*/
     static void CreatePhotos(const std::vector<PhotoType>& photos);
     void DeleteTable(const std::string& table) override;

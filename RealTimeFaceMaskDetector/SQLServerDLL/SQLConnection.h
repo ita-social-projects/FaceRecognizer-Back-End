@@ -26,6 +26,7 @@ struct ConnectParams
     std::string database;
     std::string username;
     std::string password;
+    std::string table;
 };
 
 class SQLSERVER_API SQLConnection abstract
@@ -46,9 +47,9 @@ public:
     /*Delete one record from the Photos table*/
     virtual void DeleteRecord(int id) abstract;
     /*Check if the table for Photos exists*/
-    virtual bool CheckTableExists(const std::string& table) abstract;
+    virtual bool CheckTableExists() abstract;
     /*Create the table for Photos*/
-    virtual void CreatePhotosTable(const std::string& table) abstract;
+    virtual void CreatePhotosTable() abstract;
     /*Get connection parameters from ini file in the application folder*/
     virtual void GetIniParams(const std::string& path) abstract;
     /*Remove a table from the database*/

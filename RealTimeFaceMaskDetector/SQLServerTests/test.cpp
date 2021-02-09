@@ -30,14 +30,12 @@ TEST(TestSQLServer, TestCreateTable)
 	std::shared_ptr<SQLConnection>sql_server = std::make_shared<SQLServer>();
 	sql_server->GetIniParams(CONFIG_FILE);
 	sql_server->Connect();
-	std::string table = "Phot1";
-	sql_server->CreatePhotosTable(table);
+	if (!sql_server->CheckTableExists())
+	{
+		sql_server->CreatePhotosTable();
+	}
 
-	ASSERT_EQ(true, sql_server->CheckTableExists(table));
-
-	sql_server->DeleteTable(table);
-
-	ASSERT_EQ(false, sql_server->CheckTableExists(table));
+	ASSERT_EQ(true, sql_server->CheckTableExists());
 	sql_server->Disconnect();
 }
 
