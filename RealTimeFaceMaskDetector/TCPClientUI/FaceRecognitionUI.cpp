@@ -16,20 +16,28 @@ void FaceRecognitionUI::onExitButtonClicked()
     qDebug() << "QQQQ!!!";
 };
 
-void FaceRecognitionUI::Recognize(TCPClient &client)
+void FaceRecognitionUI::UpdateWindow(TCPClient &client)
 {
     
     while (!m_exit_button_clicked)
     {
-        m_mask_recognizer->StartRecognition();
-        cv::Mat image = m_mask_recognizer->GetImage();
+        m_mask_recognizer->RunAnalysis();
+
+        cv::VideoCapture m_camera;
+        if (!m_camera.open(0))
+        {
+            throw std::runtime_error("can't load camera");
+        }
+        cv::Mat image;
+        m_camera >> image;
+
         QImage frame = Mat2QImage(image);
         QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
         ui.frame->setPixmap(map);
         ui.frame->show();
         cv::waitKey(30);
         std::vector<char> buffer;
-        cv::imwrite("image_face.png", m_mask_recognizer->GetImage());
+        cv::imwrite("image_face.png", image);
 
         std::ifstream image_face_send;
         client.ConvertImageToBinary(image_face_send, buffer);
@@ -37,6 +45,16 @@ void FaceRecognitionUI::Recognize(TCPClient &client)
 
         Sleep(2000);
         qDebug() << "QQQQ\n   ";
+    }
+}
+
+void FaceRecognitionUI::Recognize(int camera_id)
+{
+    FaceRecognizer recognizer(img_data, camera_id);
+
+    while (true)
+    {
+
     }
 }
 
@@ -49,23 +67,9 @@ QImage FaceRecognitionUI::Mat2QImage(cv::Mat const& src)
     // of QImage::QImage ( const uchar * data, int width, int height, Format format )
     return dest;
 }
-std::unique_ptr<MaskRecognizer> m_mask_recognizer = std::make_unique<MaskRecognizer>();
+std::unique_ptr<FaceRecognizer> m_mask_recognizer = std::make_unique<FaceRecognizer>();
 
-std::vector<char> GetImageBytesVector()
-{
-    cv::Mat image = m_mask_recognizer->GetImage();
-    std::vector<char> bytes_vector;
-    if (image.isContinuous()) {
-        // array.assign(mat.datastart, mat.dataend); // <- has problems for sub-matrix like mat = big_mat.row(i)
-        bytes_vector.assign(image.data, image.data + image.total() * image.channels());
-    }
-    else {
-        for (int i = 0; i < image.rows; ++i) {
-            bytes_vector.insert(bytes_vector.end(), image.ptr<char>(i), image.ptr<char>(i) + image.cols * image.channels());
-        }
-    }
-    return bytes_vector;
-}
+
 
 
 FaceRecognitionUI::~FaceRecognitionUI()
