@@ -67,7 +67,7 @@
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>msvc2019_64</QtInstall>
+    <QtInstall>Qt</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
@@ -110,9 +110,7 @@
     <QtUic Include="FaceRecognitionUI.ui" />
     <QtUic Include="TCPClientUI.ui" />
     <QtMoc Include="TCPClientUI.h" />
-    <ClCompile Include="easylogging++.cpp" />
     <ClCompile Include="FaceRecognitionUI.cpp" />
-    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MaskRecognizer.cpp" />
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TCPClientUI.cpp" />
@@ -120,13 +118,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FaceRecognitionUI.h" />
-    <ClInclude Include="easylogging++.h" />
-    <ClInclude Include="Logger.h" />
     <ClInclude Include="MaskRecognizer.h" />
     <QtMoc Include="TCPClient.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Configuration.conf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

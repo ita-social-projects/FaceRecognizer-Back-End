@@ -13,7 +13,7 @@
 //  https://amrayn.com
 //  http://muflihun.com
 //
-
+#include "pch.h"
 #include "easylogging++.h"
 
 #if defined(AUTO_INITIALIZE_EASYLOGGINGPP)

@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "../SQLServerDLL/IniParser.cpp"
+#include "../SQLServerDLL/SQLServer.cpp"
+#include "../SQLServerDLL/SQLException.cpp"
 #include <fstream>
 
 TEST(TestIniParser, TestParse) 
@@ -22,3 +24,19 @@ TEST(TestIniParser, TestParse)
 	ASSERT_EQ("No such parameter", parser.GetParam("Section2", "par4"));
 	remove("Test.txt");
 }
+
+TEST(TestSQLServer, TestCreateTable)
+{
+	std::shared_ptr<SQLConnection>sql_server = std::make_shared<SQLServer>();
+	sql_server->GetIniParams(CONFIG_FILE);
+	sql_server->Connect();
+	if (!sql_server->CheckTableExists())
+	{
+		sql_server->CreatePhotosTable();
+	}
+
+	ASSERT_EQ(true, sql_server->CheckTableExists());
+	sql_server->Disconnect();
+}
+
+
