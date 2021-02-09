@@ -46,20 +46,20 @@
     <ClCompile Include="FaceRecognitionUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MaskRecognizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="easylogging++.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
+    <ClCompile Include="ImageData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceRecognizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MaskRecognizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="easylogging++.h">
       <Filter>Logger</Filter>
     </ClInclude>
@@ -67,6 +67,12 @@
       <Filter>Logger</Filter>
     </ClInclude>
     <ClInclude Include="TCPClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceRecognizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

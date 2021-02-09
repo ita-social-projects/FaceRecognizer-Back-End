@@ -20,8 +20,11 @@ class ImageData
 	std::mutex m_mtx;
 
 public:
+
 	void SetData(cv::Mat& image, faceInfo& faces);
 
 	void GetData(cv::Mat& image, faceInfo& faces);
+
+	ImageData& operator= (const ImageData& obj);
 };
 
