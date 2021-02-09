@@ -14,7 +14,7 @@
 #include <QDebug>
 
 #include "ui_FaceRecognitionUI.h"
-#include "MaskRecognizer.h"
+#include "FaceRecognizer.h"
 
 #pragma comment (lib, "ws2_32.lib")
 
