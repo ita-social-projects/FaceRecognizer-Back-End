@@ -9,9 +9,9 @@
 
 #include "TCPClientUI.h"
 
-#include <QWidget>
-#include <QImage>
-#include <QDebug>
+#include <QtWidgets/QWidget>
+#include <QtGui/QImage>
+#include <QtCore/QDebug>
 
 #include "ui_FaceRecognitionUI.h"
 #include "MaskRecognizer.h"
