@@ -65,4 +65,7 @@
       <Filter>Resource Files</Filter>
     </QtUic>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration.conf" />
+  </ItemGroup>
 </Project>
