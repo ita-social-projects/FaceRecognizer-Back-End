@@ -56,16 +56,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="TCPClient.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
     <QtUic Include="FaceRecognitionUI.ui">
       <Filter>Resource Files</Filter>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="FaceRecognitionUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

@@ -120,7 +120,7 @@
   <ItemGroup>
     <ClInclude Include="FaceRecognitionUI.h" />
     <ClInclude Include="MaskRecognizer.h" />
-    <QtMoc Include="TCPClient.h" />
+    <ClInclude Include="TCPClient.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />

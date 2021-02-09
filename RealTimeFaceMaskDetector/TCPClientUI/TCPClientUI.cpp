@@ -1,5 +1,6 @@
 #include "TCPClientUI.h"
 #include "TCPClient.h"
+#include "../EncryptDecryptECBMode/EncryptDecryptAES_ECBMode.h"
 
 extern std::string g_ip;
 extern int g_port;
@@ -53,10 +54,11 @@ void TCPClientUI::Save()
         client.Connect();
 
         Sleep(1000);
-        client.m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
-        client.m_face_recognition_ui->show();
+        std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
+        m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
+        m_face_recognition_ui->show();
         this->hide();
-        client.m_face_recognition_ui->Recognize(client);
+        m_face_recognition_ui->Recognize(client);
 
         client.CloseSocket();
     }
