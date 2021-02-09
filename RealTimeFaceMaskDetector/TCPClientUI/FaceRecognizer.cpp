@@ -1,8 +1,9 @@
 #include "FaceRecognizer.h"
 
-FaceRecognizer::FaceRecognizer(ImageData &data, int camera)
+FaceRecognizer::FaceRecognizer(int camera)
 {
-    m_data = data;
+    // Закоментуємо, бо ми тут робимо лише КОПІЮ FaceRecognitionUI::ImageData
+    //m_data = img_data;
 
     const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
     const std::string mouth_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_mcs_mouth.xml";
@@ -22,11 +23,11 @@ FaceRecognizer::FaceRecognizer(ImageData &data, int camera)
 
 }
 
-void FaceRecognizer::runAnalysis()
+void FaceRecognizer::runAnalysis(ImageData& img_data)
 {
     cv::Mat img;
     std::vector<cv::Rect> face_rects, mouth_rects, nose_rects;
-    std::vector<std::pair<cv::Rect, bool>> faces_with_info;
+    faceInfo faces_with_info;
 
     // load image from camera
     m_camera >> img;
@@ -47,5 +48,5 @@ void FaceRecognizer::runAnalysis()
             mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
 
-    m_data.SetData(img, faces_with_info);
+    img_data.SetData(img, faces_with_info); // сетимо інфу в FaceRecognitionUI::ImageData
 }

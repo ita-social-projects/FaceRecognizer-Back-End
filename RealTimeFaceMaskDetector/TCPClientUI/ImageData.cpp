@@ -1,6 +1,6 @@
 #include "ImageData.h"
 
-void ImageData::SetData(cv::Mat image, faceInfo faces)
+void ImageData::SetData(cv::Mat& image, faceInfo& faces)
 {
 	std::lock_guard l_g(m_mtx);
 	m_image = image;

@@ -20,7 +20,7 @@ public:
 	QImage mat2QImage(cv::Mat const& src);
 
 	void updateWindow(TCPClient& client);
-	void recognize(int camera_id);
+	void recognize(int camera_id = 0);
 	void sendImage(); // not finished
 
 	~FaceRecognitionUI();

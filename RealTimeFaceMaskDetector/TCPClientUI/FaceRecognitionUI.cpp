@@ -32,8 +32,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         }*/
         cv::Mat image;
         faceInfo faces;
-        //m_camera >> image;
-
+        
+        //ст€гуЇмо ≥нфу, €ку отримали в FaceRecognizer
         img_data.GetData(image, faces);
 
         if (image.empty())
@@ -64,11 +64,13 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
 void FaceRecognitionUI::recognize(int camera_id)
 {
-    FaceRecognizer recognizer(img_data, camera_id);
+    FaceRecognizer recognizer(camera_id);
 
     while (run_analizer)
     {
-        recognizer.runAnalysis();
+        // маЇмо передавати FaceRecognitionUI::ImageData в FaceRecognizer, 
+        // щоб там зм≥нити даний клас, викликавши його сеттер
+        recognizer.runAnalysis(img_data);
     }
 }
 
