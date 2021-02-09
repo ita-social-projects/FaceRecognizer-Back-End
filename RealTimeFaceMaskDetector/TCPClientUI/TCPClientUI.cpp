@@ -1,5 +1,6 @@
 #include "TCPClientUI.h"
 #include "TCPClient.h"
+#include "../EncryptDecryptECBMode/EncryptDecryptAES_ECBMode.h"
 
 extern std::string g_ip;
 extern int g_port;
