@@ -1,8 +1,9 @@
 #pragma once
 
 #include "ui_FaceRecognitionUI.h"
-#include "MaskRecognizer.h"
+#include "FaceRecognizer.h"
 #include "TCPClient.h"
+#include "ImageData.h"
 
 class FaceRecognitionUI : public QWidget
 {
@@ -13,15 +14,20 @@ public:
 	~FaceRecognitionUI();
 
 	bool m_exit_button_clicked = false;
-	void Recognize(TCPClient &client);
+	void UpdateWindow(TCPClient &client);
 	QImage Mat2QImage(cv::Mat const& src);
-	friend std::vector<char> GetImageBytesVector();
+
+	void Recognize(int camera_id=0);
 
 public slots:
 	void onExitButtonClicked();
 
 public:
 	Ui::FaceRecognitionUI ui;
+
+private:
+	ImageData img_data;
+	bool run_analizer = true;
 };
 
-extern std::unique_ptr<MaskRecognizer> m_mask_recognizer;
+extern std::unique_ptr<FaceRecognizer> m_mask_recognizer;
