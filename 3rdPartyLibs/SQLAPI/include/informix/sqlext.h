@@ -1,3 +1,4 @@
+/*
 //-----------------------------------------------------------------------------
 // File:			sqlext.h
 //
@@ -8,6 +9,8 @@
 // Comments: 		
 //
 //-----------------------------------------------------------------------------
+//
+*/
 
 #ifndef __SQLEXT
 #define __SQLEXT
@@ -2010,10 +2013,10 @@ SQLRETURN SQL_API SQLSetScrollOptions(    /*      Use SQLSetStmtOptions */
 
 #define		TRACE_VERSION	1000		/* Version of trace API */
 
-RETCODE	SQL_API TraceOpenLogFile(LPWSTR,LPWSTR,DWORD);// open a trace log file 
-RETCODE	SQL_API TraceCloseLogFile();			// Request to close a trace log 
-VOID	SQL_API TraceReturn(RETCODE,RETCODE);	// Processes trace after FN is called 
-DWORD	SQL_API TraceVersion();					// Returns trace API version 
+RETCODE	SQL_API TraceOpenLogFile(LPWSTR,LPWSTR,DWORD); /* open a trace log file */
+RETCODE	SQL_API TraceCloseLogFile();			/* Request to close a trace log  */
+VOID	SQL_API TraceReturn(RETCODE,RETCODE);	/* Processes trace after FN is called  */
+DWORD	SQL_API TraceVersion();					/* Returns trace API version  */
 
 /* Functions for Visual Studio Analyzer*/
 /* to turn on/off tracing or VS events, call TraceVSControl by setting or clearing the following bits  */

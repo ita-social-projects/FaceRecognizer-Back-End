@@ -2,6 +2,7 @@
 
 bool SocketServer::InitSocketServer()
 {
+	ConnectToSQL();
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
 	{
@@ -205,19 +206,17 @@ void SocketServer::SaveAndSendData()
 
 bool SocketServer::SendMessage()
 {
-	std::shared_ptr<SQLConnection>sql_server = std::make_shared<SQLServer>();
+	//std::shared_ptr<SQLConnection>sql_server = std::make_shared<SQLServer>();
 	try
 	{
-		sql_server->GetIniParams(CONFIG_FILE);
+		//sql_server->GetIniParams(CONFIG_FILE);
 
-		// -- Connect --
-		sql_server->Connect();
+		//// -- Connect --
+		//sql_server->Connect();
 
-		CreateTableIfNeeded(sql_server);
+		//CreateTableIfNeeded(sql_server);
 		sql_server->InsertPhoto(m_photo_to_send);
 
-		// -- Disconnect --
-		sql_server->Disconnect();
 	}
 	catch (const SQLException& e)
 	{
@@ -250,7 +249,7 @@ bool SocketServer::ShutdownServer()
 	closesocket(m_client_socket);
 	closesocket(m_listen_socket);
 	WSACleanup();
-
+	sql_server->Disconnect();
 	return true;
 }
 
@@ -320,5 +319,22 @@ void SocketServer::ReplaceForbiddenSymbol(char& symbol)
 	if (symbol == ' ' || symbol == ':')
 	{
 		symbol = '_';
+	}
+}
+
+void SocketServer::ConnectToSQL()
+{
+	sql_server = std::make_shared<SQLServer>();
+	try
+	{
+		sql_server->GetIniParams(CONFIG_FILE);
+
+		// -- Connect --
+		sql_server->Connect();
+		CreateTableIfNeeded(sql_server);
+	}
+	catch (const SQLException& e)
+	{
+		std::cout << e.what() << std::endl;
 	}
 }

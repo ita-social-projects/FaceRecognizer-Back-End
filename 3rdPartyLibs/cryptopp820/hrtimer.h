@@ -43,7 +43,7 @@ private:
 /// \note ThreadUserTimer only works correctly on Windows NT or later desktops and servers.
 /// On Unix-based it reports process time. On Windows Phone and Windows Store it reports wall
 /// clock time with performance counter precision. On all others it reports wall clock time.
-class CRYPTOPP_DLL ThreadUserTimer : public TimerBase
+class ThreadUserTimer : public TimerBase
 {
 public:
 	ThreadUserTimer(Unit unit = TimerBase::SECONDS, bool stuckAtZero = false) : TimerBase(unit, stuckAtZero) {}

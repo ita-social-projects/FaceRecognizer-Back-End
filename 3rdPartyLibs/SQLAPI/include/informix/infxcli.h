@@ -1,16 +1,12 @@
 /****************************************************************************
- *
- *                               IBM CORP.
- *
  *                           PROPRIETARY DATA
  *
- * Licensed Material - Property Of IBM
+ * Licensed Materials - Property of IBM and/or HCL
  *
- * "Restricted Materials of IBM"
+ * IBM Informix Client-SDK
  *
- * IBM Informix Client SDK
- *
- * (c)  Copyright IBM Corporation 1997, 2011. All rights reserved.
+ * (c)  Copyright IBM Corporation 1997, 2012. All rights reserved.
+ * (c) Copyright HCL Technologies Ltd. 2017.  All Rights Reserved. 
  *
 ** INFXCLI.H - This is the the main include for IBM Informix-CLI
 **             applications.
@@ -38,6 +34,39 @@ extern "C" {                /* Assume C declarations for C++   */
 #include <stdlib.h>
 #include "infxsql.h"
 #endif /*_WINDOWS_*/
+
+typedef struct tagIfmxJoinTrigger
+{
+        void(*callback)
+                (char const *jsonOutBuf);
+        int      *joinSessionID;
+        BOOL     *ControlBackToApplication;
+        SQLWCHAR reserved[16];
+} IFMX_JOIN_SMART_TRIGGER;
+
+typedef struct tagIfmxOpenTrigger
+{
+        BOOL     *isDetachable;
+        int      *timeOut;
+        short    *maxRecsPerRead;
+        int      *maxPendingOperations;
+        SQLWCHAR reserved[16];
+} IFMX_OPEN_SMART_TRIGGER;
+
+typedef struct tagIfmxRegisterTrigger
+{
+        void(*callback)
+                (char const *jsonOutBuf);
+        int      *loFileDescriptor;
+        SQLWCHAR *tableName;
+        SQLWCHAR *ownerName;
+        SQLWCHAR *dbName;
+        SQLWCHAR *sqlQuery;
+        SQLWCHAR *label;
+        BOOL     *isDeregister;
+        BOOL     *ControlBackToApplication;
+        SQLWCHAR reserved[16];
+} IFMX_REGISTER_SMART_TRIGGER;
 
 #define SQL_TXN_LAST_COMMITTED               0x00000010L
 #define SQL_TRANSACTION_LAST_COMMITTED       SQL_TXN_LAST_COMMITTED
@@ -93,6 +122,8 @@ extern "C" {                /* Assume C declarations for C++   */
 #define SQL_INFX_DECIMAL                        -113
 #define SQL_INFX_BIGINT                         -114
 
+typedef long SQLINFX_BIGINT;
+
 typedef void * HINFX_RC;		/* row & collection handle */
 
 /* Informix Connect Attributes Extensions */
@@ -139,6 +170,29 @@ typedef void * HINFX_RC;		/* row & collection handle */
 #define SQL_INFX_ATTR_SENDTIMEOUT        2281
 #define SQL_INFX_ATTR_RECVTIMEOUT        2282
 #define SQL_INFX_ATTR_IDSISAMERRMSG      2283
+#define SQL_INFX_ATTR_OPEN_SMART_TRIGGER     2284
+#define SQL_INFX_ATTR_JOIN_SMART_TRIGGER     2285
+#define SQL_INFX_ATTR_GET_LO_FILE_DESC_SMART_TRIGGER  2286
+#define SQL_INFX_ATTR_GET_SESSION_ID_SMART_TRIGGER 2287
+#define SQL_INFX_ATTR_REGISTER_SMART_TRIGGER       2288
+#define SQL_INFX_ATTR_GET_DATA_SMART_TRIGGER_LOOP  2289
+#define SQL_INFX_ATTR_GET_DATA_SMART_TRIGGER_NO_LOOP 2290
+#define SQL_INFX_ATTR_DELETE_SMART_TRIGGER         2291
+#define SQL_INFX_ATTR_CP_TIMEOUT                   2292
+#define SQL_INFX_ATTR_CONNECTION_POOLING           2293
+#define SQL_INFX_ATTR_CP_MATCH                     2294
+#define SQL_INFX_ATTR_CP_TOTAL_CONNECTIONS         2295
+#define SQL_INFX_ATTR_CP_TOTAL_ACTIVE              2296
+#define SQL_INFX_ATTR_CP_TOTAL_IDLE                2297
+#define SQL_INFX_ATTR_CLIENT_LABEL                 2298
+#define SQL_INFX_ATTR_MIN_CONN_POOL_SIZE           2299
+#define SQL_INFX_ATTR_MAX_CONN_LIMIT               2300
+
+/* Connection pooling value parameters */
+#define SQL_INFX_CP_STRICT_MATCH     1
+#define SQL_INFX_CP_RELAXED_MATCH    2
+#define SQL_INFX_CP_OFF              1
+#define SQL_INFX_CP_ON               2
 
 /*Attributes same as cli*/
 #define SQL_ATTR_USE_TRUSTED_CONTEXT               2561

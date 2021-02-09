@@ -197,11 +197,6 @@
   <Target Name="CopyCryptestToRoot">
     <Exec Command="copy $(Platform)\Output\$(Configuration)\cryptest.exe $(SolutionDir)" />
   </Target>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <!-- Source Files -->
   <ItemGroup>
     <ClCompile Include="adhoc.cpp" />

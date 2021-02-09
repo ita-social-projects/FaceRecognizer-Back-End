@@ -330,6 +330,7 @@ public:
 
 #define SACON_OPTION_MYSQL_CHARSET _TSA("CharacterSet")
 #define SACMD_OPTION_MYSQL_RESULT _TSA("HandleResult")
+#define SACMD_OPTION_MYSQL_IGNORE_BINARY_FLAG _TSA("IgnoreFieldBinaryFlag")
 
 #define SA_MYSQL_UTF8_CHARSET_NAME "utf8mb4"
 

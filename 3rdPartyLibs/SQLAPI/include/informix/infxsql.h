@@ -1,20 +1,16 @@
 /****************************************************************************
- *
- *                               IBM CORP.
- *
  *                           PROPRIETARY DATA
  *
- * Licensed Material - Property Of IBM
+ * Licensed Materials - Property of IBM and/or HCL
  *
- * "Restricted Materials of IBM"
- *
- * IBM Informix Client SDK
+ * IBM Informix Client-SDK
  *
  * Copyright IBM Corporation 2012
+ * (c) Copyright HCL Technologies Ltd. 2017.  All Rights Reserved.
  *
-** INFXSQL.H - This is the the include file for IBM Informix-CLI
-**             applications with sqlcli.h, sqlcli1.h and SQLEXT.H
-**
+ * INFXSQL.H - This is the the include file for IBM Informix-CLI
+ *             applications with sqlcli.h, sqlcli1.h and SQLEXT.H
+ *
 *********************************************************************/
 
 #ifndef __INFXSQL
@@ -106,8 +102,8 @@ typedef void FAR *         HSTMT;
 typedef signed short       RETCODE;
 
 /* 64-bit Length Defines */
-#define SQLLEN          SQLINTEGER
-#define SQLULEN         SQLUINTEGER
+typedef unsigned long long  SQLULEN;
+typedef long long           SQLLEN;
 #define SQLSETPOSIROW   SQLUSMALLINT
 
 /* Windows/NT specific DataTypes and defines */
@@ -1130,7 +1126,7 @@ typedef struct _TAGGUID {
 
 /* UNICODE versions */
 
-#if defined(_WIN64) || defined(ODBC64)
+#ifdef _WIN64
 SQLRETURN SQL_API SQLColAttributeW(
     SQLHSTMT        hstmt,
     SQLUSMALLINT    iCol,

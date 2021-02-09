@@ -49,6 +49,24 @@ typedef void (*PQtrace_t)(PGconn *conn, FILE *debug_port);
 typedef void (*PQuntrace_t)(PGconn *conn);
 typedef PQnoticeProcessor (*PQsetNoticeProcessor_t)(PGconn *conn, PQnoticeProcessor proc, void *arg);
 typedef PGresult* (*PQexec_t)(PGconn *conn, const char *query);
+typedef PGresult* (*PQexecParams_t)(PGconn* conn,
+	const char* command,
+	int nParams,
+	const Oid* paramTypes,
+	const char* const* paramValues,
+	const int* paramLengths,
+	const int* paramFormats,
+	int resultFormat);
+typedef PGresult* (*PQprepare_t)(PGconn* conn, const char* stmtName,
+	const char* query, int nParams,
+	const Oid* paramTypes);
+typedef PGresult* (*PQexecPrepared_t)(PGconn* conn,
+	const char* stmtName,
+	int nParams,
+	const char* const* paramValues,
+	const int* paramLengths,
+	const int* paramFormats,
+	int resultFormat);
 typedef PGnotify* (*PQnotifies_t)(PGconn *conn);
 typedef int (*PQsendQuery_t)(PGconn *conn, const char *query);
 typedef PGresult* (*PQgetResult_t)(PGconn *conn);
@@ -193,6 +211,9 @@ public:
 	PQuntrace_t PQuntrace;
 	PQsetNoticeProcessor_t PQsetNoticeProcessor;
 	PQexec_t PQexec;
+	PQexecParams_t PQexecParams;
+	PQprepare_t PQprepare;
+	PQexecPrepared_t PQexecPrepared;
 	PQnotifies_t PQnotifies;
 	PQsendQuery_t PQsendQuery;
 	PQgetResult_t PQgetResult;
@@ -308,5 +329,14 @@ public:
 
 	PGresult *res; // PostgreSQL result struct
 };
+
+#define SACON_OPTION_PGSQL_CLIENT_ENCODING _TSA("ClientEncoding")
+#define SACON_OPTION_PGSQL_SNAPSHOT_ID _TSA("SNAPSHOT_ID")
+
+#define SACMD_OPTION_PGSQL_OID_TYPE_INTERPRETATION _TSA("OidTypeInterpretation")
+
+#define SACMD_OPTION_PGSQL_USE_CURSOR _TSA("UseCursor")
+#define SACMD_OPTION_PGSQL_SET_CURSOR_NAME _TSA("SetCursorName")
+#define SACMD_OPTION_PGSQL_USE_PREPARED _TSA("UsePrepared")
 
 #endif // !defined(__PGAPI_H__)

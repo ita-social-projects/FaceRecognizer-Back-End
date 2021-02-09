@@ -892,6 +892,8 @@ public:
 
 	//! Returns native API unload flag value
 	bool isUnloadAPI() const;
+	//! Set native API auto-uninitialize flag value
+	void setAutoUnInitialize(bool bVal);
 };
 
 /*! Describes types of a handle called for DBMS connection.
@@ -1129,7 +1131,7 @@ public:
 
 	//! Sets the command text.
 	void setCommandText(
-		const SAString& sSQL,
+		const SAString& sSQL, //!< A SAString object represents command text string (an SQL statement or a stored procedure name).
 		SACommandType_t eCmdType = SA_CmdUnknown);
 	//! Returns the command text associated with the SACommand object.
 	SAString CommandText() const;
@@ -1145,31 +1147,31 @@ public:
 	long RowsAffected() SQLAPI_THROW(SAException);
 	//! Fetches next row from a result set.
 	bool FetchNext() SQLAPI_THROW(SAException);
-	//! Fetches previous row from a result set.
+	//! Fetches the previous row from a result set.
 	bool FetchPrior() SQLAPI_THROW(SAException);
 	//! Fetches the first row from a result set.
 	bool FetchFirst() SQLAPI_THROW(SAException);
 	//! Fetches the last row from a result set.
 	bool FetchLast() SQLAPI_THROW(SAException);
-	//! Fetches specified row from a result set.
+	//! Fetches the specified row from a result set.
 	bool FetchPos(int offset, bool Relative = false) SQLAPI_THROW(SAException);
 	//! Attempts to cancel the pending result set, or current statement execution.
 	void Cancel() SQLAPI_THROW(SAException);
 
-	//!@ {
+	//!@{
 	//! Creates parameter associated with the specified command.
 	SAParam& CreateParam(
-		const SAString& sName,
-		SADataType_t eParamType,
-		SAParamDirType_t eDirType = SA_ParamInput);
+		const SAString& sName, //!< A string representing the name of parameter
+		SADataType_t eParamType, //!< Type of the parameter's value
+		SAParamDirType_t eDirType = SA_ParamInput); //!< Type of the parameter
 	SAParam& CreateParam(
-		const SAString& sName,
-		SADataType_t eParamType,
-		int nNativeType,
-		size_t nParamSize,
-		int	nParamPrecision,
-		int	nParamScale,
-		SAParamDirType_t eDirType);
+		const SAString& sName, //!< A string representing the name of parameter
+		SADataType_t eParamType, //!< Type of the parameter's value
+		int nNativeType, //!< An integer value representes a code of server-specific data type, if known. Otherwise, -1 
+		size_t nParamSize, //!< An integer value represents parameter's value size
+		int	nParamPrecision, //!< An integer value represents parameter's value precision
+		int	nParamScale, //!< An integer value represents parameter's value scale
+		SAParamDirType_t eDirType); //!< Type of the parameter
 	//!@}
 	//! Destroys all parameters associated with the specified command.
 	void DestroyParams();
@@ -1815,6 +1817,9 @@ public:
 	//! The wrapper for LIBC setlocale function.
 	static char* SQLAPI_CALLBACK setlocale(int category, const char* locale);
 
+	static void Initialize(); //!< Initialize SQLAPI++ library.
+	static void UnInitialize(); //!< Uninitialize SQLAPI++ library.
+
 	static int GetVersionMajor(); //!< Returns the Library major version number.
 	static int GetVersionMinor(); //!< Returns the Library minor version number.
 	static int GetVersionBuild(); //!< Returns the Library build version number.
@@ -1824,6 +1829,9 @@ public:
 
 	//! Setups the Library tracing callback function.
 	static void SetTraceFunction(SATraceInfo_t traceInfo, SATraceFunction_t traceFunc, void* pData);
+
+	//! Can be used for the tuning the default double conversion precision.
+	static int & doubleConvertPrecision();
 };
 
 #endif // __cplusplus
@@ -2004,7 +2012,7 @@ SQLAPI_API SABool_t sqlapi_datetime_has_time(const SADateTime* dt);
 
 #define SQLAPI_VER_MAJOR	5
 #define SQLAPI_VER_MINOR	1
-#define SQLAPI_VER_BUILD	2
+#define SQLAPI_VER_BUILD	3
 
 #endif // !defined(__SQLAPI_H__)
 

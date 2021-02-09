@@ -668,6 +668,9 @@ class SQLAPI_API sybExternalConnection
 	CS_INT m_nExternalUserDataLen;
 	CS_VOID *m_pExternalUserData;
 	CS_INT m_nExternalUserDataAllocated;
+	CS_VOID * m_pExternalConUserData;
+	CS_INT m_nExternalConUserDataLen;
+
 	SASybErrInfo m_SybErrInfo;
 
 public:
