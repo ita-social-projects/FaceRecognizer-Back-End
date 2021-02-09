@@ -1,8 +1,8 @@
 #include "FaceRecognizer.h"
 
-FaceRecognizer::FaceRecognizer(ImageData &data, int camera = 0)
+FaceRecognizer::FaceRecognizer(ImageData &data, int camera)
 {
-    this->data = data;
+    m_data = data;
 
     const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
     const std::string mouth_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_mcs_mouth.xml";
@@ -22,7 +22,7 @@ FaceRecognizer::FaceRecognizer(ImageData &data, int camera = 0)
 
 }
 
-void FaceRecognizer::RunAnalysis()
+void FaceRecognizer::runAnalysis()
 {
     cv::Mat img;
     std::vector<cv::Rect> face_rects, mouth_rects, nose_rects;
@@ -42,8 +42,10 @@ void FaceRecognizer::RunAnalysis()
         m_mouth_cascade.detectMultiScale(cv::Mat(img, face), mouth_rects, 1.5, 5);
         m_nose_cascade.detectMultiScale(cv::Mat(img, face), nose_rects, 1.5, 5);
 
-        faces_with_info.push_back(std::pair(face, mouth_rects.size() == 0 || nose_rects.size() == 0));
+        faces_with_info.push_back(std::pair(
+            face, 
+            mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
 
-    data.SetData(img, faces_with_info);
+    m_data.SetData(img, faces_with_info);
 }

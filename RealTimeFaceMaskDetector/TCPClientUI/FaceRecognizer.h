@@ -17,7 +17,7 @@ class FaceRecognizer
 public:
 	FaceRecognizer(ImageData &data, int camera = 0);
 
-	void RunAnalysis();
+	void runAnalysis();
 
 private:
 	cv::CascadeClassifier m_face_cascade;
@@ -26,6 +26,5 @@ private:
 
 	cv::VideoCapture m_camera;
 
-	ImageData data;
-
+	ImageData m_data;
 };
