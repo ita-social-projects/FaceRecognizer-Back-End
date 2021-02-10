@@ -50,17 +50,7 @@ bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& bu
 
 bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
 {
-<<<<<<< HEAD
-
-    /*Firstly sends size, than data*/
-
-    m_size = buffer.size() - 1;
-    if (m_size == 0)
-        return false;
-    else
-=======
     if (buffer.empty())
->>>>>>> TCPClient
     {
         return false;
     }
