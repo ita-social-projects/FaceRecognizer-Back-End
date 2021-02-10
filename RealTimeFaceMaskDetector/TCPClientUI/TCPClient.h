@@ -47,6 +47,5 @@ public:
 private:
     WSAData m_wsa_data;
     sockaddr_in m_soket_info;
-    SOCKET m_socket;
-    size_t m_size;    
+    SOCKET m_socket;  
 };
