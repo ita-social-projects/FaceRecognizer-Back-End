@@ -1,7 +1,18 @@
-3rdPartyLibs/
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,c++,qt,opencv
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,c++,qt,opencv
+
+
+## photos
+*.png
+*.jpeg
+
+### Configuration files ###
+*.ini
+
+## additional directories
+3rdPartyLibs/
+conafiles/
 
 ### C++ ###
 # Prerequisites
@@ -324,6 +335,7 @@ ClientBin/
 *.pfx
 *.publishsettings
 orleans.codegen.cs
+3rdPartyLibs/
 
 # Including strong name files can present a security risk
 # (https://github.com/github/gitignore/pull/2483#issue-259490424)
@@ -445,3 +457,4 @@ MigrationBackup/
 .ionide/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,c++,qt,opencv
+/ConanFiles

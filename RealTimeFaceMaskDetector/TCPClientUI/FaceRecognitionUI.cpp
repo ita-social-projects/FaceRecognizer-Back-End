@@ -20,7 +20,7 @@ void FaceRecognitionUI::onExitButtonClicked()
 
 void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
-
+    
     std::thread thrd(&FaceRecognitionUI::recognize, this, 0);
 
     while (!m_exit_button_clicked)
@@ -83,6 +83,7 @@ QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
     // of QImage::QImage ( const uchar * data, int width, int height, Format format )
     return dest;
 }
+std::unique_ptr<MaskRecognizer> m_mask_recognizer = std::make_unique<MaskRecognizer>();
 
 void FaceRecognitionUI::sendImage()
 {
