@@ -19,6 +19,8 @@ public:
 	int GetMessageLength();
 
 private:
+	void ConnectToSQL();
+
 	bool BindListeningSocket();
 	bool AcceptConnection();
 	void TryAcceptAndStartMessaging(bool& ret_value);
@@ -53,7 +55,7 @@ private:
 	addrinfo* m_host_info = nullptr;
 	addrinfo hints;
 
-
+	std::shared_ptr<SQLConnection>sql_server;
 
 	/*Photo that will be sent to database. 
 	It's fields will be rewritten with each
