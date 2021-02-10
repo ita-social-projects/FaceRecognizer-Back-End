@@ -25,7 +25,7 @@ FaceRecognizer::FaceRecognizer(int camera)
 
 void FaceRecognizer::runAnalysis(ImageData& img_data)
 {
-    cv::Mat img;
+    cv::Mat img, grey_img;
     std::vector<cv::Rect> face_rects, mouth_rects, nose_rects;
     faceInfo faces_with_info;
 
@@ -33,20 +33,21 @@ void FaceRecognizer::runAnalysis(ImageData& img_data)
     m_camera >> img;
 
     // convert image to grayscale
-    cvtColor(img, img, cv::COLOR_BGR2GRAY);
+    cvtColor(img, grey_img, cv::COLOR_BGR2GRAY);
 
     // detect faces
-    m_face_cascade.detectMultiScale(img, face_rects, 1.1, 4);
+    m_face_cascade.detectMultiScale(grey_img, face_rects, 1.1, 4);
 
     for (auto& face : face_rects)
     {
-        m_mouth_cascade.detectMultiScale(cv::Mat(img, face), mouth_rects, 1.5, 5);
-        m_nose_cascade.detectMultiScale(cv::Mat(img, face), nose_rects, 1.5, 5);
+        m_mouth_cascade.detectMultiScale(cv::Mat(grey_img, face), mouth_rects, 1.5, 5);
+        m_nose_cascade.detectMultiScale(cv::Mat(grey_img, face), nose_rects, 1.5, 5);
 
         faces_with_info.push_back(std::pair(
             face, 
             mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
+
 
     img_data.SetData(img, faces_with_info); // ������ ���� � FaceRecognitionUI::ImageData
 }

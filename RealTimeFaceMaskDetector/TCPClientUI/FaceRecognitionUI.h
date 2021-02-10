@@ -28,6 +28,7 @@ public:
 
 private:
 	ImageData img_data;
+	std::thread thrd;
 
 	bool m_exit_button_clicked = false;
 	bool run_analizer = true;
