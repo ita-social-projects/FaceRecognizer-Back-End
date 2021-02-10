@@ -21,16 +21,14 @@ struct FaceWithMaskInfo {
 class ImageData
 {
 	cv::Mat m_image;
-	//faceInfo m_faces;
-	cv::Rect m_face;
-	bool m_has_mask;
+	faceInfo m_faces;
 	std::mutex m_mtx;
 
 public:
 
-	void SetData(cv::Mat image,cv::Rect face, bool has_mask);
+	void SetData(cv::Mat image, faceInfo faces);
 
-	void GetData(cv::Mat& image, cv::Rect &face, bool &has_mask);
+	void GetData(cv::Mat& image, faceInfo &face);
 
 	ImageData& operator= (const ImageData& obj);
 };
