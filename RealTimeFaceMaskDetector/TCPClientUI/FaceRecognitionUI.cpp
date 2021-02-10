@@ -1,6 +1,6 @@
 #pragma once
 #include "FaceRecognitionUI.h"
-#include <QDebug>
+#include <QtCore/QDebug>
 #include <thread>
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
@@ -83,7 +83,6 @@ QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
     // of QImage::QImage ( const uchar * data, int width, int height, Format format )
     return dest;
 }
-std::unique_ptr<MaskRecognizer> m_mask_recognizer = std::make_unique<MaskRecognizer>();
 
 void FaceRecognitionUI::sendImage()
 {
