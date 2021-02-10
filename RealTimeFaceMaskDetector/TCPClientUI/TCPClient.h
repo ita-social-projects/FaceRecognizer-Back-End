@@ -9,10 +9,10 @@
 
 #include "TCPClientUI.h"
 
-#include <QWidget>
-#include <QImage>
+#include <QtWidgets/QWidget>
+#include <QtGui/QImage>
 
-#include "MaskRecognizer.h"
+#include "FaceRecognizer.h"
 
 #pragma comment (lib, "ws2_32.lib")
 
