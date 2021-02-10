@@ -12,12 +12,15 @@
 
 #include "ImageData.h"
 
+
+
 class FaceRecognizer
 {
 public:
 	FaceRecognizer(int camera = 0);
 
 	void runAnalysis(ImageData& img_data);
+
 
 private:
 	cv::CascadeClassifier m_face_cascade;

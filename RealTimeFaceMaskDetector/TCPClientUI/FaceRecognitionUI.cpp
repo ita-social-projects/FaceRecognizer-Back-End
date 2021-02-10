@@ -1,6 +1,7 @@
 #pragma once
 #include "FaceRecognitionUI.h"
 #include <QtCore/QDebug>
+#include <QtGui/QPainter>
 #include <thread>
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
@@ -14,6 +15,7 @@ void FaceRecognitionUI::onExitButtonClicked()
 {
     m_exit_button_clicked = true;
     run_analizer = false;
+    thrd.join();
     close();
     qDebug() << "QQQQ!!!";
 };
@@ -21,7 +23,10 @@ void FaceRecognitionUI::onExitButtonClicked()
 void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
     
-    std::thread thrd(&FaceRecognitionUI::recognize, this, 0);
+    thrd  = std::thread(&FaceRecognitionUI::recognize, this, 0);
+
+    auto painter = new QPainter(this);
+    painter->setPen(Qt::green);
 
     while (!m_exit_button_clicked)
     {
@@ -45,7 +50,23 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
         ui.frame->setPixmap(map);
         ui.frame->show();
+
         cv::waitKey(30);
+      
+
+        for (auto& face : faces) {
+            if (!face.second) {
+                qDebug() << "ebalo\n";
+                painter->drawRect(face.first.tl().x, face.first.br().y,
+                    face.first.br().x- face.first.tl().x,
+                    face.first.tl().y - face.first.br().y);
+            }
+        }
+
+        
+    
+        
+        
 
         /*std::vector<char> buffer;
         cv::imwrite("image_face.png", image);
@@ -60,6 +81,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
         qDebug() << "QQQQ\n   ";
     }
+
 }
 
 void FaceRecognitionUI::recognize(int camera_id)
@@ -92,4 +114,5 @@ void FaceRecognitionUI::sendImage()
 
 FaceRecognitionUI::~FaceRecognitionUI()
 {
+
 }
