@@ -2,6 +2,9 @@
 #include "TCPClient.h"
 #include "../EncryptDecryptECBMode/EncryptDecryptAES_ECBMode.h"
 
+/* These are global variables.
+   g_ip stores server ip & g_port stores server port.
+   They are defined in TCPClient.cpp file. */
 extern std::string g_ip;
 extern int g_port;
 
