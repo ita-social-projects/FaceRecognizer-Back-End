@@ -1,6 +1,6 @@
 #pragma once
 #include "FaceRecognitionUI.h"
-#include <QDebug>
+#include <QtCore/QDebug>
 #include <thread>
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
@@ -20,7 +20,7 @@ void FaceRecognitionUI::onExitButtonClicked()
 
 void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
-
+    
     std::thread thrd(&FaceRecognitionUI::recognize, this, 0);
 
     while (!m_exit_button_clicked)

@@ -1,4 +1,5 @@
 #pragma once
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -10,7 +11,12 @@
 #include <thread>
 #include <algorithm>
 
-#define faceInfo std::vector<std::pair<cv::Rect, bool>>
+struct FaceWithMaskInfo {
+	cv::Rect face;
+	bool has_mask;
+};
+
+#define faceInfo std::vector<std::pair<cv::Rect, bool>>  // TODO: typedef  ;   struct instead of pair
 
 class ImageData
 {
@@ -26,4 +32,3 @@ public:
 
 	ImageData& operator= (const ImageData& obj);
 };
-

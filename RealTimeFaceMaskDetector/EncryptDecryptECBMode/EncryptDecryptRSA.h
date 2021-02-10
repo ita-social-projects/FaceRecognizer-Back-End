@@ -1,10 +1,10 @@
 #pragma once
 #include <memory>
 #include "ICrypt.h"
-#include "..\..\3rdPartyLibs\cryptopp820\rsa.h"
-#include "..\..\3rdPartyLibs\cryptopp820\modes.h"
-#include "..\..\3rdPartyLibs\cryptopp820\filters.h"
-#include "..\..\3rdPartyLibs\cryptopp820\osrng.h"
+#include <cryptopp/rsa.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/osrng.h>
 
 class ENCRYPTDECRYPTECBMODE_API EncryptDecryptRSA : public ICrypt
 {

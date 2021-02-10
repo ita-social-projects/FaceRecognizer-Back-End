@@ -3,8 +3,8 @@
 #include "FaceRecognitionUI.h"
 
 
-#include <QRegExpValidator>
-#include <qmessagebox>
+#include <QtGui/QRegExpValidator>
+#include <QtWidgets/qmessagebox>
 
 extern std::string g_ip;
 extern int g_port;
