@@ -26,5 +26,5 @@ private:
 
 	cv::VideoCapture m_camera;
 
-	ImageData m_data; // ця штука локальна, вона ніяк не впливає на ImageData в FaceRecognitionUI
+	ImageData m_data; // С†СЏ С€С‚СѓРєР° Р»РѕРєР°Р»СЊРЅР°, РІРѕРЅР° РЅС–СЏРє РЅРµ РІРїР»РёРІР°С” РЅР° ImageData РІ FaceRecognitionUI
 };

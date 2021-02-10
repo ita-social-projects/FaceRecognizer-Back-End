@@ -1,4 +1,5 @@
 #pragma once
+//#include <vector>
 
 #include "ui_FaceRecognitionUI.h"
 #include "FaceRecognizer.h"
@@ -20,7 +21,7 @@ public:
 	QImage mat2QImage(cv::Mat const& src);
 
 	void updateWindow(TCPClient& client);
-	void recognize(int camera_id = 0);
+  void recognize(int camera_id = 0);
 	void sendImage(); // not finished
 
 	~FaceRecognitionUI();

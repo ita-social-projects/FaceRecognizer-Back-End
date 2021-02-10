@@ -1,6 +1,6 @@
 #pragma once
 #include "FaceRecognitionUI.h"
-#include <QDebug>
+#include <QtCore/QDebug>
 #include <thread>
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
@@ -20,7 +20,7 @@ void FaceRecognitionUI::onExitButtonClicked()
 
 void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
-
+    
     std::thread thrd(&FaceRecognitionUI::recognize, this, 0);
 
     while (!m_exit_button_clicked)
@@ -33,7 +33,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         cv::Mat image;
         faceInfo faces;
         
-        //стягуємо інфу, яку отримали в FaceRecognizer
+        //СЃС‚СЏРіСѓС”РјРѕ С–РЅС„Сѓ, СЏРєСѓ РѕС‚СЂРёРјР°Р»Рё РІ FaceRecognizer
         img_data.GetData(image, faces);
 
         if (image.empty())
@@ -68,8 +68,8 @@ void FaceRecognitionUI::recognize(int camera_id)
 
     while (run_analizer)
     {
-        // маємо передавати FaceRecognitionUI::ImageData в FaceRecognizer, 
-        // щоб там змінити даний клас, викликавши його сеттер
+        // РјР°С”РјРѕ РїРµСЂРµРґР°РІР°С‚Рё FaceRecognitionUI::ImageData РІ FaceRecognizer, 
+        // С‰РѕР± С‚Р°Рј Р·РјС–РЅРёС‚Рё РґР°РЅРёР№ РєР»Р°СЃ, РІРёРєР»РёРєР°РІС€Рё Р№РѕРіРѕ СЃРµС‚С‚РµСЂ
         recognizer.runAnalysis(img_data);
     }
 }
