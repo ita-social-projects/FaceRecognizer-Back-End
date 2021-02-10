@@ -28,9 +28,15 @@ bool TCPClient::Connect()
         return false;
 }
 
-bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer)
+bool TCPClient::ConvertImageToBinary(QPixmap& pixmap, std::vector<char>& buffer)
 {
-    image.open("image_face.png", std::ios::in | std::ios::binary);
+    QByteArray bytes;
+    QBuffer buff(&bytes);
+    buff.open(QIODevice::WriteOnly);
+    pixmap.save(&buff, "JPG");
+    buffer.assign(bytes.constData(), bytes.constData() + bytes.size());
+
+    /*image.open("image_face.png", std::ios::in | std::ios::binary);
 
     char byte_image = '\0';
 
@@ -44,13 +50,13 @@ bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& bu
 
     image.close();
 
-    return true;
+    return true;*/
 }
 
 bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
 {
 
-    /*Firstly sends size, than data*/
+    /*Firstly sends size, then data*/
 
     m_size = buffer.size() - 1;
     if (m_size == 0)

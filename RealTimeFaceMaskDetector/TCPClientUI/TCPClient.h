@@ -8,11 +8,11 @@
 #include <vector>
 
 #include "TCPClientUI.h"
+#include "FaceRecognizer.h"
 
 #include <QtWidgets/QWidget>
 #include <QtGui/QImage>
-
-#include "FaceRecognizer.h"
+#include <QtCore/QBuffer>
 
 #pragma comment (lib, "ws2_32.lib")
 
@@ -26,7 +26,7 @@ class TCPClient
 public:
     bool CreateSocket();
     bool Connect();
-    bool ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer);
+    bool ConvertImageToBinary(QPixmap& pixmap, std::vector<char>& buffer);
     bool SendBinaryMessage(std::vector<char>& buffer);
     bool CloseSocket();
 

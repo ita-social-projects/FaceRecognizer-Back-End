@@ -52,30 +52,21 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         ui.frame->show();
 
         cv::waitKey(30);
-      
-
+        int height, width;
         for (auto& face : faces) {
             if (!face.second) {
-                qDebug() << "ebalo\n";
+                cv::Mat face_img(image, face.first);
+                height = face.first.tl().y - face.first.br().y;
+                width = face.first.br().x - face.first.tl().x;
+                auto face_map = QPixmap::fromImage(mat2QImage(face_img).scaled(width, height, Qt::KeepAspectRatio, Qt::FastTransformation));
+                sendImage(client, face_map);
+
+                qDebug() << "Face:)\n";
                 painter->drawRect(face.first.tl().x, face.first.br().y,
-                    face.first.br().x- face.first.tl().x,
+                    face.first.br().x - face.first.tl().x,
                     face.first.tl().y - face.first.br().y);
             }
         }
-
-        
-    
-        
-        
-
-        /*std::vector<char> buffer;
-        cv::imwrite("image_face.png", image);
-
-        std::ifstream image_face_send;
-        client.ConvertImageToBinary(image_face_send, buffer);
-        client.SendBinaryMessage(buffer);
-
-        sendImage();*/
 
         //Sleep(2000);
 
@@ -106,9 +97,11 @@ QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
     return dest;
 }
 
-void FaceRecognitionUI::sendImage()
+void FaceRecognitionUI::sendImage(TCPClient& client, QPixmap& pixmap)
 {
-    
+    std::vector<char> buffer;
+    client.ConvertImageToBinary(pixmap, buffer);
+    client.SendBinaryMessage(buffer);
 }
 
 
