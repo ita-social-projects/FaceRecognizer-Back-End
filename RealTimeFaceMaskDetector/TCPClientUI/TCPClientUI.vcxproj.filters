@@ -26,5 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

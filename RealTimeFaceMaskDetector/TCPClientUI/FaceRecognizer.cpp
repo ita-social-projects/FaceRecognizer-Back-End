@@ -48,5 +48,6 @@ void FaceRecognizer::runAnalysis(ImageData& img_data)
             mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
 
-    img_data.SetData(img, faces_with_info); // ������ ���� � FaceRecognitionUI::ImageData
+
+    img_data.SetData(img, faces_with_info[0].first, faces_with_info[0].second); // ������ ���� � FaceRecognitionUI::ImageData
 }

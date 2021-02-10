@@ -1,6 +1,7 @@
 #pragma once
 #include "FaceRecognitionUI.h"
 #include <QtCore/QDebug>
+#include <QtGui/QPainter>
 #include <thread>
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
@@ -31,10 +32,12 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             throw std::runtime_error("can't load camera");
         }*/
         cv::Mat image;
-        faceInfo faces;
+        //faceInfo faces;
+        cv::Rect ebalo;
+        bool mask;
         
         //������� ����, ��� �������� � FaceRecognizer
-        img_data.GetData(image, faces);
+        img_data.GetData(image, ebalo,mask);
 
         if (image.empty())
         {
@@ -46,6 +49,12 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         ui.frame->setPixmap(map);
         ui.frame->show();
         cv::waitKey(30);
+
+        auto x = ebalo.tl().x;
+
+        auto painter = new QPainter();
+        painter->setPen(Qt::green);
+        painter->drawRect(ebalo.tl().x, ebalo.br().y, ebalo.br().x - ebalo.tl().x, ebalo.tl().y - ebalo.br().y);
 
         /*std::vector<char> buffer;
         cv::imwrite("image_face.png", image);

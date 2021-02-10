@@ -1,23 +1,26 @@
 #include "ImageData.h"
 
-void ImageData::SetData(cv::Mat image, faceInfo faces)
+void ImageData::SetData(cv::Mat image, cv::Rect face, bool has_mask)
 {
 	std::lock_guard l_g(m_mtx);
 	m_image = image.clone();
-	m_faces = faces;
+	m_face = face;
+	m_has_mask = has_mask;
 }
 
-void ImageData::GetData(cv::Mat& image, faceInfo& faces)
+void ImageData::GetData(cv::Mat& image, cv::Rect& face, bool& has_mask)
 {
 	std::lock_guard l_g(m_mtx);
 	image = m_image.clone();
-	std::copy(m_faces.begin(), m_faces.end(), std::back_inserter(faces));
+	face = m_face;
+	has_mask = m_has_mask;
 }
 
 ImageData& ImageData::operator= (const ImageData & obj)
 {
 	std::lock_guard l_g(m_mtx);
 	m_image = obj.m_image.clone();
-	m_faces = obj.m_faces;
+	m_face = obj.m_face;
+	m_has_mask = obj.m_has_mask;
 	return *this;
 }
