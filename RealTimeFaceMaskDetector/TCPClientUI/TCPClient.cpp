@@ -65,7 +65,7 @@ bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
         return false;
     }
 
-    std::string buffer_size_s = std::to_string(m_size);
+    std::string buffer_size_s = std::to_string(buffer.size());
 
     // Sending count of bytes to the server.
     send(m_socket, buffer_size_s.c_str(), buffer_size_s.length(), EMPTY_FLAGS);
