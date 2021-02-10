@@ -130,6 +130,11 @@ bool SocketServer::ReceiveFullMessage()
 {
 	int total_bytes_count = GetMessageLength();
 
+	if (total_bytes_count == 0)
+	{
+		return false;
+	}
+
 	m_buffer.resize(total_bytes_count + 1);
 
 	m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
