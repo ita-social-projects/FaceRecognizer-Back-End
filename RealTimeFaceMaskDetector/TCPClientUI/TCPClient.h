@@ -23,7 +23,8 @@
 class FaceRecognitionUI;
 
 /* These are global variables.
-   g_ip stores server ip & g_port stores server port.*/
+   g_ip stores server ip & g_port stores server port.
+   They are defined it TCPClient.cpp file. */
 extern std::string g_ip;
 extern int g_port;
 
