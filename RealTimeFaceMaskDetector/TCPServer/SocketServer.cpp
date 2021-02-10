@@ -206,15 +206,9 @@ void SocketServer::SaveAndSendData()
 
 bool SocketServer::SendMessage()
 {
-	//std::shared_ptr<SQLConnection>sql_server = std::make_shared<SQLServer>();
 	try
 	{
-		//sql_server->GetIniParams(CONFIG_FILE);
 
-		//// -- Connect --
-		//sql_server->Connect();
-
-		//CreateTableIfNeeded(sql_server);
 		sql_server->InsertPhoto(m_photo_to_send);
 
 	}
