@@ -55,6 +55,9 @@
     <ClCompile Include="Logger.cpp">
       <Filter>Logger</Filter>
     </ClCompile>
+    <ClCompile Include="ImageData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MaskRecognizer.h">
@@ -67,6 +70,9 @@
       <Filter>Logger</Filter>
     </ClInclude>
     <ClInclude Include="TCPClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

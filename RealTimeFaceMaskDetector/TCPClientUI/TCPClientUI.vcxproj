@@ -115,6 +115,7 @@
     <QtMoc Include="TCPClientUI.h" />
     <ClCompile Include="easylogging++.cpp" />
     <ClCompile Include="FaceRecognitionUI.cpp" />
+    <ClCompile Include="ImageData.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="MaskRecognizer.cpp" />
     <ClCompile Include="TCPClient.cpp" />
@@ -124,6 +125,7 @@
   <ItemGroup>
     <QtMoc Include="FaceRecognitionUI.h" />
     <ClInclude Include="easylogging++.h" />
+    <ClInclude Include="ImageData.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MaskRecognizer.h" />
     <ClInclude Include="TCPClient.h" />
