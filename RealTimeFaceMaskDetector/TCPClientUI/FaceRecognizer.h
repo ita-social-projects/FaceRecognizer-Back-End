@@ -19,7 +19,7 @@ class FaceRecognizer
 public:
 	FaceRecognizer(int camera = 0);
 
-  void runAnalysis(ImageData& img_data);
+	void runAnalysis(ImageData& img_data);
 
 
 private:
@@ -29,5 +29,5 @@ private:
 
 	cv::VideoCapture m_camera;
 
-	ImageData m_data; // �� ����� ��������, ���� ��� �� ������ �� ImageData � FaceRecognitionUI
+	ImageData m_data; // ця штука локальна, вона ніяк не впливає на ImageData в FaceRecognitionUI
 };

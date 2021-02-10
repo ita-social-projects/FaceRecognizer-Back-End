@@ -2,7 +2,7 @@
 
 FaceRecognizer::FaceRecognizer(int camera)
 {
-    // �����������, �� �� ��� ������ ���� ��ϲ� FaceRecognitionUI::ImageData
+    // Закоментуємо, бо ми тут робимо лише КОПІЮ FaceRecognitionUI::ImageData
     //m_data = img_data;
 
     const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
@@ -48,6 +48,5 @@ void FaceRecognizer::runAnalysis(ImageData& img_data)
             mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
 
-
-    img_data.SetData(img, faces_with_info); // ������ ���� � FaceRecognitionUI::ImageData
+    img_data.SetData(img, faces_with_info); // setymo infu v FaceRecognitionUI::ImageData
 }
