@@ -1,9 +1,8 @@
 #include "FaceRecognizer.h"
 
-FaceRecognizer::FaceRecognizer(int camera)
+FaceRecognizer::FaceRecognizer(ImageData &data, int camera)
 {
-    // �����������, �� �� ��� ������ ���� ��ϲ� FaceRecognitionUI::ImageData
-    //m_data = img_data;
+    m_data = data;
 
     const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_frontalface_alt.xml";
     const std::string mouth_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\sources\\data\\haarcascades\\haarcascade_mcs_mouth.xml";
@@ -23,11 +22,11 @@ FaceRecognizer::FaceRecognizer(int camera)
 
 }
 
-void FaceRecognizer::runAnalysis(ImageData& img_data)
+void FaceRecognizer::runAnalysis()
 {
     cv::Mat img;
     std::vector<cv::Rect> face_rects, mouth_rects, nose_rects;
-    faceInfo faces_with_info;
+    std::vector<std::pair<cv::Rect, bool>> faces_with_info;
 
     // load image from camera
     m_camera >> img;
@@ -48,5 +47,5 @@ void FaceRecognizer::runAnalysis(ImageData& img_data)
             mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
 
-    img_data.SetData(img, faces_with_info); // ������ ���� � FaceRecognitionUI::ImageData
+    m_data.SetData(img, faces_with_info);
 }

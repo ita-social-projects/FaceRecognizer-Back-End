@@ -32,8 +32,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         }*/
         cv::Mat image;
         faceInfo faces;
-        
-        //������� ����, ��� �������� � FaceRecognizer
+        //m_camera >> image;
+
         img_data.GetData(image, faces);
 
         if (image.empty())
@@ -64,13 +64,11 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
 void FaceRecognitionUI::recognize(int camera_id)
 {
-    FaceRecognizer recognizer(camera_id);
+    FaceRecognizer recognizer(img_data, camera_id);
 
     while (run_analizer)
     {
-        // ���� ���������� FaceRecognitionUI::ImageData � FaceRecognizer, 
-        // ��� ��� ������ ����� ����, ���������� ���� ������
-        recognizer.runAnalysis(img_data);
+        recognizer.runAnalysis();
     }
 }
 
