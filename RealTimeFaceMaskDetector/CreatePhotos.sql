@@ -2,7 +2,7 @@ USE [$DATABASE$]
 
 CREATE TABLE [dbo].[$TAB$](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
-	[Photo] [image] NULL,
+	[PhotoPath] [nvarchar](255) NULL,
 	[PhotoName] [nvarchar](255) NULL,
 	[PhotoExtension] [nvarchar](20) NULL,
 	[Date] [datetime] NULL,
@@ -10,7 +10,6 @@ CREATE TABLE [dbo].[$TAB$](
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
+) ON [PRIMARY]
 
 

@@ -20,6 +20,10 @@ void IniParser::Parse()
         {
             continue;
         }
+        if (text.find(";") == 0)
+        {
+            continue;
+        }
         if (text.find("[") == 0)
         {
             size_t last = text.find(']');
@@ -67,5 +71,5 @@ std::string IniParser::GetParam(const std::string& section, const std::string& p
             }
         }
     }
-    return "No such parameter";
+    return "No such parameter"; 
 }

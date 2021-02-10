@@ -1,5 +1,5 @@
 #include "WindowsService.h"
-
+#include <thread>
 #pragma region Variables
 
 SocketServer Service::s_socket_server{};
@@ -73,7 +73,7 @@ bool Service::ReportStatus(const unsigned short current_state, const unsigned sh
 		s_service_status.dwControlsAccepted = SERVICE_ACCEPT_STOP;
 	}
 
-	if (current_state == SERVICE_RUNNING ||	current_state == SERVICE_STOPPED)  // Progress for Service operation
+	if (current_state == SERVICE_RUNNING || current_state == SERVICE_STOPPED)  // Progress for Service operation
 	{
 		s_service_status.dwCheckPoint = BEGIN_CHECK_POINT_VALUE;
 	}
@@ -88,9 +88,10 @@ bool Service::ReportStatus(const unsigned short current_state, const unsigned sh
 		return false;
 	}
 
-	LOG_MSG << "ReportStatus begin";
+	LOG_MSG << "ReportStatus end";
 	return true;
 }
+
 
 bool Service::Initialize(const unsigned short argc, const wchar_t* const argv[])
 {
@@ -117,21 +118,84 @@ bool Service::Initialize(const unsigned short argc, const wchar_t* const argv[])
 	return ReportStatus(SERVICE_STOPPED, NO_ERROR, DEFAULT_WAIT_HINT);
 }
 
+void Service::StartServerWork(bool& is_listening_started)
+{
+	std::thread listen_multiple_clients([&]() {s_socket_server.StartListening(is_listening_started); });
+	if (listen_multiple_clients.joinable())
+	{
+		listen_multiple_clients.join();
+	}
+}
+
 bool Service::CreateServer()
 {
 	LOG_MSG << "CreateServer begin";
 	bool is_server_initialized = s_socket_server.InitSocketServer();
 	bool is_socked_created = s_socket_server.CreateListeningSocket();
-	bool is_listening_started = s_socket_server.StartListening();
-	bool is_connection_accepted = s_socket_server.AcceptConnection();
-	bool is_message_received = s_socket_server.ReceiveMessage();
-
+	bool is_listening_started;
+	
+	StartServerWork(is_listening_started);
+	
 	LOG_MSG << "CreateServer end";
 	return is_server_initialized && 
 		is_socked_created &&
-		is_listening_started &&
-		is_connection_accepted &&
-		is_message_received;
+		is_listening_started;
+}
+
+void Service::TryCreateServer(bool& is_started)
+{
+	is_started = CreateServer();
+	if (!is_started)
+	{
+		LOG_WARNING << "Start: CreateServer: ERROR " << GetLastError();
+	}
+	else
+	{
+		LOG_MSG << "Start: succeeded :)";
+	}
+}
+
+void Service::TryStopService(SC_HANDLE handle_open_service, SERVICE_STATUS_PROCESS status_process, bool& is_stopped)
+{
+	if (!ControlService(handle_open_service, SERVICE_CONTROL_STOP, reinterpret_cast<LPSERVICE_STATUS>(&status_process)))
+	{
+		int error_code = GetLastError();
+		if (!error_code)
+		{
+			LOG_MSG << "Stop: succeeded :)";
+		}
+		else
+		{
+			LOG_ERROR << "Stop: ControlService: ERROR " << GetLastError();
+			is_stopped = false;
+		}
+	}
+}
+
+void Service::TryDeleteService(SC_HANDLE handle_service, bool& is_deleted)
+{
+	if (!DeleteService(handle_service))
+	{
+		LOG_ERROR << "Uninstall: DeleteService: ERROR " << GetLastError();
+		is_deleted = false;
+	}
+	else
+	{
+		LOG_MSG << "Uninstall: succeeded :)";
+	}
+}
+
+void Service::TryStartService(SC_HANDLE handle_open_service, bool& is_started)
+{
+	if (!StartService(handle_open_service, false, nullptr))
+	{
+		LOG_ERROR << "Start: StartService: ERROR " << GetLastError();
+		is_started = false;
+	}
+	else
+	{
+		TryCreateServer(is_started);
+	}
 }
 
 bool Service::ShutdownServer()
@@ -169,12 +233,16 @@ bool Service::Install()
 	SC_HANDLE handle_service = nullptr;
 	wchar_t path[MAX_PATH];
 
-	if (!GetModuleFileName(nullptr, path, MAX_PATH)) // Get the Executable file from SCM
+	/*Get the path to Executable file from SCM.
+	If param 0 is nullptr, writes path to current .exe */
+	if (!GetModuleFileName(nullptr, path, MAX_PATH))
 	{
 		LOG_ERROR << "Install: GetModuleFileName: ERROR " << GetLastError();
 		return false;
 	};
 
+	/*Establishes a connection to the service control manager on the specified computer
+	and opens the specified service control manager database.*/
 	handle_SCM = OpenSCManager(
 		nullptr,					// Local Machine
 		nullptr,					// By default Database 
@@ -223,15 +291,15 @@ bool Service::Start()
 {
 	LOG_MSG << "Start begin";
 
-	SC_HANDLE open_SCM = nullptr;
-	SC_HANDLE open_service = nullptr;
+	SC_HANDLE handle_open_SCM = nullptr;
+	SC_HANDLE handle_open_service = nullptr;
 
-	open_SCM = OpenSCManager(
+	handle_open_SCM = OpenSCManager(
 		nullptr,					// Local Machine
 		nullptr,					// By default Database (SERVICES_ACTIVE_DATABASE)
 		SC_MANAGER_ALL_ACCESS);		// Access Right
 
-	if (!open_SCM)
+	if (!handle_open_SCM)
 	{
 		LOG_ERROR << "Start: OpenSCManager: ERROR " << GetLastError();
 		return false;
@@ -239,33 +307,22 @@ bool Service::Start()
 
 	bool is_opened = true, is_started = true;
 
-	open_service = OpenService(
-		open_SCM,											// SCM Handle
+	handle_open_service = OpenService(
+		handle_open_SCM,									// SCM Handle
 		Service::get_instance().s_service_name.c_str(),		// Service Name
 		SC_MANAGER_ALL_ACCESS);								// Access Right
 
-	if (!open_service)
+	if (!handle_open_service)
 	{
 		LOG_ERROR << "Start: OpenService: ERROR " << GetLastError();
 		is_opened = false;
 	}
 	else if (is_opened)
 	{
-		if (!StartService(open_service, false, nullptr))
-		{
-			LOG_ERROR << "Start: StartService: ERROR " << GetLastError();
-			is_started = false;
-		}
-		else
-		{
-			CreateServer();
-
-			LOG_MSG << "Start: succeeded :)";
-		}
-
-		CloseServiceHandle(open_service);
+		TryStartService(handle_open_service, is_started);
+		CloseServiceHandle(handle_open_service);
 	}
-	CloseServiceHandle(open_SCM);
+	CloseServiceHandle(handle_open_SCM);
 
 	LOG_MSG << "Start end";
 	return is_opened && is_started;
@@ -277,7 +334,7 @@ bool Service::Stop()
 
 	ShutdownServer();
 
-	SERVICE_STATUS_PROCESS status_process;
+	SERVICE_STATUS_PROCESS status_process{};
 	SC_HANDLE open_SCM = nullptr;
 	SC_HANDLE open_service = nullptr;
 
@@ -306,19 +363,7 @@ bool Service::Stop()
 	}
 	else if (is_opened)
 	{
-		if (!ControlService(open_service, SERVICE_CONTROL_STOP, reinterpret_cast<LPSERVICE_STATUS>(&status_process)))
-		{
-			int error_code = GetLastError();
-			if (!error_code)
-			{
-				LOG_MSG << "Stop: succeeded :)";
-			}
-			else
-			{
-				LOG_ERROR << "Stop: ControlService: ERROR " << GetLastError();
-				is_stopped = false;
-			}
-		}
+		TryStopService(open_service, status_process, is_stopped);
 		CloseServiceHandle(open_service);
 	}
 	CloseServiceHandle(open_SCM);
@@ -379,15 +424,7 @@ bool Service::Uninstall()
 	}
 	else if (is_opened)
 	{
-		if (!DeleteService(handle_service))
-		{
-			LOG_ERROR << "Uninstall: DeleteService: ERROR " << GetLastError();
-			is_deleted = false;
-		}
-		else
-		{
-			LOG_MSG << "Uninstall: succeeded :)";
-		}
+		TryDeleteService(handle_service, is_deleted);
 		CloseServiceHandle(handle_service);
 	}
 	CloseServiceHandle(handle_SCM);

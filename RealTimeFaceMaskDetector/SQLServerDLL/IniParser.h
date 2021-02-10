@@ -5,9 +5,15 @@
 #include <vector>
 #include <fstream>
 
+#ifdef SQLSERVER_EXPORTS
+#define INIPARSER_API __declspec(dllexport)
+#else
+#define INIPARSER_API __declspec(dllimport)
+#endif
+
 namespace fs = std::filesystem;
 
-class IniParser
+class INIPARSER_API IniParser
 {
 public:
 	IniParser(std::string ini);
