@@ -1,35 +1,35 @@
 #pragma once
-//#include <vector>
-
-#include <QWidget>
-#include <QImage>
-#include <QDebug>
 
 #include "ui_FaceRecognitionUI.h"
-#include "MaskRecognizer.h"
+#include "FaceRecognizer.h"
 #include "TCPClient.h"
-
-class TCPClient;
+#include "ImageData.h"
 
 class FaceRecognitionUI : public QWidget
 {
 	Q_OBJECT
 
-public:
-	FaceRecognitionUI(QWidget *parent = Q_NULLPTR);
-	~FaceRecognitionUI();
-
-	bool m_exit_button_clicked = false;
-	void Recognize(TCPClient &client);
-	QImage Mat2QImage(cv::Mat const& src);
-	friend std::vector<char> GetImageBytesVector();
-
 public slots:
 	void onExitButtonClicked();
 
 public:
+
+	FaceRecognitionUI(QWidget *parent = Q_NULLPTR);
+
 	Ui::FaceRecognitionUI ui;
+
+	QImage mat2QImage(cv::Mat const& src);
+
+	void updateWindow(TCPClient& client);
+	void recognize(int camera_id = 0);
+	void sendImage(TCPClient& client, QPixmap& pixmap);
+
+	~FaceRecognitionUI();
+
+private:
+	ImageData img_data;
+	std::thread thrd;
+
+	bool m_exit_button_clicked = false;
+	bool run_analizer = true;
 };
-
-
-extern std::unique_ptr<MaskRecognizer> m_mask_recognizer;

@@ -60,6 +60,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;$(Qt_INCLUDEPATH_);.\</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_)</AdditionalLibraryDirectories>
@@ -123,11 +124,16 @@
     <ClInclude Include="TCPClient.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="Configuration.conf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EncryptDecryptECBMode\EncryptDecryptECBMode.vcxproj">
       <Project>{79f7370c-9bf0-45de-b2eb-1159df437d30}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Logger\Logger.vcxproj">
+      <Project>{ade47c16-1e41-4168-ad1e-fdf9daeec556}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

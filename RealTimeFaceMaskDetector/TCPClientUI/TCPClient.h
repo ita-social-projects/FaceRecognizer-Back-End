@@ -8,14 +8,12 @@
 #include <vector>
 
 #include "TCPClientUI.h"
+#include "FaceRecognizer.h"
 
 #include <QtWidgets/QWidget>
 #include <QtGui/QImage>
-#include <QtCore/QDebug>
 
-#include "FaceRecognitionUI.h"
-#include "ui_FaceRecognitionUI.h"
-#include "MaskRecognizer.h"
+#include <QtCore/QBuffer>
 
 #pragma comment (lib, "ws2_32.lib")
 
@@ -39,7 +37,7 @@ public:
     /* Connects to the server socket. */
     bool Connect();
     /* Converts image to binary and returns result via second parameter. */
-    bool ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer);
+    bool ConvertImageToBinary(QPixmap& pixmap, std::vector<char>& buffer);
     /* Sends vector of bytes to the server. */
     bool SendBinaryMessage(std::vector<char>& buffer);
     /* Diconnects from the server and terminates use of the Winsock DLL  */

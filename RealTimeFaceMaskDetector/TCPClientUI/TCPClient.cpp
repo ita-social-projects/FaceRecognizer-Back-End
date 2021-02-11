@@ -29,9 +29,15 @@ bool TCPClient::Connect()
     return connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) != SOCKET_ERROR;
 }
 
-bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer)
+bool TCPClient::ConvertImageToBinary(QPixmap& pixmap, std::vector<char>& buffer)
 {
-    image.open("image_face.png", std::ios::in | std::ios::binary);
+    QByteArray bytes;
+    QBuffer buff(&bytes);
+    buff.open(QIODevice::WriteOnly);
+    pixmap.save(&buff, "JPG");
+    buffer.assign(bytes.constData(), bytes.constData() + bytes.size());
+
+    /*image.open("image_face.png", std::ios::in | std::ios::binary);
 
     while (!image.eof())
     {
@@ -45,7 +51,7 @@ bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& bu
 
     image.close();
 
-    return true;
+    return true;*/
 }
 
 bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
@@ -56,7 +62,7 @@ bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
     }
 
     std::string buffer_size_s = std::to_string(buffer.size());
-
+  
     // Sending count of bytes to the server.
     send(m_socket, buffer_size_s.c_str(), buffer_size_s.length(), EMPTY_FLAGS);
 

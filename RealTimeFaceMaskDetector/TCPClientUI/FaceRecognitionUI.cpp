@@ -1,4 +1,8 @@
+#pragma once
 #include "FaceRecognitionUI.h"
+#include <QtCore/QDebug>
+#include <QtGui/QPainter>
+#include <thread>
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
@@ -10,37 +14,90 @@ FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
 void FaceRecognitionUI::onExitButtonClicked()
 {
     m_exit_button_clicked = true;
+    run_analizer = false;
+    thrd.join();
     close();
-
-
     qDebug() << "QQQQ!!!";
 };
 
-void FaceRecognitionUI::Recognize(TCPClient &client)
+void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
-    
+    thrd  = std::thread(&FaceRecognitionUI::recognize, this, 0);
+
     while (!m_exit_button_clicked)
     {
-        m_mask_recognizer->StartRecognition();
-        cv::Mat image = m_mask_recognizer->GetImage();
-        QImage frame = Mat2QImage(image);
+        /*cv::VideoCapture m_camera;
+        if (!m_camera.open(0))
+        {
+            throw std::runtime_error("can't load camera");
+        }*/
+
+        cv::Mat image;
+        faceInfo faces;
+        
+        //get info from FaceRecognizer
+        img_data.GetData(image, faces);
+
+        if (image.empty())
+        {
+            continue;
+        }
+
+        bool is_all_in_mask = true;
+        int height, width;
+        for (auto& face : faces) 
+        {
+            if (!face.second)
+            {
+                cv::Mat face_img(image, face.first);
+                height = face.first.tl().y - face.first.br().y;
+                width = face.first.br().x - face.first.tl().x;
+                auto face_map = QPixmap::fromImage(mat2QImage(face_img).scaled(width, height, Qt::KeepAspectRatio, Qt::FastTransformation));
+                sendImage(client, face_map);
+
+                is_all_in_mask = is_all_in_mask && face.second; 
+
+                auto rect_color = face.second == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
+                cv::rectangle(image,face.first,rect_color, 3, 8, 0);
+
+                qDebug() << "Face:)\n";
+            }
+        }
+
+        if (is_all_in_mask) 
+        {
+            FaceRecognizer::SetPanelTextInMask(image);
+        }
+        else 
+        {
+            FaceRecognizer::SetPanelTextWithoutMask(image);
+        }
+
+        QImage frame = mat2QImage(image);
         QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
         ui.frame->setPixmap(map);
         ui.frame->show();
+
         cv::waitKey(30);
-        std::vector<char> buffer;
-        cv::imwrite("image_face.png", m_mask_recognizer->GetImage());
 
-        std::ifstream image_face_send;
-        client.ConvertImageToBinary(image_face_send, buffer);
-        client.SendBinaryMessage(buffer);
+        qDebug() << "QQQQ\n";
+    }
 
-        // Sleep(2000);
-        qDebug() << "QQQQ\n   ";
+}
+
+void FaceRecognitionUI::recognize(int camera_id)
+{
+    FaceRecognizer recognizer(camera_id);
+
+    while (run_analizer)
+    {
+        // маємо передавати FaceRecognitionUI::ImageData в FaceRecognizer, 
+        // щоб там змінити даний клас, викликавши його сеттер
+        recognizer.runAnalysis(img_data);
     }
 }
 
-QImage FaceRecognitionUI::Mat2QImage(cv::Mat const& src)
+QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
 {
     cv::Mat temp; // make the same cv::Mat
     cvtColor(src, temp, cv::COLOR_BGR2RGB); // cvtColor Makes a copt, that what i need
@@ -49,25 +106,16 @@ QImage FaceRecognitionUI::Mat2QImage(cv::Mat const& src)
     // of QImage::QImage ( const uchar * data, int width, int height, Format format )
     return dest;
 }
-std::unique_ptr<MaskRecognizer> m_mask_recognizer = std::make_unique<MaskRecognizer>();
 
-std::vector<char> GetImageBytesVector()
+void FaceRecognitionUI::sendImage(TCPClient& client, QPixmap& pixmap)
 {
-    cv::Mat image = m_mask_recognizer->GetImage();
-    std::vector<char> bytes_vector;
-    if (image.isContinuous()) {
-        // array.assign(mat.datastart, mat.dataend); // <- has problems for sub-matrix like mat = big_mat.row(i)
-        bytes_vector.assign(image.data, image.data + image.total() * image.channels());
-    }
-    else {
-        for (int i = 0; i < image.rows; ++i) {
-            bytes_vector.insert(bytes_vector.end(), image.ptr<char>(i), image.ptr<char>(i) + image.cols * image.channels());
-        }
-    }
-    return bytes_vector;
+    std::vector<char> buffer;
+    client.ConvertImageToBinary(pixmap, buffer);
+    client.SendBinaryMessage(buffer);
 }
 
 
 FaceRecognitionUI::~FaceRecognitionUI()
 {
+
 }

@@ -20,18 +20,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="TCPClientUI.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtUic Include="TCPClientUI.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
-    <QtMoc Include="TCPClientUI.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="TCPClientUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClInclude Include="ImageData.h" />
+    <ClInclude Include="FaceRecognizer.h" />
+    <ClInclude Include="TCPClient.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,9 +47,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="FaceRecognitionUI.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
+    <QtRcc Include="TCPClientUI.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="FaceRecognitionUI.ui" />
+    <QtUic Include="TCPClientUI.ui" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />
