@@ -104,8 +104,11 @@ bool SocketServer::StartListening(bool& ret_value)
 		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
 		{
 			TryAcceptAndStartMessaging(ret_value);
+			
 			if (!ret_value) 
+			{
 				break;
+			}
 		}
 		else 
 		{
@@ -115,8 +118,8 @@ bool SocketServer::StartListening(bool& ret_value)
 			ret_value = false;
 			break;
 		}
-	return true;
 	}
+	LOG_MSG << "Server work finished !";
 	return ret_value;
 }
 
@@ -148,10 +151,13 @@ bool SocketServer::ReceiveFullMessage()
 	else if (m_func_result == 0) // client closed connection
 	{
 		LOG_MSG << "Connection closing...";
+		std::cout << "Connection closing..." << std::endl;
 		return false;
 	}
 	else // error when receiving message. <Check possible errors in documentation for 'recv' function>
 	{
+		LOG_ERROR << "Receive ERROR";
+		std::cout << "Receive ERROR" << std::endl;
 		closesocket(m_client_socket);
 		WSACleanup();
 		throw std::string("Receive ERROR");
@@ -331,15 +337,17 @@ void SocketServer::ConnectToSQL()
 	sql_server = std::make_shared<SQLServer>();
 	try
 	{
+		LOG_MSG << "Connect to SQL";
 		sql_server->GetIniParams(CONFIG_FILE);
 
-		//ConnectParams db{ "MAC14BF\SQLEXPRESS", "","", "MaskPhotosDatabase", "Photos" };
+		//ConnectParams db{ "DELL-G5","MaskPhotosDatabase", "", "", "Photos" };
 		//sql_server->Connect(db);
 		sql_server->Connect();
+		LOG_MSG << "Connect to SQL: FINISHED";
 		CreateTableIfNeeded(sql_server);
 	}
 	catch (const SQLException& e)
 	{
-		std::cout << e.what() << std::endl;
+		LOG_ERROR << e.what();
 	}
 }
