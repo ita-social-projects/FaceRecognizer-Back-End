@@ -35,6 +35,12 @@ TCPClientUI::TCPClientUI(QWidget *parent)
 
     connect(ui.Close, &QPushButton::clicked, this, &TCPClientUI::Close);
     connect(ui.Save, &QPushButton::clicked, this, &TCPClientUI::Save);
+
+    const QString default_ip = "127.0.0.1";
+    const QString default_port = "27015";
+
+    ui.IP->setText(default_ip);
+    ui.Port->setText(default_port);
 }
 
 void TCPClientUI::Save()
@@ -69,7 +75,7 @@ void TCPClientUI::Save()
         m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
         m_face_recognition_ui->show();
         this->hide();
-        client.m_face_recognition_ui->updateWindow(client);
+        m_face_recognition_ui->updateWindow(client);
         client.CloseSocket();
     }
 }

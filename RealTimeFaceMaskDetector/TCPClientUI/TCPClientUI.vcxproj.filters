@@ -46,31 +46,36 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ImageData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="FaceRecognizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="TCPClientUI.qrc" />
+    <QtUic Include="FaceRecognitionUI.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="TCPClientUI.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="FaceRecognitionUI.ui" />
-    <QtUic Include="TCPClientUI.ui" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Configuration.conf" />
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="TCPClient.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="TCPClientUI.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="FaceRecognitionUI.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="TCPClientUI.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="FaceRecognitionUI.h">

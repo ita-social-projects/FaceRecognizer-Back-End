@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui_TCPClientUI.h"
+#include "FaceRecognizer.h"
 
 class TCPClientUI : public QMainWindow
 {
@@ -16,5 +17,3 @@ private slots:
 private:
     Ui::TCPClientUIClass ui;
 };
-
-extern std::unique_ptr<MaskRecognizer> m_mask_recognizer;

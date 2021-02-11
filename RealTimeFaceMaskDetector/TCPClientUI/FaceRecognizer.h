@@ -12,8 +12,6 @@
 
 #include "ImageData.h"
 
-
-
 class FaceRecognizer
 {
 public:
