@@ -1,7 +1,6 @@
 
 #pragma once
 #include <ws2tcpip.h>
-#include "EncryptDecryptAES_ECBMode.h"
 #include "Logger.h"
 #include "SQLServer.h"
 

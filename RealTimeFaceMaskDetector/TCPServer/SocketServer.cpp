@@ -192,7 +192,6 @@ bool SocketServer::ReceiveMessage(bool& ret_value)
 
 void SocketServer::SaveAndSendData()
 {
-	EncryptDecryptAES_ECBMode decryptor;
 	std::ofstream recv_data;
 
 	if (!OpenParticularFile(recv_data))
@@ -203,9 +202,7 @@ void SocketServer::SaveAndSendData()
 	recv_data.close();
 
 	//Writing in database
-	std::string data;
-	std::string cipher(m_buffer.begin(), m_buffer.end());
-	decryptor.Decrypt(cipher, data);
+	//here must be decrypt
 	UpdateDataBase();
 }
 
