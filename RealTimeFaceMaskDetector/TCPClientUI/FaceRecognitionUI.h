@@ -1,5 +1,4 @@
 #pragma once
-//#include <vector>
 
 #include "ui_FaceRecognitionUI.h"
 #include "FaceRecognizer.h"
@@ -14,6 +13,7 @@ public slots:
 	void onExitButtonClicked();
 
 public:
+
 	FaceRecognitionUI(QWidget *parent = Q_NULLPTR);
 
 	Ui::FaceRecognitionUI ui;
