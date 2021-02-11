@@ -2,6 +2,7 @@
 
 bool SocketServer::InitSocketServer()
 {
+	ConnectToSQL();
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
 	{
@@ -119,7 +120,7 @@ int  SocketServer::GetMessageLength()
 {
 	std::vector<char> bytes_number;
 	bytes_number.resize(DEFAULT_BUFLEN);
-	recv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
+	ThreadSafeRecv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
 
 	return atoi(bytes_number.data());
 }
@@ -129,9 +130,14 @@ bool SocketServer::ReceiveFullMessage()
 {
 	int total_bytes_count = GetMessageLength();
 
+	if (total_bytes_count == 0)
+	{
+		return false;
+	}
+
 	m_buffer.resize(total_bytes_count + 1);
 
-	m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
+	m_func_result = ThreadSafeRecv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
 	if (m_func_result > 0) // correctrly receided message
 	{
 		LOG_MSG << "Total bytes: "<< total_bytes_count <<" Received: " << m_func_result;
@@ -160,6 +166,12 @@ void SocketServer::TryReceiveAndSendMessage(bool& client_connected)
 	{
 		client_connected = false;
 	}
+}
+
+int SocketServer::ThreadSafeRecv(SOCKET s, char* buf, int len, int flag)
+{
+	std::lock_guard<std::mutex> lock(recv_mutex);
+	return recv(s, buf, len, flag);
 }
 
 bool SocketServer::ReceiveMessage(bool& ret_value)
@@ -191,7 +203,7 @@ void SocketServer::SaveAndSendData()
 
 	if (!OpenParticularFile(recv_data))
 	{
-		/*cannot open file error*/
+		return;
 	}
 	recv_data.write(m_buffer.data(), m_buffer.size());
 	recv_data.close();
@@ -200,24 +212,16 @@ void SocketServer::SaveAndSendData()
 	std::string data;
 	std::string cipher(m_buffer.begin(), m_buffer.end());
 	decryptor.Decrypt(cipher, data);
-	SendMessage();
+	UpdateDataBase();
 }
 
-bool SocketServer::SendMessage()
+bool SocketServer::UpdateDataBase()
 {
-	std::shared_ptr<SQLConnection>sql_server = std::make_shared<SQLServer>();
 	try
 	{
-		sql_server->GetIniParams(CONFIG_FILE);
-
-		// -- Connect --
-		sql_server->Connect();
-
-		CreateTableIfNeeded(sql_server);
+		std::lock_guard<std::mutex> lock(sql_mutex);
 		sql_server->InsertPhoto(m_photo_to_send);
 
-		// -- Disconnect --
-		sql_server->Disconnect();
 	}
 	catch (const SQLException& e)
 	{
@@ -250,7 +254,7 @@ bool SocketServer::ShutdownServer()
 	closesocket(m_client_socket);
 	closesocket(m_listen_socket);
 	WSACleanup();
-
+	sql_server->Disconnect();
 	return true;
 }
 
@@ -296,8 +300,10 @@ bool SocketServer::OpenParticularFile(std::ofstream& stream)
 							m_photo_to_send.name + "." +
 							m_photo_to_send.extension };
 	stream.open(photo_path, std::ios::binary);
-	if (!stream.is_open())
+	if (std::filesystem::exists(photo_path) || !stream.is_open())
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -320,5 +326,21 @@ void SocketServer::ReplaceForbiddenSymbol(char& symbol)
 	if (symbol == ' ' || symbol == ':')
 	{
 		symbol = '_';
+	}
+}
+
+void SocketServer::ConnectToSQL()
+{
+	sql_server = std::make_shared<SQLServer>();
+	try
+	{
+		sql_server->GetIniParams(CONFIG_FILE);
+
+		sql_server->Connect();
+		CreateTableIfNeeded(sql_server);
+	}
+	catch (const SQLException& e)
+	{
+		std::cout << e.what() << std::endl;
 	}
 }
