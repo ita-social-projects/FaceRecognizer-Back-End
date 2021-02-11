@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Logger">
-      <UniqueIdentifier>{d51415ce-b1e2-4874-8323-f2bff0e42129}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -26,20 +23,8 @@
     <ClCompile Include="ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="easylogging++.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Logger</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SocketServer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ThreadPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WindowsService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -52,10 +37,5 @@
     <ClInclude Include="ThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Configuration.conf">
-      <Filter>Logger</Filter>
-    </None>
   </ItemGroup>
 </Project>

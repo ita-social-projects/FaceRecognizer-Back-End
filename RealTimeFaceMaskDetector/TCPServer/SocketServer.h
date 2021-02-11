@@ -4,7 +4,6 @@
 #include "EncryptDecryptAES_ECBMode.h"
 #include "Logger.h"
 #include "SQLServer.h"
-
 #pragma comment (lib, "Ws2_32.lib")
 
 const char* const DEFAULT_PORT = "27015";
