@@ -130,6 +130,11 @@ bool SocketServer::ReceiveFullMessage()
 {
 	int total_bytes_count = GetMessageLength();
 
+	if (total_bytes_count == 0)
+	{
+		return false;
+	}
+
 	m_buffer.resize(total_bytes_count + 1);
 
 	m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
@@ -192,9 +197,8 @@ void SocketServer::SaveAndSendData()
 
 	if (!OpenParticularFile(recv_data))
 	{
-		/*cannot open file error*/
+		return;
 	}
-
 	recv_data.write(m_buffer.data(), m_buffer.size());
 	recv_data.close();
 
@@ -202,17 +206,14 @@ void SocketServer::SaveAndSendData()
 	std::string data;
 	std::string cipher(m_buffer.begin(), m_buffer.end());
 	decryptor.Decrypt(cipher, data);
-
-	SendMessage();
+	UpdateDataBase();
 }
 
-bool SocketServer::SendMessage()
+bool SocketServer::UpdateDataBase()
 {
 	try
 	{
-
 		sql_server->InsertPhoto(m_photo_to_send);
-
 	}
 	catch (const SQLException& e)
 	{
@@ -290,9 +291,16 @@ bool SocketServer::OpenParticularFile(std::ofstream& stream)
 	std::string photo_path{ m_photo_to_send.path +
 							m_photo_to_send.name + "." +
 							m_photo_to_send.extension };
+	
+	if (std::filesystem::exists(photo_path))
+	{
+		return false;
+	}
 	stream.open(photo_path, std::ios::binary);
 	if (!stream.is_open())
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -325,7 +333,6 @@ void SocketServer::ConnectToSQL()
 	{
 		sql_server->GetIniParams(CONFIG_FILE);
 
-		// -- Connect --
 		sql_server->Connect();
 		CreateTableIfNeeded(sql_server);
 	}
