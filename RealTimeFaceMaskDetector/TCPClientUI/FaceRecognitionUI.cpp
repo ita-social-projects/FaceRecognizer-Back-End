@@ -22,11 +22,7 @@ void FaceRecognitionUI::onExitButtonClicked()
 
 void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
-    
     thrd  = std::thread(&FaceRecognitionUI::recognize, this, 0);
-
-    auto painter = new QPainter(this);
-    painter->setPen(Qt::green);
 
     while (!m_exit_button_clicked)
     {
@@ -46,27 +42,38 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             continue;
         }
 
-        QImage frame = mat2QImage(image);
-        QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
-        ui.frame->setPixmap(map);
-        ui.frame->show();
-
-        cv::waitKey(30);
+        bool is_all_in_mask = false;
         int height, width;
         for (auto& face : faces) {
             if (!face.second) {
+
                 cv::Mat face_img(image, face.first);
                 height = face.first.tl().y - face.first.br().y;
                 width = face.first.br().x - face.first.tl().x;
                 auto face_map = QPixmap::fromImage(mat2QImage(face_img).scaled(width, height, Qt::KeepAspectRatio, Qt::FastTransformation));
                 sendImage(client, face_map);
 
+                is_all_in_mask = is_all_in_mask && face.second; 
+
                 qDebug() << "Face:)\n";
-                painter->drawRect(face.first.tl().x, face.first.br().y,
-                    face.first.br().x - face.first.tl().x,
-                    face.first.tl().y - face.first.br().y);
             }
         }
+
+        if (is_all_in_mask) {
+            FaceRecognizer::SetPanelTextInMask(image);
+        }
+        else {
+            FaceRecognizer::SetPanelTextWithoutMask(image);
+        }
+
+
+
+        QImage frame = mat2QImage(image);
+        QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
+        ui.frame->setPixmap(map);
+        ui.frame->show();
+
+        cv::waitKey(30);
 
         //Sleep(2000);
 

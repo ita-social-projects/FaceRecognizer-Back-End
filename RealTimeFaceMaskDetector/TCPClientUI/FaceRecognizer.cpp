@@ -50,3 +50,23 @@ void FaceRecognizer::runAnalysis(ImageData& img_data)
 
     img_data.SetData(img, faces_with_info); // setymo infu v FaceRecognitionUI::ImageData
 }
+
+void FaceRecognizer::SetPanelTextInMask(cv::Mat& image)
+{
+    cv::Mat img_copy = image.clone();
+    auto m_color = cv::Scalar(0, 255, 0);
+
+    rectangle(image, cv::Point(70, 0), cv::Point(600, 50), m_color, cv::FILLED, 8, 0);
+    putText(image, "Thanks for wearing mask :)", cv::Point(150, 30),
+            cv::FONT_HERSHEY_COMPLEX, 0.8, cv::Scalar(0, 0, 0), 1, cv::LINE_AA);
+}
+
+void FaceRecognizer::SetPanelTextWithoutMask(cv::Mat& image)
+{
+    cv::Mat img_copy = image.clone();
+    auto m_color = cv::Scalar(0, 0, 255);
+
+    rectangle(image, cv::Point(70, 0), cv::Point(600, 50), m_color, cv::FILLED, 8, 0);
+    putText(image, "Put on a mask please!", cv::Point(170, 30),
+        cv::FONT_HERSHEY_COMPLEX, 0.8, cv::Scalar(0, 0, 0), 1, cv::LINE_AA);
+}
