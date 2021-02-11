@@ -27,7 +27,6 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     std::chrono::high_resolution_clock::time_point send_time, new_send_time;
     send_time = get_current_time_fenced();
 
-
     thrd  = std::thread(&FaceRecognitionUI::recognize, this, 0);
 
 
@@ -96,7 +95,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
         cv::waitKey(30);
 
-        qDebug() << "QQQQ\n";
+        qDebug() << "Renew screen\n";
     }
 
 }
