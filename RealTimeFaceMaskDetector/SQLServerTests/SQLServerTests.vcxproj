@@ -86,7 +86,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\gtest\lib;C:\SQLAPI\vs2019\x86_64\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\gtest\lib;C:\SQLAPI\vs2019\x86_64\lib;..\x64\Debug;</AdditionalLibraryDirectories>
       <AdditionalDependencies>sqlapi.lib;gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
