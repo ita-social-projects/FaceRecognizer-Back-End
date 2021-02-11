@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QRegExpValidator>
 #include "ui_TCPClientUI.h"
+#include "FaceRecognizer.h"
 
 class TCPClientUI : public QMainWindow
 {
@@ -14,6 +14,6 @@ private slots:
     void Save();
     void Close();
 
-public:
+private:
     Ui::TCPClientUIClass ui;
 };

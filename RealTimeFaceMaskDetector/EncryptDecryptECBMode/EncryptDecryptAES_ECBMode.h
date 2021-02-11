@@ -2,10 +2,10 @@
 #include <memory>
 #include "ICrypt.h"
 
-#include "..\..\3rdPartyLibs\cryptopp820\aes.h"
-#include "..\..\3rdPartyLibs\cryptopp820\modes.h"
-#include "..\..\3rdPartyLibs\cryptopp820\filters.h"
-#include "..\..\3rdPartyLibs\cryptopp820\osrng.h"
+#include <cryptopp/aes.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/osrng.h>
 
 
 template class __declspec(dllexport) std::unique_ptr<CryptoPP::byte*>;

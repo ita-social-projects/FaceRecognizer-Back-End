@@ -1,6 +1,7 @@
 #include "TCPClient.h"
-#include "TCPClientUI.h"
-#include "../EncryptDecryptECBMode/EncryptDecryptAES_ECBMode.h"
+
+constexpr int EMPTY_FLAGS = 0;
+constexpr int DEFAULT_SERVICE_PROVIDER_PROTOCOL = 0;
 
 std::string g_ip;
 int g_port;
@@ -13,64 +14,77 @@ bool TCPClient::CreateSocket()
     m_soket_info.sin_addr.s_addr = inet_addr(g_ip.c_str());
     m_soket_info.sin_port = htons(g_port);
 
-    m_socket = socket(AF_INET, SOCK_STREAM, 0);
+    m_socket = socket(AF_INET, SOCK_STREAM, EMPTY_FLAGS);
 
     if (m_socket == INVALID_SOCKET)
+    {
         return false;
+    }
+
     return true;
 }
 
 bool TCPClient::Connect()
 {
-    if (connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) != SOCKET_ERROR)
-        return true;
-    else
-        return false;
+    return connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) != SOCKET_ERROR;
 }
+
+//bool TCPClient::ConvertImageToBinary(cv::Mat img, std::vector<char>& buffer)
+//{
+//    
+//    if (img.isContinuous())
+//    {
+//        buffer.assign(img.data, img.data + img.total() * img.channels());
+//        return true;
+//    }
+//    else
+//    {
+//        for (int i = 0; i < img.rows; ++i)
+//        {
+//            buffer.insert(buffer.end(), img.ptr<float>(i), img.ptr<float>(i) + img.cols * img.channels());
+//        }
+//        return true;
+//    }
+//}
 
 bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer)
 {
     image.open("image_face.png", std::ios::in | std::ios::binary);
-
     char byte_image = '\0';
-
     while (!image.eof())
     {
         byte_image = image.get();
-        m_size++;
         buffer.push_back(byte_image);
     }
-    m_size--;
-
     image.close();
-
     return true;
 }
 
 bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
 {
-    m_size = buffer.size() - 1;
-    if (m_size == 0)
-        return false;
-    else
+    if (buffer.empty())
     {
-        std::string size = std::to_string(m_size);
-        send(m_socket, size.c_str(), size.length(), 0);
-
-        if (send(m_socket, buffer.data(), buffer.size() - 1, 0))
-            return true;
-        else
-            return false;
+        return false;
     }
+
+    std::string buffer_size_s = std::to_string(buffer.size());
+  
+    // Sending count of bytes to the server.
+    send(m_socket, buffer_size_s.c_str(), buffer_size_s.length(), EMPTY_FLAGS);
+
+    // Sending image bytes to the server.
+    return send(m_socket, buffer.data(), buffer.size(), EMPTY_FLAGS);
 }
 
 bool TCPClient::CloseSocket()
 {
-    if (!closesocket(m_socket) == SOCKET_ERROR)
+    if (closesocket(m_socket) != SOCKET_ERROR)
     {
         WSACleanup();
         return true;
     }
     else
+    {
         return false;
+    }
 }

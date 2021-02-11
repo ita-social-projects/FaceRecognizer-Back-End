@@ -18,23 +18,15 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Logger">
-      <UniqueIdentifier>{540d686b-4840-40ae-8255-b3f217949225}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="TCPClientUI.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-    <QtUic Include="TCPClientUI.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
-    <QtMoc Include="TCPClientUI.h">
+    <ClInclude Include="FaceRecognizer.h" />
+    <ClInclude Include="ImageData.h">
       <Filter>Header Files</Filter>
-    </QtMoc>
-    <ClCompile Include="TCPClientUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="TCPClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,43 +38,54 @@
     <ClCompile Include="FaceRecognitionUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MaskRecognizer.cpp">
+    <ClCompile Include="FaceRecognizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="easylogging++.cpp">
-      <Filter>Logger</Filter>
+    <ClCompile Include="TCPClientUI.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Logger</Filter>
+    <ClCompile Include="ImageData.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MaskRecognizer.h">
+    <ClInclude Include="FaceRecognizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="easylogging++.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
-    <ClInclude Include="TCPClient.h">
+    <ClInclude Include="ImageData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="FaceRecognitionUI.h">
+    <ClInclude Include="TimeCounting.h">
       <Filter>Header Files</Filter>
-    </QtMoc>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="FaceRecognitionUI.ui">
       <Filter>Resource Files</Filter>
     </QtUic>
+    <QtUic Include="TCPClientUI.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Configuration.conf">
-      <Filter>Logger</Filter>
-    </None>
+    <QtMoc Include="TCPClientUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="FaceRecognitionUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="TCPClientUI.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="TCPClientUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="FaceRecognitionUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>
