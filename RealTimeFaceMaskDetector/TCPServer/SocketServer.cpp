@@ -50,6 +50,7 @@ bool SocketServer::BindListeningSocket()
 		closesocket(m_listen_socket);
 		WSACleanup();
 		LOG_ERROR << "BindListeningSocket ERROR: faild to bind socket";
+		LOG_ERROR << GetLastError();
 		return false;
 	}
 	return true;
@@ -84,8 +85,10 @@ void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 void SocketServer::StartMessagingWintClient(bool& ret_value)
 {
 	std::thread th = std::thread([&]() {ReceiveMessage(ret_value); });
-	if (th.joinable())
-		th.detach();
+	if (th.joinable()) 
+	{
+		th.join();
+	}
 }
 
 bool SocketServer::StartListening(bool& ret_value)
@@ -129,6 +132,11 @@ int  SocketServer::GetMessageLength()
 bool SocketServer::ReceiveFullMessage()
 {
 	int total_bytes_count = GetMessageLength();
+
+	if (total_bytes_count == 0)
+	{
+		return false;
+	}
 
 	m_buffer.resize(total_bytes_count + 1);
 
@@ -192,9 +200,8 @@ void SocketServer::SaveAndSendData()
 
 	if (!OpenParticularFile(recv_data))
 	{
-		/*cannot open file error*/
+		return;
 	}
-
 	recv_data.write(m_buffer.data(), m_buffer.size());
 	recv_data.close();
 
@@ -202,17 +209,14 @@ void SocketServer::SaveAndSendData()
 	std::string data;
 	std::string cipher(m_buffer.begin(), m_buffer.end());
 	decryptor.Decrypt(cipher, data);
-
-	SendMessage();
+	UpdateDataBase();
 }
 
-bool SocketServer::SendMessage()
+bool SocketServer::UpdateDataBase()
 {
 	try
 	{
-
 		sql_server->InsertPhoto(m_photo_to_send);
-
 	}
 	catch (const SQLException& e)
 	{
@@ -290,9 +294,16 @@ bool SocketServer::OpenParticularFile(std::ofstream& stream)
 	std::string photo_path{ m_photo_to_send.path +
 							m_photo_to_send.name + "." +
 							m_photo_to_send.extension };
+	
+	if (std::filesystem::exists(photo_path))
+	{
+		return false;
+	}
 	stream.open(photo_path, std::ios::binary);
 	if (!stream.is_open())
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -325,7 +336,8 @@ void SocketServer::ConnectToSQL()
 	{
 		sql_server->GetIniParams(CONFIG_FILE);
 
-		// -- Connect --
+		//ConnectParams db{ "MAC14BF\SQLEXPRESS", "","", "MaskPhotosDatabase", "Photos" };
+		//sql_server->Connect(db);
 		sql_server->Connect();
 		CreateTableIfNeeded(sql_server);
 	}

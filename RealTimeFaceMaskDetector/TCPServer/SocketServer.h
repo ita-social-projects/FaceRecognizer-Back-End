@@ -4,6 +4,7 @@
 #include "EncryptDecryptAES_ECBMode.h"
 #include "Logger.h"
 #include "SQLServer.h"
+
 #pragma comment (lib, "Ws2_32.lib")
 
 const char* const DEFAULT_PORT = "27015";
@@ -25,7 +26,7 @@ private:
 	bool AcceptConnection();
 	void TryAcceptAndStartMessaging(bool& ret_value);
 	void SaveAndSendData();
-	bool SendMessage();
+	bool UpdateDataBase();
 	void CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server);
 
 	bool ReceiveMessage(bool& ret_value);

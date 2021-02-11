@@ -50,22 +50,18 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         }
 
         bool is_all_in_mask = true;
-        int height, width;
         for (auto& face : faces) 
         {
             if (!face.second)
             {
                 cv::Mat face_img(image, face.first);
-                height = face.first.tl().y - face.first.br().y;
-                width = face.first.br().x - face.first.tl().x;
-                auto face_map = QPixmap::fromImage(mat2QImage(face_img).scaled(width, height, Qt::KeepAspectRatio, Qt::FastTransformation));
 
                 // replace with same person check
                 new_send_time = get_current_time_fenced();
                 if (to_us(new_send_time - send_time) >= 5)
                 {
                     send_time = new_send_time;
-                    sendImage(client, face_map);
+                    sendImage(client, face_img.clone());
                     qDebug() << "Image_sent\n";
                 }
                 
@@ -123,10 +119,10 @@ QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
     return dest;
 }
 
-void FaceRecognitionUI::sendImage(TCPClient& client, QPixmap& pixmap)
+void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat img)
 {
     std::vector<char> buffer;
-    client.ConvertImageToBinary(pixmap, buffer);
+    client.ConvertImageToBinary(img.clone(), buffer);
     client.SendBinaryMessage(buffer);
 }
 

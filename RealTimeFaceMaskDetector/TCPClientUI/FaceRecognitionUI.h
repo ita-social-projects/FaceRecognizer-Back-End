@@ -22,7 +22,7 @@ public:
 
 	void updateWindow(TCPClient& client);
 	void recognize(int camera_id = 0);
-	void sendImage(TCPClient& client, QPixmap& pixmap);
+	void sendImage(TCPClient& client, cv::Mat img);
 
 	~FaceRecognitionUI();
 
