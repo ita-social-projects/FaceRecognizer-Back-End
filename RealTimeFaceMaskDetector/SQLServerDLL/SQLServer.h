@@ -7,6 +7,7 @@
 class SQLSERVER_API SQLServer : public SQLConnection
 {
 public:
+
     struct PhotoType
     {
         SAString photoBytes;
@@ -15,7 +16,6 @@ public:
     };
 
     SQLServer() = default;
-    SQLServer(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password);
 
     SQLServer(const ConnectParams& connect_string);
 

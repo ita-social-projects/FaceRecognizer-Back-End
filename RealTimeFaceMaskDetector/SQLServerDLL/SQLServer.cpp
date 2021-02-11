@@ -80,7 +80,6 @@ void SQLServer::InsertPhoto(const Photo& photo)
 		insert_statement += " CONVERT(DATETIME,\'" + photo.date + "'\, 120));";
 
 		SACommand insert(&m_connection, _TSA(insert_statement.c_str()));
-
 		insert.Execute();
 	}
 	catch (const SAException& ex)
@@ -110,7 +109,6 @@ std::vector<SQLServer::PhotoType> SQLServer::GetAllPhotos()
 		SACommand select(&m_connection, _TSA(selectStatement.c_str()));
 
 		select.Execute();
-
 		std::vector<PhotoType> photos;
 
 		if (select.isResultSet())
