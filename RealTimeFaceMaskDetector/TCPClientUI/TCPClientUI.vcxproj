@@ -113,15 +113,17 @@
     <QtUic Include="TCPClientUI.ui" />
     <QtMoc Include="TCPClientUI.h" />
     <ClCompile Include="FaceRecognitionUI.cpp" />
-    <ClCompile Include="MaskRecognizer.cpp" />
+    <ClCompile Include="FaceRecognizer.cpp" />
+    <ClCompile Include="ImageData.cpp" />
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TCPClientUI.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FaceRecognitionUI.h" />
-    <ClInclude Include="MaskRecognizer.h" />
-    <ClInclude Include="TCPClient.h" />
+    <QtMoc Include="FaceRecognitionUI.h" />
+    <ClInclude Include="FaceRecognizer.h" />
+    <ClInclude Include="ImageData.h" />
+    <QtMoc Include="TCPClient.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
