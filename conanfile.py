@@ -3,7 +3,7 @@ from conans import ConanFile, tools, MSBuild
 class RealTimeFaceMaskDetector(ConanFile):
     name = "realtime_face_mask_detector"
     version = "0.1"
-    url = "https://github.com/OleksiiiSemko/Real-Time-Face-Mask-Detector-Server.git"
+    url = "https://github.com/ita-social-projects/Real-Time-Face-Mask-Detector-Server.git"
     settings = "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = {
