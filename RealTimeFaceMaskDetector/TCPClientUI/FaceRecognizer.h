@@ -21,6 +21,8 @@ public:
 
 	void runAnalysis(ImageData& img_data);
 
+	static void FaceRecognizer::SetPanelTextInMask(cv::Mat& image);
+	static void FaceRecognizer::SetPanelTextWithoutMask(cv::Mat& image);
 
 private:
 	cv::CascadeClassifier m_face_cascade;

@@ -22,11 +22,7 @@ void FaceRecognitionUI::onExitButtonClicked()
 
 void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
-    
     thrd  = std::thread(&FaceRecognitionUI::recognize, this, 0);
-
-    auto painter = new QPainter(this);
-    painter->setPen(Qt::green);
 
     while (!m_exit_button_clicked)
     {
@@ -35,15 +31,46 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         {
             throw std::runtime_error("can't load camera");
         }*/
+
         cv::Mat image;
         faceInfo faces;
         
-        //стягуємо інфу, яку отримали в FaceRecognizer
+        //get info from FaceRecognizer
         img_data.GetData(image, faces);
 
         if (image.empty())
         {
             continue;
+        }
+
+        bool is_all_in_mask = true;
+        int height, width;
+        for (auto& face : faces) 
+        {
+            if (!face.second)
+            {
+                cv::Mat face_img(image, face.first);
+                height = face.first.tl().y - face.first.br().y;
+                width = face.first.br().x - face.first.tl().x;
+                auto face_map = QPixmap::fromImage(mat2QImage(face_img).scaled(width, height, Qt::KeepAspectRatio, Qt::FastTransformation));
+                sendImage(client, face_map);
+
+                is_all_in_mask = is_all_in_mask && face.second; 
+
+                auto rect_color = face.second == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
+                cv::rectangle(image,face.first,rect_color, 3, 8, 0);
+
+                qDebug() << "Face:)\n";
+            }
+        }
+
+        if (is_all_in_mask) 
+        {
+            FaceRecognizer::SetPanelTextInMask(image);
+        }
+        else 
+        {
+            FaceRecognizer::SetPanelTextWithoutMask(image);
         }
 
         QImage frame = mat2QImage(image);
@@ -52,25 +79,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         ui.frame->show();
 
         cv::waitKey(30);
-        int height, width;
-        for (auto& face : faces) {
-            if (!face.second) {
-                cv::Mat face_img(image, face.first);
-                height = face.first.tl().y - face.first.br().y;
-                width = face.first.br().x - face.first.tl().x;
-                auto face_map = QPixmap::fromImage(mat2QImage(face_img).scaled(width, height, Qt::KeepAspectRatio, Qt::FastTransformation));
-                sendImage(client, face_map);
 
-                qDebug() << "Face:)\n";
-                painter->drawRect(face.first.tl().x, face.first.br().y,
-                    face.first.br().x - face.first.tl().x,
-                    face.first.tl().y - face.first.br().y);
-            }
-        }
-
-        //Sleep(2000);
-
-        qDebug() << "QQQQ\n   ";
+        qDebug() << "QQQQ\n";
     }
 
 }
