@@ -1,6 +1,7 @@
 #pragma once
 #include "FaceRecognitionUI.h"
 #include <QtCore/QDebug>
+#include <QtGui/QPainter>
 #include <thread>
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
@@ -14,14 +15,14 @@ void FaceRecognitionUI::onExitButtonClicked()
 {
     m_exit_button_clicked = true;
     run_analizer = false;
+    thrd.join();
     close();
     qDebug() << "QQQQ!!!";
 };
 
 void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
-    
-    std::thread thrd(&FaceRecognitionUI::recognize, this, 0);
+    thrd  = std::thread(&FaceRecognitionUI::recognize, this, 0);
 
     while (!m_exit_button_clicked)
     {
@@ -30,10 +31,11 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         {
             throw std::runtime_error("can't load camera");
         }*/
+
         cv::Mat image;
         faceInfo faces;
         
-        //������� ����, ��� �������� � FaceRecognizer
+        //get info from FaceRecognizer
         img_data.GetData(image, faces);
 
         if (image.empty())
@@ -41,25 +43,46 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             continue;
         }
 
+        bool is_all_in_mask = true;
+        int height, width;
+        for (auto& face : faces) 
+        {
+            if (!face.second)
+            {
+                cv::Mat face_img(image, face.first);
+                height = face.first.tl().y - face.first.br().y;
+                width = face.first.br().x - face.first.tl().x;
+                auto face_map = QPixmap::fromImage(mat2QImage(face_img).scaled(width, height, Qt::KeepAspectRatio, Qt::FastTransformation));
+                sendImage(client, face_map);
+
+                is_all_in_mask = is_all_in_mask && face.second; 
+
+                auto rect_color = face.second == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
+                cv::rectangle(image,face.first,rect_color, 3, 8, 0);
+
+                qDebug() << "Face:)\n";
+            }
+        }
+
+        if (is_all_in_mask) 
+        {
+            FaceRecognizer::SetPanelTextInMask(image);
+        }
+        else 
+        {
+            FaceRecognizer::SetPanelTextWithoutMask(image);
+        }
+
         QImage frame = mat2QImage(image);
         QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
         ui.frame->setPixmap(map);
         ui.frame->show();
+
         cv::waitKey(30);
 
-        /*std::vector<char> buffer;
-        cv::imwrite("image_face.png", image);
-
-        std::ifstream image_face_send;
-        client.ConvertImageToBinary(image_face_send, buffer);
-        client.SendBinaryMessage(buffer);
-
-        sendImage();*/
-
-        //Sleep(2000);
-
-        qDebug() << "QQQQ\n   ";
+        qDebug() << "QQQQ\n";
     }
+
 }
 
 void FaceRecognitionUI::recognize(int camera_id)
@@ -68,8 +91,8 @@ void FaceRecognitionUI::recognize(int camera_id)
 
     while (run_analizer)
     {
-        // ���� ���������� FaceRecognitionUI::ImageData � FaceRecognizer, 
-        // ��� ��� ������ ����� ����, ���������� ���� ������
+        // маємо передавати FaceRecognitionUI::ImageData в FaceRecognizer, 
+        // щоб там змінити даний клас, викликавши його сеттер
         recognizer.runAnalysis(img_data);
     }
 }
@@ -84,12 +107,15 @@ QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
     return dest;
 }
 
-void FaceRecognitionUI::sendImage()
+void FaceRecognitionUI::sendImage(TCPClient& client, QPixmap& pixmap)
 {
-    
+    std::vector<char> buffer;
+    client.ConvertImageToBinary(pixmap, buffer);
+    client.SendBinaryMessage(buffer);
 }
 
 
 FaceRecognitionUI::~FaceRecognitionUI()
 {
+
 }

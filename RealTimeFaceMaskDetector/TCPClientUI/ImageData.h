@@ -16,7 +16,7 @@ struct FaceWithMaskInfo {
 	bool has_mask;
 };
 
-#define faceInfo std::vector<std::pair<cv::Rect, bool>>  // TODO: typedef  ;   struct instead of pair
+using faceInfo = std::vector<std::pair<cv::Rect, bool>>;  // TODO: struct instead of pair
 
 class ImageData
 {
@@ -28,7 +28,7 @@ public:
 
 	void SetData(cv::Mat image, faceInfo faces);
 
-	void GetData(cv::Mat& image, faceInfo& faces);
+	void GetData(cv::Mat& image, faceInfo &face);
 
 	ImageData& operator= (const ImageData& obj);
 };

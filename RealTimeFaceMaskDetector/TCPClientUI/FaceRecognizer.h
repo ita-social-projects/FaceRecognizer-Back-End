@@ -12,12 +12,17 @@
 
 #include "ImageData.h"
 
+
+
 class FaceRecognizer
 {
 public:
 	FaceRecognizer(int camera = 0);
 
-  void runAnalysis(ImageData& img_data);
+	void runAnalysis(ImageData& img_data);
+
+	static void FaceRecognizer::SetPanelTextInMask(cv::Mat& image);
+	static void FaceRecognizer::SetPanelTextWithoutMask(cv::Mat& image);
 
 private:
 	cv::CascadeClassifier m_face_cascade;
@@ -26,5 +31,5 @@ private:
 
 	cv::VideoCapture m_camera;
 
-	ImageData m_data; // �� ����� ��������, ���� ��� �� ������ �� ImageData � FaceRecognitionUI
+	ImageData m_data; // ця штука локальна, вона ніяк не впливає на ImageData в FaceRecognitionUI
 };

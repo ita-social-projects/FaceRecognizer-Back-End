@@ -54,12 +54,13 @@
     </Link>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>..\EncryptDecryptECBMode;..\..\3rdPartyLibs\cryptopp820\include;..\..\3rdPartyLibs\opencv\include;C:\Qt_vs\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\EncryptDecryptECBMode;..\..\3rdPartyLibs\cryptopp820\include;..\..\3rdPartyLibs\opencv\include;C:\Qt_vs\include;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;$(Qt_INCLUDEPATH_);.\</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_)</AdditionalLibraryDirectories>
@@ -112,19 +113,18 @@
     <QtUic Include="TCPClientUI.ui" />
     <QtMoc Include="TCPClientUI.h" />
     <ClCompile Include="FaceRecognitionUI.cpp" />
-    <ClCompile Include="ImageData.cpp" />
-    <ClCompile Include="FaceRecognizer.cpp" />
+    <ClCompile Include="MaskRecognizer.cpp" />
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TCPClientUI.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="FaceRecognitionUI.h" />
-    <ClInclude Include="ImageData.h" />
-    <ClInclude Include="FaceRecognizer.h" />
-    <ClInclude Include="TCPClient.h" />
+    <ClInclude Include="FaceRecognitionUI.h" />
+    <ClInclude Include="MaskRecognizer.h" />
+    <QtMoc Include="TCPClient.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="Configuration.conf" />
   </ItemGroup>
   <ItemGroup>

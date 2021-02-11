@@ -7,16 +7,7 @@
 class SQLSERVER_API SQLServer : public SQLConnection
 {
 public:
-    virtual void Connect(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password) abstract;
-    virtual void InsertPhoto(const std::string& photo_path, const std::string& photo_name, const std::string& photo_extension) abstract;
-    virtual void RollBack() abstract;
-    virtual void Disconnect() abstract;
-    virtual void ClearTable() abstract;
-};
 
-class SQLSERVER_API SQLServer : public SQLConnection
-{
-public:
     struct PhotoType
     {
         SAString photoBytes;
@@ -25,7 +16,6 @@ public:
     };
 
     SQLServer() = default;
-    SQLServer(const std::string& database_string, /*serverName@databaseName*/ const std::string& username, const std::string& password);
 
     SQLServer(const ConnectParams& connect_string);
 
