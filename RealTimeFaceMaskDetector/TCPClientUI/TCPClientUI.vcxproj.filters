@@ -20,6 +20,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FaceRecognizer.h" />
+    <ClInclude Include="ImageData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,13 +35,13 @@
     <ClCompile Include="FaceRecognitionUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImageData.cpp">
+    <ClCompile Include="FaceRecognizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TCPClientUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FaceRecognizer.cpp">
+    <ClCompile Include="ImageData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
