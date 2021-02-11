@@ -38,6 +38,7 @@ public:
     /* Connects to the server socket. */
     bool Connect();
     /* Sends vector of bytes to the server. */
+    /* Sends vector of bytes to the server. */
     bool SendBinaryMessage(std::vector<char>& buffer);
     /* Diconnects from the server and terminates use of the Winsock DLL  */
     bool CloseSocket();
