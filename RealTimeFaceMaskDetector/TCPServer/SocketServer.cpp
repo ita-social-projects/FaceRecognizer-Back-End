@@ -127,8 +127,8 @@ int  SocketServer::GetMessageLength()
 {
 	std::vector<char> bytes_number;
 	bytes_number.resize(DEFAULT_BUFLEN);
+	recv_mutex.lock();
 	recv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
-
 	return atoi(bytes_number.data());
 }
 
@@ -138,12 +138,13 @@ bool SocketServer::ReceiveFullMessage()
 
 	if (total_bytes_count == 0)
 	{
+		recv_mutex.unlock();
 		return false;
 	}
 
 	m_buffer.resize(total_bytes_count + 1);
-
 	m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
+	recv_mutex.unlock();
 	if (m_func_result > 0) // correctrly receided message
 	{
 		LOG_MSG << "Total bytes: "<< total_bytes_count <<" Received: " << m_func_result;
@@ -207,8 +208,10 @@ void SocketServer::SaveAndSendData()
 	{
 		return;
 	}
+	recv_mutex.lock();
 	recv_data.write(m_buffer.data(), m_buffer.size());
 	recv_data.close();
+	recv_mutex.unlock();
 
 	//Writing in database
 	//here must be decrypt
@@ -219,6 +222,7 @@ bool SocketServer::UpdateDataBase()
 {
 	try
 	{
+		std::lock_guard<std::mutex> lock(sql_mutex);
 		sql_server->InsertPhoto(m_photo_to_send);
 	}
 	catch (const SQLException& e)
