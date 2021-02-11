@@ -35,6 +35,12 @@ TCPClientUI::TCPClientUI(QWidget *parent)
 
     connect(ui.Close, &QPushButton::clicked, this, &TCPClientUI::Close);
     connect(ui.Save, &QPushButton::clicked, this, &TCPClientUI::Save);
+
+    const QString default_ip = "127.0.0.1";
+    const QString default_port = "27015";
+
+    ui.IP->setText(default_ip);
+    ui.Port->setText(default_port);
 }
 
 void TCPClientUI::Save()

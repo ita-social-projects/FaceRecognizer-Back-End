@@ -17,5 +17,3 @@ private slots:
 private:
     Ui::TCPClientUIClass ui;
 };
-
-extern std::unique_ptr<FaceRecognizer> m_face_recognition_ui;
