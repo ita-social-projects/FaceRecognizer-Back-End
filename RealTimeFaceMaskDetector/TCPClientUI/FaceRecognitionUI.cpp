@@ -123,7 +123,7 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat img)
 {
     std::vector<uchar> ubuffer;
     std::vector<char> buffer;
-    client.ConvertImageToBinary(img.clone(), ubuffer);
+    cv::imencode(".png", img.clone(), ubuffer);
     for (auto& value : ubuffer) {
         buffer.push_back(static_cast<char>(value));
     }

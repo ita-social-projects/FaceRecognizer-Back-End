@@ -37,8 +37,6 @@ public:
     bool CreateSocket();
     /* Connects to the server socket. */
     bool Connect();
-    /* Converts image to binary and returns result via second parameter. */
-    bool ConvertImageToBinary(cv::Mat img, std::vector<uchar>& buffer);
     /* Sends vector of bytes to the server. */
     bool SendBinaryMessage(std::vector<char>& buffer);
     /* Diconnects from the server and terminates use of the Winsock DLL  */
