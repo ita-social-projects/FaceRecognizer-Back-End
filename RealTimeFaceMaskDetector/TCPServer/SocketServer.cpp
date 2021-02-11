@@ -50,6 +50,7 @@ bool SocketServer::BindListeningSocket()
 		closesocket(m_listen_socket);
 		WSACleanup();
 		LOG_ERROR << "BindListeningSocket ERROR: faild to bind socket";
+		LOG_ERROR << GetLastError();
 		return false;
 	}
 	return true;
@@ -84,8 +85,10 @@ void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 void SocketServer::StartMessagingWintClient(bool& ret_value)
 {
 	std::thread th = std::thread([&]() {ReceiveMessage(ret_value); });
-	if (th.joinable())
-		th.detach();
+	if (th.joinable()) 
+	{
+		th.join();
+	}
 }
 
 bool SocketServer::StartListening(bool& ret_value)
@@ -112,6 +115,7 @@ bool SocketServer::StartListening(bool& ret_value)
 			ret_value = false;
 			break;
 		}
+	return true;
 	}
 	return ret_value;
 }
@@ -124,7 +128,6 @@ int  SocketServer::GetMessageLength()
 
 	return atoi(bytes_number.data());
 }
-
 
 bool SocketServer::ReceiveFullMessage()
 {
@@ -192,7 +195,6 @@ bool SocketServer::ReceiveMessage(bool& ret_value)
 
 void SocketServer::SaveAndSendData()
 {
-	EncryptDecryptAES_ECBMode decryptor;
 	std::ofstream recv_data;
 
 	if (!OpenParticularFile(recv_data))
@@ -203,9 +205,7 @@ void SocketServer::SaveAndSendData()
 	recv_data.close();
 
 	//Writing in database
-	std::string data;
-	std::string cipher(m_buffer.begin(), m_buffer.end());
-	decryptor.Decrypt(cipher, data);
+	//here must be decrypt
 	UpdateDataBase();
 }
 
@@ -333,6 +333,8 @@ void SocketServer::ConnectToSQL()
 	{
 		sql_server->GetIniParams(CONFIG_FILE);
 
+		//ConnectParams db{ "MAC14BF\SQLEXPRESS", "","", "MaskPhotosDatabase", "Photos" };
+		//sql_server->Connect(db);
 		sql_server->Connect();
 		CreateTableIfNeeded(sql_server);
 	}

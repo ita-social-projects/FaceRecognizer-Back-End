@@ -1,10 +1,7 @@
 #pragma once
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/qmessagebox.h>
-#include <QtGui/QRegExpValidator>
 
 #include "ui_TCPClientUI.h"
-#include "MaskRecognizer.h"
+#include "FaceRecognizer.h"
 
 class TCPClientUI : public QMainWindow
 {
@@ -17,6 +14,6 @@ private slots:
     void Save();
     void Close();
 
-public:
+private:
     Ui::TCPClientUIClass ui;
 };
