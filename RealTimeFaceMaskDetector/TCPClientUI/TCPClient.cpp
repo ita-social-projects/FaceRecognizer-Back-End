@@ -29,29 +29,22 @@ bool TCPClient::Connect()
     return connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) != SOCKET_ERROR;
 }
 
-bool TCPClient::ConvertImageToBinary(QPixmap& pixmap, std::vector<char>& buffer)
+bool TCPClient::ConvertImageToBinary(cv::Mat img, std::vector<char>& buffer)
 {
-    QByteArray bytes;
-    QBuffer buff(&bytes);
-    buff.open(QIODevice::WriteOnly);
-    pixmap.save(&buff, "JPG");
-    buffer.assign(bytes.constData(), bytes.constData() + bytes.size());
-
-    /*image.open("image_face.png", std::ios::in | std::ios::binary);
-
-    while (!image.eof())
+    
+    if (img.isContinuous())
     {
-        const char one_byte = image.get();
-        buffer.push_back(one_byte);
+        buffer.assign(img.data, img.data + img.total() * img.channels());
+        return true;
     }
-
-    // Deleting one element from the end which equals to Traits::eof()
-    // See docs: https://en.cppreference.com/w/cpp/io/basic_istream/get
-    buffer.pop_back();
-
-    image.close();
-
-    return true;*/
+    else
+    {
+        for (int i = 0; i < img.rows; ++i)
+        {
+            buffer.insert(buffer.end(), img.ptr<float>(i), img.ptr<float>(i) + img.cols * img.channels());
+        }
+        return true;
+    }
 }
 
 bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
