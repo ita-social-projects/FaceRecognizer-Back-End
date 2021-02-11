@@ -50,6 +50,7 @@ bool SocketServer::BindListeningSocket()
 		closesocket(m_listen_socket);
 		WSACleanup();
 		LOG_ERROR << "BindListeningSocket ERROR: faild to bind socket";
+		LOG_ERROR << GetLastError();
 		return false;
 	}
 	return true;
@@ -84,8 +85,10 @@ void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 void SocketServer::StartMessagingWintClient(bool& ret_value)
 {
 	std::thread th = std::thread([&]() {ReceiveMessage(ret_value); });
-	if (th.joinable())
-		th.detach();
+	if (th.joinable()) 
+	{
+		th.join();
+	}
 }
 
 bool SocketServer::StartListening(bool& ret_value)
@@ -112,6 +115,7 @@ bool SocketServer::StartListening(bool& ret_value)
 			ret_value = false;
 			break;
 		}
+	return true;
 	}
 	return ret_value;
 }
@@ -124,7 +128,6 @@ int  SocketServer::GetMessageLength()
 
 	return atoi(bytes_number.data());
 }
-
 
 bool SocketServer::ReceiveFullMessage()
 {
@@ -333,6 +336,8 @@ void SocketServer::ConnectToSQL()
 	{
 		sql_server->GetIniParams(CONFIG_FILE);
 
+		//ConnectParams db{ "MAC14BF\SQLEXPRESS", "","", "MaskPhotosDatabase", "Photos" };
+		//sql_server->Connect(db);
 		sql_server->Connect();
 		CreateTableIfNeeded(sql_server);
 	}
