@@ -31,10 +31,11 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         {
             throw std::runtime_error("can't load camera");
         }*/
+
         cv::Mat image;
         faceInfo faces;
         
-        //стягуємо інфу, яку отримали в FaceRecognizer
+        //get info from FaceRecognizer
         img_data.GetData(image, faces);
 
         if (image.empty())
@@ -42,11 +43,12 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             continue;
         }
 
-        bool is_all_in_mask = false;
+        bool is_all_in_mask = true;
         int height, width;
-        for (auto& face : faces) {
-            if (!face.second) {
-
+        for (auto& face : faces) 
+        {
+            if (!face.second)
+            {
                 cv::Mat face_img(image, face.first);
                 height = face.first.tl().y - face.first.br().y;
                 width = face.first.br().x - face.first.tl().x;
@@ -55,18 +57,21 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
                 is_all_in_mask = is_all_in_mask && face.second; 
 
+                auto rect_color = face.second == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
+                cv::rectangle(image,face.first,rect_color, 3, 8, 0);
+
                 qDebug() << "Face:)\n";
             }
         }
 
-        if (is_all_in_mask) {
+        if (is_all_in_mask) 
+        {
             FaceRecognizer::SetPanelTextInMask(image);
         }
-        else {
+        else 
+        {
             FaceRecognizer::SetPanelTextWithoutMask(image);
         }
-
-
 
         QImage frame = mat2QImage(image);
         QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
@@ -75,9 +80,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
         cv::waitKey(30);
 
-        //Sleep(2000);
-
-        qDebug() << "QQQQ\n   ";
+        qDebug() << "QQQQ\n";
     }
 
 }
