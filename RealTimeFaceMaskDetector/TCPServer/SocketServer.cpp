@@ -112,6 +112,7 @@ bool SocketServer::StartListening(bool& ret_value)
 			ret_value = false;
 			break;
 		}
+	return true;
 	}
 	return ret_value;
 }
@@ -125,6 +126,14 @@ int  SocketServer::GetMessageLength()
 	return atoi(bytes_number.data());
 }
 
+bool SocketServer::SendMessage()
+{
+	// Connection information:
+		std::string server_name{ "SAPIK\\SQLEXPRESS" };                     // "" if server exists on your local machine
+		std::string database_name{ "MaskPhotosDatabase" };
+		std::string username{ "" };                          // "" if Windows authentification
+		std::string password{ "" };                          // "" if Windows authentification
+		std::string database_string = server_name + "@" + database_name; // 1-st parameter of 'Connect' method
 
 bool SocketServer::ReceiveFullMessage()
 {
@@ -194,6 +203,8 @@ void SocketServer::SaveAndSendData()
 	{
 		/*cannot open file error*/
 	}
+	} while (recived_bytes_count < total_bytes_count);
+
 	recv_data.write(m_buffer.data(), m_buffer.size());
 	recv_data.close();
 
@@ -201,6 +212,8 @@ void SocketServer::SaveAndSendData()
 	std::string data;
 	std::string cipher(m_buffer.begin(), m_buffer.end());
 	decryptor.Decrypt(cipher, data);
+
+	LOG_MSG << "Total bytes received: " << recived_bytes_count;
 	SendMessage();
 }
 

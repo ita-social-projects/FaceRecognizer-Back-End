@@ -134,6 +134,10 @@
       <Project>{79f7370c-9bf0-45de-b2eb-1159df437d30}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\Logger\Logger.vcxproj">
+      <Project>{ade47c16-1e41-4168-ad1e-fdf9daeec556}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon.png" />

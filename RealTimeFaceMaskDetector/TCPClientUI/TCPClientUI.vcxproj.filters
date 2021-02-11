@@ -82,4 +82,9 @@
   <ItemGroup>
     <Text Include="README (2).txt" />
   </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="FaceRecognitionUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
 </Project>
