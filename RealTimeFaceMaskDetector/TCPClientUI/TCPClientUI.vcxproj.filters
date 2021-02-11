@@ -20,12 +20,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FaceRecognizer.h" />
-    <ClInclude Include="ImageData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -35,10 +29,10 @@
     <ClCompile Include="FaceRecognitionUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FaceRecognizer.cpp">
+    <ClCompile Include="TCPClientUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TCPClientUI.cpp">
+    <ClCompile Include="FaceRecognizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ImageData.cpp">
@@ -47,6 +41,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FaceRecognizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeCounting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,10 +62,10 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="TCPClient.h">
+    <QtMoc Include="TCPClientUI.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="TCPClientUI.h">
+    <QtMoc Include="TCPClient.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="FaceRecognitionUI.h">

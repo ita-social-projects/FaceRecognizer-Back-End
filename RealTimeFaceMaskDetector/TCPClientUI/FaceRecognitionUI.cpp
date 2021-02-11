@@ -3,6 +3,7 @@
 #include <QtCore/QDebug>
 #include <QtGui/QPainter>
 #include <thread>
+#include "TimeCounting.h"
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
@@ -22,7 +23,13 @@ void FaceRecognitionUI::onExitButtonClicked()
 
 void FaceRecognitionUI::updateWindow(TCPClient& client)
 {
+    // need for same person check
+    std::chrono::high_resolution_clock::time_point send_time, new_send_time;
+    send_time = get_current_time_fenced();
+
+
     thrd  = std::thread(&FaceRecognitionUI::recognize, this, 0);
+
 
     while (!m_exit_button_clicked)
     {
@@ -53,7 +60,16 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                 height = face.first.tl().y - face.first.br().y;
                 width = face.first.br().x - face.first.tl().x;
                 auto face_map = QPixmap::fromImage(mat2QImage(face_img).scaled(width, height, Qt::KeepAspectRatio, Qt::FastTransformation));
-                sendImage(client, face_map);
+
+                // replace with same person check
+                new_send_time = get_current_time_fenced();
+                if (to_us(new_send_time - send_time) >= 5)
+                {
+                    send_time = new_send_time;
+                    sendImage(client, face_map);
+                    qDebug() << "Image_sent\n";
+                }
+                
 
                 is_all_in_mask = is_all_in_mask && face.second; 
 
