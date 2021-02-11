@@ -12,7 +12,6 @@
 
 #include <QtWidgets/QWidget>
 #include <QtGui/QImage>
-
 #include <QtCore/QBuffer>
 
 #pragma comment (lib, "ws2_32.lib")

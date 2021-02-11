@@ -123,28 +123,7 @@
     <QtMoc Include="FaceRecognitionUI.h" />
     <ClInclude Include="FaceRecognizer.h" />
     <ClInclude Include="ImageData.h" />
-    <QtMoc Include="TCPClient.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="Configuration.conf" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EncryptDecryptECBMode\EncryptDecryptECBMode.vcxproj">
-      <Project>{79f7370c-9bf0-45de-b2eb-1159df437d30}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Logger\Logger.vcxproj">
-      <Project>{ade47c16-1e41-4168-ad1e-fdf9daeec556}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="icon.png" />
-    <Image Include="PNG_transparency_demonstration_1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="README (2).txt" />
+    <ClInclude Include="TCPClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

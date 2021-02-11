@@ -129,12 +129,12 @@ int  SocketServer::GetMessageLength()
 bool SocketServer::SendMessage()
 {
 	// Connection information:
-		std::string server_name{ "SAPIK\\SQLEXPRESS" };                     // "" if server exists on your local machine
-		std::string database_name{ "MaskPhotosDatabase" };
-		std::string username{ "" };                          // "" if Windows authentification
-		std::string password{ "" };                          // "" if Windows authentification
-		std::string database_string = server_name + "@" + database_name; // 1-st parameter of 'Connect' method
-
+	std::string server_name{ "SAPIK\\SQLEXPRESS" };                     // "" if server exists on your local machine
+	std::string database_name{ "MaskPhotosDatabase" };
+	std::string username{ "" };                          // "" if Windows authentification
+	std::string password{ "" };                          // "" if Windows authentification
+	std::string database_string = server_name + "@" + database_name; // 1-st parameter of 'Connect' method
+}
 bool SocketServer::ReceiveFullMessage()
 {
 	int total_bytes_count = GetMessageLength();
@@ -203,7 +203,7 @@ void SocketServer::SaveAndSendData()
 	{
 		/*cannot open file error*/
 	}
-	} while (recived_bytes_count < total_bytes_count);
+	while (recived_bytes_count < total_bytes_count);
 
 	recv_data.write(m_buffer.data(), m_buffer.size());
 	recv_data.close();

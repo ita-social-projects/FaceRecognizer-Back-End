@@ -69,7 +69,7 @@ void TCPClientUI::Save()
         m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
         m_face_recognition_ui->show();
         this->hide();
-        client.m_face_recognition_ui->updateWindow(client);
+        m_face_recognition_ui->updateWindow(client);
         client.CloseSocket();
     }
 }

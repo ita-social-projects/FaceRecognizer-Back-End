@@ -46,6 +46,9 @@
     <ClInclude Include="FaceRecognizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TCPClient.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="FaceRecognitionUI.ui">
@@ -56,13 +59,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Configuration.conf" />
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="TCPClient.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="TCPClientUI.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -71,16 +67,9 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon.png" />
-    <Image Include="PNG_transparency_demonstration_1.png" />
-  </ItemGroup>
-  <ItemGroup>
     <QtRcc Include="TCPClientUI.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="README (2).txt" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="FaceRecognitionUI.h">
