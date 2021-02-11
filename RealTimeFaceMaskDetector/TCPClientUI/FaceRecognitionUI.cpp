@@ -63,10 +63,6 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             }
         }
 
-        
-    
-        
-        
 
         /*std::vector<char> buffer;
         cv::imwrite("image_face.png", image);
