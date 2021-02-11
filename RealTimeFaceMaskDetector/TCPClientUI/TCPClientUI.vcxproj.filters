@@ -46,10 +46,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FaceRecognizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ImageData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FaceRecognizer.h">
+    <ClInclude Include="TimeCounting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TCPClient.h">
@@ -78,6 +81,12 @@
     </QtRcc>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="TCPClientUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TCPClient.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="FaceRecognitionUI.h">
       <Filter>Header Files</Filter>
     </QtMoc>
