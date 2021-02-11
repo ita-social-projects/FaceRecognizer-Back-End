@@ -78,14 +78,15 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                 qDebug() << "Face:)\n";
             }
         }
-
-        if (is_all_in_mask) 
-        {
-            FaceRecognizer::SetPanelTextInMask(image);
-        }
-        else 
-        {
-            FaceRecognizer::SetPanelTextWithoutMask(image);
+        if (!(faces.empty())) {
+            if (is_all_in_mask)
+            {
+                FaceRecognizer::SetPanelTextInMask(image);
+            }
+            else
+            {
+                FaceRecognizer::SetPanelTextWithoutMask(image);
+            }
         }
 
         QImage frame = mat2QImage(image);

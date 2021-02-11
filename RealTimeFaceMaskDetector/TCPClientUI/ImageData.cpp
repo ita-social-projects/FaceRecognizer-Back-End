@@ -1,4 +1,3 @@
-
 #include "ImageData.h"
 
 void ImageData::SetData(cv::Mat image, faceInfo faces)

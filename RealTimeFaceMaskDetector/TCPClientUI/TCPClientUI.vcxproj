@@ -74,9 +74,9 @@
     <QtInstall>Qt_vs</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>Qt</QtInstall>
+    <QtInstall>Qt_vs</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
-    <QtBuildConfig>release</QtBuildConfig>
+    <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -125,20 +125,6 @@
     <ClInclude Include="FaceRecognizer.h" />
     <ClInclude Include="ImageData.h" />
     <QtMoc Include="TCPClient.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="Configuration.conf" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EncryptDecryptECBMode\EncryptDecryptECBMode.vcxproj">
-      <Project>{79f7370c-9bf0-45de-b2eb-1159df437d30}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Logger\Logger.vcxproj">
-      <Project>{ade47c16-1e41-4168-ad1e-fdf9daeec556}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
