@@ -14,7 +14,7 @@ bool TCPClient::CreateSocket()
     m_soket_info.sin_addr.s_addr = inet_addr(g_ip.c_str());
     m_soket_info.sin_port = htons(g_port);
 
-    m_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    m_socket = socket(AF_INET, SOCK_STREAM, EMPTY_FLAGS);
 
     if (m_socket == INVALID_SOCKET)
     {
