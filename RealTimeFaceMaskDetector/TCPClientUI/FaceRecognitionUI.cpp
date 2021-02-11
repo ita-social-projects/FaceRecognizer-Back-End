@@ -5,6 +5,8 @@
 #include <thread>
 #include "TimeCounting.h"
 
+#define IDCAM 0
+
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
 {
@@ -27,8 +29,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     std::chrono::high_resolution_clock::time_point send_time, new_send_time;
     send_time = get_current_time_fenced();
 
-    thrd  = std::thread(&FaceRecognitionUI::recognize, this, 0);
-
+    thrd  = std::thread(&FaceRecognitionUI::recognize, this, IDCAM);
 
     while (!m_exit_button_clicked)
     {
@@ -65,7 +66,6 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                     qDebug() << "Image_sent\n";
                 }
                 
-
                 is_all_in_mask = is_all_in_mask && face.second; 
 
                 auto rect_color = face.second == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
@@ -111,10 +111,17 @@ void FaceRecognitionUI::recognize(int camera_id)
 
 QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
 {
-    cv::Mat temp; // make the same cv::Mat
-    cvtColor(src, temp, cv::COLOR_BGR2RGB); // cvtColor Makes a copt, that what i need
+    // make the same cv::Mat
+    cv::Mat temp;
+
+    // cvtColor Makes a copt, that what i need
+    cvtColor(src, temp, cv::COLOR_BGR2RGB);
+
     QImage dest((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
-    dest.bits(); // enforce deep copy, see documentation 
+    
+    // enforce deep copy, see documentation 
+    dest.bits(); 
+
     // of QImage::QImage ( const uchar * data, int width, int height, Format format )
     return dest;
 }
@@ -122,14 +129,12 @@ QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
 void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat img)
 {
     std::vector<uchar> ubuffer;
-    std::vector<char> buffer;
     cv::imencode(".png", img.clone(), ubuffer);
-    for (auto& value : ubuffer) {
-        buffer.push_back(static_cast<char>(value));
-    }
+    
+    std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
+
     client.SendBinaryMessage(buffer);
 }
-
 
 FaceRecognitionUI::~FaceRecognitionUI()
 {
