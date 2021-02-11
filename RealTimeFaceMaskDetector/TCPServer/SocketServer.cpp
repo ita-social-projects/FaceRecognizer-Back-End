@@ -120,7 +120,7 @@ int  SocketServer::GetMessageLength()
 {
 	std::vector<char> bytes_number;
 	bytes_number.resize(DEFAULT_BUFLEN);
-	ThreadSafeRecv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
+	recv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
 
 	return atoi(bytes_number.data());
 }
@@ -137,7 +137,7 @@ bool SocketServer::ReceiveFullMessage()
 
 	m_buffer.resize(total_bytes_count + 1);
 
-	m_func_result = ThreadSafeRecv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
+	m_func_result = recv(m_client_socket, &m_buffer[0], m_buffer.size(), 0);
 	if (m_func_result > 0) // correctrly receided message
 	{
 		LOG_MSG << "Total bytes: "<< total_bytes_count <<" Received: " << m_func_result;
@@ -166,12 +166,6 @@ void SocketServer::TryReceiveAndSendMessage(bool& client_connected)
 	{
 		client_connected = false;
 	}
-}
-
-int SocketServer::ThreadSafeRecv(SOCKET s, char* buf, int len, int flag)
-{
-	std::lock_guard<std::mutex> lock(recv_mutex);
-	return recv(s, buf, len, flag);
 }
 
 bool SocketServer::ReceiveMessage(bool& ret_value)
@@ -219,7 +213,6 @@ bool SocketServer::UpdateDataBase()
 {
 	try
 	{
-		std::lock_guard<std::mutex> lock(sql_mutex);
 		sql_server->InsertPhoto(m_photo_to_send);
 
 	}
@@ -299,8 +292,12 @@ bool SocketServer::OpenParticularFile(std::ofstream& stream)
 	std::string photo_path{ m_photo_to_send.path +
 							m_photo_to_send.name + "." +
 							m_photo_to_send.extension };
+	if (std::filesystem::exists(photo_path))
+	{
+		return false;
+	}
 	stream.open(photo_path, std::ios::binary);
-	if (std::filesystem::exists(photo_path) || !stream.is_open())
+	if (!stream.is_open())
 	{
 		return false;
 	}
