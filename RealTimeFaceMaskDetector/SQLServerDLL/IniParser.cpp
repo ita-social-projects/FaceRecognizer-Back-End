@@ -71,5 +71,5 @@ std::string IniParser::GetParam(const std::string& section, const std::string& p
             }
         }
     }
-    return "No such parameter";
+    return "No such parameter"; 
 }

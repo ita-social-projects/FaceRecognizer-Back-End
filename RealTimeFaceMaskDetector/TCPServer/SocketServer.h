@@ -4,6 +4,7 @@
 #include "EncryptDecryptAES_ECBMode.h"
 #include "Logger.h"
 #include "SQLServer.h"
+#include <mutex>
 #pragma comment (lib, "Ws2_32.lib")
 
 const char* const DEFAULT_PORT = "27015";
@@ -19,17 +20,20 @@ public:
 	int GetMessageLength();
 
 private:
+	void ConnectToSQL();
+
 	bool BindListeningSocket();
 	bool AcceptConnection();
 	void TryAcceptAndStartMessaging(bool& ret_value);
 	void SaveAndSendData();
-	bool SendMessage();
+	bool UpdateDataBase();
 	void CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server);
 
 	bool ReceiveMessage(bool& ret_value);
 	void StartMessagingWintClient(bool& ret_value);
 	bool ReceiveFullMessage();
 	void TryReceiveAndSendMessage(bool& is_client_connected);
+	int ThreadSafeRecv(SOCKET s, char* buf, int len, int flag);
 
 	/*return path to TCPServer.exe file*/
 	std::filesystem::path GetCurrentPath();
@@ -52,8 +56,10 @@ private:
 	std::vector<char> m_buffer;
 	addrinfo* m_host_info = nullptr;
 	addrinfo hints;
+	std::mutex recv_mutex;
+	std::mutex sql_mutex;
 
-
+	std::shared_ptr<SQLConnection>sql_server;
 
 	/*Photo that will be sent to database. 
 	It's fields will be rewritten with each

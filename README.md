@@ -1,7 +1,5 @@
 <a href="https://softserve.academy/"><img src="https://s.057.ua/section/newsInternalIcon/upload/images/news/icon/000/050/792/vnutr_5ce4f980ef15f.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></a>
 
-***INSERT GRAPHIC HERE (include hyperlink in image)***
-
 # Real-Time Face Mask Detector 
 
 > The application recognizes if the person is wearing a mask or not.
@@ -9,100 +7,56 @@
 > Input data is taken from a real-time webcam stream
 
 
-[![Build Status](https://img.shields.io/travis/ita-social-projects/GreenCity/master?style=flat-square)](https://travis-ci.org/github/ita-social-projects/GreenCity)
 [![Coverage Status](https://img.shields.io/gitlab/coverage/ita-social-projects/GreenCity/master?style=flat-square)](https://coveralls.io)
-[![Github Issues](https://img.shields.io/github/issues/ita-social-projects/GreenCity?style=flat-square)](https://github.com/ita-social-projects/GreenCity/issues)
-[![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/GreenCity?style=flat-square)](https://github.com/ita-social-projects/GreenCity/pulls)
+[![Pending Pull-Requests](https://img.shields.io/github/issues-pr/ita-social-projects/Real-Time-Face-Mask-Detector-Server)](https://github.com/ita-social-projects/Real-Time-Face-Mask-Detector-Server/pulls)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
-
-- For more on these wonderful  badges, refer to <a href="https://shields.io/" target="_blank">shields.io</a>.
 
 ---
 
-## Table of Contents (Optional)
-
-> If your `README` has a lot of info, section headers might be nice.
-
+## Table of Contents
+- [Setup](#setup)
 - [Installation](#installation)
-  - [Required to install](#Required-to-install)
-  - [Environment](#Environment)
-  - [Clone](#Clone)
-  - [Setup](#Setup)
-  - [How to run local](#How-to-run-local)
-  - [How to run Docker](#How-to-run-Docker)
-- [Usage](#Usage)
-  - [How to work with swagger UI](#How-to-work-with-swagger-UI)
-  - [How to run tests](#How-to-run-tests)
-  - [How to Checkstyle](#How-to-Checkstyle)
-- [Documentation](#Documentation))
+- [Documentation](#Documentation)
 - [Contributing](#contributing)
   - [git flow](#git-flow)
-  - [issue flow](#git-flow)
-- [FAQ](#faq)
-- [Support](#support)
 - [License](#license)
 
 ---
 
+## Setup
+
+- Install **[SQLAPI](https://www.sqlapi.com/Download/)** on **C** partition
+- If you don't have intalled python and pip, please install one. **[Link](https://www.python.org/downloads/)** to the download page.
+- Install **conan** using this command in the command prompt:
+  ```
+    pip install conan
+  ```
+---
+
 ## Installation
 
-- All the `code` required to get started
-- Images of what it should look like
+- Project is using mvcs compiler, so you need to have intalled **Visual Studio** or **MSBuild tool**
+- In the repository's root directory create a folder (for instance **"conanfiles"**)
+- Open command prompt and enter to this directory
+- In the command prompt run the following command if you want to build your project in debug mod:
+  ```
+  conan install .. --settings build_type=Debug --settings arch=x86_64 --options shared=True
+  ```
+  In the way, you want to build it in Release:
+
+  ```
+  conan install .. --settings build_type=Release --settings arch=x86_64 --options shared=True
+  ```
+- Install **Qt extension** in Visual Studio, after that, in the Extensions->Qt VS Tools->Qt Options, add "**C:\Qt_vc**" in the Path field and press "OK" button
 
 ### Required to install
-* Python (3.6.3)
-* PostgreSQL (9.5.9)
-* Django (1.11.6)
-* NodeJS (6.11.4)
-* Redis (3.0.6)
-
-### Environment
-environmental variables
-```properties
-spring.datasource.url=${DATASOURCE_URL}
-spring.datasource.username=${DATASOURCE_USER}
-spring.datasource.password=${DATASOURCE_PASSWORD}
-spring.mail.username=${EMAIL_ADDRESS}
-spring.mail.password=${EMAIL_PASSWORD}
-cloud.name=${CLOUD_NAME}
-api.key=${API_KEY}
-api.secret=${API_SECRET}
-```
+* [SQLAPI](https://www.sqlapi.com/Download/)
+* [SQLServer](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
+* [Conan](https://conan.io/downloads.html)
 
 ### Clone
 
-- Clone this repo to your local machine using `https://github.com/ita-social-projects/SOMEREPO`
-
-### Setup
-
-- If you want more syntax highlighting, format your code like this:
-
-> update and install this package first
-
-```shell
-$ brew update
-$ brew install SOMEREPOproductions
-```
-
-> now install npm and bower packages
-
-```shell
-$ npm install
-$ bower install
-```
-
-- For all the possible languages that support syntax highlithing on GitHub (which is basically all of them), refer <a href="https://github.com/github/linguist/blob/master/lib/linguist/languages.yml" target="_blank">here</a>.
-
-### How to run local
-
-### How to run Docker
-
----
-
-## Usage
-### How to work with swagger UI
-### How to run tests
-### How to Checkstyle
+- Clone this repo to your local machine using `https://github.com/ita-social-projects/Real-Time-Face-Mask-Detector-Server.git`
 
 ---
 
@@ -113,7 +67,7 @@ $ bower install
 ## Contributing
 
 ### Git flow
-> To get started...
+> This project is using **[Git Feature Branch Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow)**. In our case new branch should be named as **type of task/id of ticket in your task tracking system**. For instance, if you are implementing a new feature and it's number "Lv-128", branch should be named as **feature/Lv-128**.
 #### Step 1
 
 - **Option 1**
@@ -128,44 +82,9 @@ $ bower install
 
 #### Step 3
 
-- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/SOMEREPO/compare/" target="_blank">github.com/ita-social-projects/SOMEREPO</a>.
+- 🔃 Create a new pull request using <a href="https://github.com/ita-social-projects/Real-Time-Face-Mask-Detector-Server/compare" target="_blank">github.com/ita-social-projects/Real-Time-Face-Mask-Detector-Server/compare</a>.
 
 ### Issue flow
-
----
-
-## Team
-
-> Or Contributors/People
-
-[![@lhalam](https://avatars3.githubusercontent.com/u/3837059?s=100&v=4)](https://github.com/lhalam)
-[![@lhalam](https://avatars3.githubusercontent.com/u/3837059?s=100&v=4)](https://github.com/lhalam)
-[![@lhalam](https://avatars3.githubusercontent.com/u/3837059?s=100&v=4)](https://github.com/lhalam)
-[![@lhalam](https://avatars3.githubusercontent.com/u/3837059?s=100&v=4)](https://github.com/lhalam) 
-[![@lhalam](https://avatars3.githubusercontent.com/u/3837059?s=100&v=4)](https://github.com/lhalam)
-[![@lhalam](https://avatars3.githubusercontent.com/u/3837059?s=100&v=4)](https://github.com/lhalam)
-[![@lhalam](https://avatars3.githubusercontent.com/u/3837059?s=100&v=4)](https://github.com/lhalam)
-[![@lhalam](https://avatars3.githubusercontent.com/u/3837059?s=100&v=4)](https://github.com/lhalam)  
-
-- You can just grab their GitHub profile image URL
-- You should probably resize their picture using `?s=200` at the end of the image URL.
-
----
-
-## FAQ
-
-- **How do I do *specifically* so and so?**
-    - No problem! Just do this.
-
----
-
-## Support
-
-Reach out to me at one of the following places!
-
-- Website at <a href="http://Website.com" target="_blank">`Website.com`</a>
-- Facebook at <a href="https://www.facebook.com/LiubomyrHalamaha/" target="_blank">`Liubomyr Halamaha`</a>
-- Insert more social links here.
 
 ---
 
