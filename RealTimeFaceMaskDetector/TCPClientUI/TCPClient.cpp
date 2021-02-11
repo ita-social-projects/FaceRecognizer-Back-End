@@ -29,37 +29,6 @@ bool TCPClient::Connect()
     return connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) != SOCKET_ERROR;
 }
 
-//bool TCPClient::ConvertImageToBinary(cv::Mat img, std::vector<char>& buffer)
-//{
-//    
-//    if (img.isContinuous())
-//    {
-//        buffer.assign(img.data, img.data + img.total() * img.channels());
-//        return true;
-//    }
-//    else
-//    {
-//        for (int i = 0; i < img.rows; ++i)
-//        {
-//            buffer.insert(buffer.end(), img.ptr<float>(i), img.ptr<float>(i) + img.cols * img.channels());
-//        }
-//        return true;
-//    }
-//}
-
-bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer)
-{
-    image.open("image_face.png", std::ios::in | std::ios::binary);
-    char byte_image = '\0';
-    while (!image.eof())
-    {
-        byte_image = image.get();
-        buffer.push_back(byte_image);
-    }
-    image.close();
-    return true;
-}
-
 bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
 {
     if (buffer.empty())

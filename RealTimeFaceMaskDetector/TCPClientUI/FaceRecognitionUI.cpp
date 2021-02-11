@@ -121,12 +121,12 @@ QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
 
 void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat img)
 {
-    cv::imwrite("image_face.png", img);
-    std::ifstream image_face_send;
-
-    ////////////////////////////////////////
+    std::vector<uchar> ubuffer;
     std::vector<char> buffer;
-    client.ConvertImageToBinary(image_face_send, buffer);
+    cv::imencode(".png", img.clone(), ubuffer);
+    for (auto& value : ubuffer) {
+        buffer.push_back(static_cast<char>(value));
+    }
     client.SendBinaryMessage(buffer);
 }
 
