@@ -29,9 +29,9 @@ bool TCPClient::Connect()
     return connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) != SOCKET_ERROR;
 }
 
-bool TCPClient::ConvertImageToBinary(cv::Mat img, std::vector<char>& buffer)
+bool TCPClient::ConvertImageToBinary(cv::Mat img, std::vector<uchar>& buffer)
 {
-    
+    /*
     if (img.isContinuous())
     {
         buffer.assign(img.data, img.data + img.total() * img.channels());
@@ -45,6 +45,9 @@ bool TCPClient::ConvertImageToBinary(cv::Mat img, std::vector<char>& buffer)
         }
         return true;
     }
+    */
+
+    cv::imencode(".png", img, buffer);
 }
 
 bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
