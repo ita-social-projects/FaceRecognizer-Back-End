@@ -3,6 +3,7 @@
 #include <ws2tcpip.h>
 #include "Logger.h"
 #include "SQLServer.h"
+#include "mutex"
 
 #pragma comment (lib, "Ws2_32.lib")
 
@@ -54,6 +55,8 @@ private:
 	std::vector<char> m_buffer;
 	addrinfo* m_host_info = nullptr;
 	addrinfo hints;
+	std::mutex recv_mutex;
+	std::mutex sql_mutex;
 
 	std::shared_ptr<SQLConnection>sql_server;
 
