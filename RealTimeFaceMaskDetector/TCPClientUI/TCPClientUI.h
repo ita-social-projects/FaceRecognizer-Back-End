@@ -13,6 +13,8 @@ private slots:
     void Save();
     void Close();
 
-public:
+private:
     Ui::TCPClientUIClass ui;
 };
+
+extern std::unique_ptr<MaskRecognizer> m_mask_recognizer;

@@ -56,4 +56,9 @@
   <ItemGroup>
     <None Include="Configuration.conf" />
   </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="FaceRecognitionUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
 </Project>

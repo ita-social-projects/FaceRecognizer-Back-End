@@ -1,11 +1,14 @@
 #include "TCPClientUI.h"
 #include "TCPClient.h"
-#include "FaceRecognitionUI.h"
 
+#include "FaceRecognitionUI.h"
 
 #include <QtGui/QRegExpValidator>
 #include <QtWidgets/qmessagebox>
 
+/* These are global variables.
+   g_ip stores server ip & g_port stores server port.
+   They are defined in TCPClient.cpp file. */
 extern std::string g_ip;
 extern int g_port;
 
@@ -62,8 +65,9 @@ void TCPClientUI::Save()
         client.Connect();
 
         Sleep(1000);
-        client.m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
-        client.m_face_recognition_ui->show();
+        std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
+        m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
+        m_face_recognition_ui->show();
         this->hide();
         client.m_face_recognition_ui->updateWindow(client);
         client.CloseSocket();
