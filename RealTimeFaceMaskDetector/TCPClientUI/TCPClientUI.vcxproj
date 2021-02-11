@@ -74,9 +74,9 @@
     <QtInstall>Qt_vs</QtInstall>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
-    <QtInstall>Qt</QtInstall>
+    <QtInstall>Qt_vs</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
-    <QtBuildConfig>release</QtBuildConfig>
+    <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -113,14 +113,16 @@
     <QtUic Include="TCPClientUI.ui" />
     <QtMoc Include="TCPClientUI.h" />
     <ClCompile Include="FaceRecognitionUI.cpp" />
-    <ClCompile Include="MaskRecognizer.cpp" />
+    <ClCompile Include="FaceRecognizer.cpp" />
+    <ClCompile Include="ImageData.cpp" />
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="TCPClientUI.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FaceRecognitionUI.h" />
-    <ClInclude Include="MaskRecognizer.h" />
+    <QtMoc Include="FaceRecognitionUI.h" />
+    <ClInclude Include="FaceRecognizer.h" />
+    <ClInclude Include="ImageData.h" />
     <QtMoc Include="TCPClient.h" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +134,13 @@
       <Project>{79f7370c-9bf0-45de-b2eb-1159df437d30}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.png" />
+    <Image Include="PNG_transparency_demonstration_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="README (2).txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

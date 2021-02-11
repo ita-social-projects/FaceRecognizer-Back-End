@@ -20,11 +20,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ImageData.h" />
-    <ClInclude Include="FaceRecognizer.h" />
-    <ClInclude Include="TCPClient.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -34,26 +29,57 @@
     <ClCompile Include="FaceRecognitionUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MaskRecognizer.cpp">
+    <ClCompile Include="ImageData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TCPClientUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceRecognizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MaskRecognizer.h">
+    <ClInclude Include="ImageData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FaceRecognitionUI.h">
+    <ClInclude Include="FaceRecognizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="TCPClientUI.qrc" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="FaceRecognitionUI.ui" />
-    <QtUic Include="TCPClientUI.ui" />
+    <QtUic Include="FaceRecognitionUI.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
+    <QtUic Include="TCPClientUI.ui">
+      <Filter>Resource Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <None Include="Configuration.conf" />
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="TCPClient.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="TCPClientUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="FaceRecognitionUI.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.png" />
+    <Image Include="PNG_transparency_demonstration_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="TCPClientUI.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="README (2).txt" />
   </ItemGroup>
 </Project>
