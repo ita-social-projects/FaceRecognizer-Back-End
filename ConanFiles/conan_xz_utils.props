@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ImportGroup Label="ConanDependencies">
+  </ImportGroup>
+	<ImportGroup Label="Configurations">
+		<Import Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64'" Project="conan_xz_utils_debug_x64.props"/>
+	</ImportGroup>
+	<PropertyGroup>
+		<conan_xz_utils_props_imported>True</conan_xz_utils_props_imported>
+	</PropertyGroup>
+	<PropertyGroup>
+		<LocalDebuggerEnvironment>PATH=%PATH%;$(Conanxz_utilsBinaryDirectories)$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+		<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+	</PropertyGroup>
+	<ItemDefinitionGroup>
+		<ClCompile>
+			<AdditionalIncludeDirectories>$(Conanxz_utilsIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(Conanxz_utilsPreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(Conanxz_utilsCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<AdditionalLibraryDirectories>$(Conanxz_utilsLibraryDirectories)%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+			<AdditionalDependencies>$(Conanxz_utilsLibraries)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>$(Conanxz_utilsSystemDeps)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalOptions>$(Conanxz_utilsLinkerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</Link>
+		<Midl>
+			<AdditionalIncludeDirectories>$(Conanxz_utilsIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+		</Midl>
+		<ResourceCompile>
+			<AdditionalIncludeDirectories>$(Conanxz_utilsIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(Conanxz_utilsPreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(Conanxz_utilsCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ResourceCompile>
+	</ItemDefinitionGroup>
+</Project>

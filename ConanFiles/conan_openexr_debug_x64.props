@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="ConanVariables">
+    <ConanopenexrRootFolder>C:\Users\mac\.conan\data\openexr\2.5.4\_\_\package\6acf24cd4adf2df742e006cc0e5f0329e3b6e60b</ConanopenexrRootFolder>
+    <ConanopenexrCompilerFlags></ConanopenexrCompilerFlags>
+    <ConanopenexrLinkerFlags></ConanopenexrLinkerFlags>
+    <ConanopenexrPreprocessorDefinitions></ConanopenexrPreprocessorDefinitions>
+    <ConanopenexrIncludeDirectories>C:\Users\mac\.conan\data\openexr\2.5.4\_\_\package\6acf24cd4adf2df742e006cc0e5f0329e3b6e60b\include\OpenEXR;C:\Users\mac\.conan\data\openexr\2.5.4\_\_\package\6acf24cd4adf2df742e006cc0e5f0329e3b6e60b\include;</ConanopenexrIncludeDirectories>
+    <ConanopenexrResourceDirectories></ConanopenexrResourceDirectories>
+    <ConanopenexrLibraryDirectories>C:\Users\mac\.conan\data\openexr\2.5.4\_\_\package\6acf24cd4adf2df742e006cc0e5f0329e3b6e60b\lib;</ConanopenexrLibraryDirectories>
+    <ConanopenexrBinaryDirectories></ConanopenexrBinaryDirectories>
+    <ConanopenexrLibraries>IlmImf-2_5_d.lib;IlmImfUtil-2_5_d.lib;IlmThread-2_5_d.lib;Imath-2_5_d.lib;Half-2_5_d.lib;IexMath-2_5_d.lib;Iex-2_5_d.lib;</ConanopenexrLibraries>
+    <ConanopenexrSystemDeps></ConanopenexrSystemDeps>
+  </PropertyGroup>
+</Project>

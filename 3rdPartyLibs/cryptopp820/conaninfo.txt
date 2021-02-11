@@ -1,0 +1,33 @@
+[settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=Visual Studio
+    compiler.runtime=MDd
+    compiler.version=16
+    os=Windows
+
+[requires]
+
+
+[options]
+    shared=False
+
+[full_settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=Visual Studio
+    compiler.runtime=MDd
+    compiler.version=16
+    os=Windows
+
+[full_requires]
+
+
+[full_options]
+    shared=False
+
+[recipe_hash]
+    b9a02aa4234c721866f762477a438763
+
+[env]
+

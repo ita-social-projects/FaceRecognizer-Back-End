@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ImportGroup Label="ConanDependencies">
+		<Import Condition="'$(conan_zlib_props_imported)' != 'True'" Project="conan_zlib.props"/>
+		<Import Condition="'$(conan_openssl_props_imported)' != 'True'" Project="conan_openssl.props"/>
+		<Import Condition="'$(conan_pcre2_props_imported)' != 'True'" Project="conan_pcre2.props"/>
+		<Import Condition="'$(conan_double-conversion_props_imported)' != 'True'" Project="conan_double-conversion.props"/>
+		<Import Condition="'$(conan_freetype_props_imported)' != 'True'" Project="conan_freetype.props"/>
+		<Import Condition="'$(conan_libjpeg_props_imported)' != 'True'" Project="conan_libjpeg.props"/>
+		<Import Condition="'$(conan_libpng_props_imported)' != 'True'" Project="conan_libpng.props"/>
+		<Import Condition="'$(conan_sqlite3_props_imported)' != 'True'" Project="conan_sqlite3.props"/>
+		<Import Condition="'$(conan_libpq_props_imported)' != 'True'" Project="conan_libpq.props"/>
+		<Import Condition="'$(conan_opengl_props_imported)' != 'True'" Project="conan_opengl.props"/>
+		<Import Condition="'$(conan_zstd_props_imported)' != 'True'" Project="conan_zstd.props"/>
+	</ImportGroup>
+	<ImportGroup Label="Configurations">
+		<Import Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64'" Project="conan_qt_debug_x64.props"/>
+	</ImportGroup>
+	<PropertyGroup>
+		<conan_qt_props_imported>True</conan_qt_props_imported>
+	</PropertyGroup>
+	<PropertyGroup>
+		<LocalDebuggerEnvironment>PATH=%PATH%;$(ConanqtBinaryDirectories)$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+		<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+	</PropertyGroup>
+	<ItemDefinitionGroup>
+		<ClCompile>
+			<AdditionalIncludeDirectories>$(ConanqtIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(ConanqtPreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(ConanqtCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<AdditionalLibraryDirectories>$(ConanqtLibraryDirectories)%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+			<AdditionalDependencies>$(ConanqtLibraries)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>$(ConanqtSystemDeps)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalOptions>$(ConanqtLinkerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</Link>
+		<Midl>
+			<AdditionalIncludeDirectories>$(ConanqtIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+		</Midl>
+		<ResourceCompile>
+			<AdditionalIncludeDirectories>$(ConanqtIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(ConanqtPreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(ConanqtCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ResourceCompile>
+	</ItemDefinitionGroup>
+</Project>

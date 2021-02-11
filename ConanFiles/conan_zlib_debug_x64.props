@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="ConanVariables">
+    <ConanzlibRootFolder>C:\Users\mac\.conan\data\zlib\1.2.11\_\_\package\d057732059ea44a47760900cb5e4855d2bea8714</ConanzlibRootFolder>
+    <ConanzlibCompilerFlags></ConanzlibCompilerFlags>
+    <ConanzlibLinkerFlags></ConanzlibLinkerFlags>
+    <ConanzlibPreprocessorDefinitions></ConanzlibPreprocessorDefinitions>
+    <ConanzlibIncludeDirectories>C:\Users\mac\.conan\data\zlib\1.2.11\_\_\package\d057732059ea44a47760900cb5e4855d2bea8714\include;</ConanzlibIncludeDirectories>
+    <ConanzlibResourceDirectories></ConanzlibResourceDirectories>
+    <ConanzlibLibraryDirectories>C:\Users\mac\.conan\data\zlib\1.2.11\_\_\package\d057732059ea44a47760900cb5e4855d2bea8714\lib;</ConanzlibLibraryDirectories>
+    <ConanzlibBinaryDirectories></ConanzlibBinaryDirectories>
+    <ConanzlibLibraries>zlib.lib;</ConanzlibLibraries>
+    <ConanzlibSystemDeps></ConanzlibSystemDeps>
+  </PropertyGroup>
+</Project>

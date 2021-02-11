@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ImportGroup Label="ConanDependencies">
+		<Import Condition="'$(conan_zlib_props_imported)' != 'True'" Project="conan_zlib.props"/>
+	</ImportGroup>
+	<ImportGroup Label="Configurations">
+		<Import Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64'" Project="conan_libpng_debug_x64.props"/>
+	</ImportGroup>
+	<PropertyGroup>
+		<conan_libpng_props_imported>True</conan_libpng_props_imported>
+	</PropertyGroup>
+	<PropertyGroup>
+		<LocalDebuggerEnvironment>PATH=%PATH%;$(ConanlibpngBinaryDirectories)$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+		<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+	</PropertyGroup>
+	<ItemDefinitionGroup>
+		<ClCompile>
+			<AdditionalIncludeDirectories>$(ConanlibpngIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(ConanlibpngPreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(ConanlibpngCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<AdditionalLibraryDirectories>$(ConanlibpngLibraryDirectories)%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+			<AdditionalDependencies>$(ConanlibpngLibraries)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>$(ConanlibpngSystemDeps)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalOptions>$(ConanlibpngLinkerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</Link>
+		<Midl>
+			<AdditionalIncludeDirectories>$(ConanlibpngIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+		</Midl>
+		<ResourceCompile>
+			<AdditionalIncludeDirectories>$(ConanlibpngIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(ConanlibpngPreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(ConanlibpngCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ResourceCompile>
+	</ItemDefinitionGroup>
+</Project>

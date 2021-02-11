@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ImportGroup Label="ConanDependencies">
+  </ImportGroup>
+	<ImportGroup Label="Configurations">
+		<Import Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64'" Project="conan_libdeflate_debug_x64.props"/>
+	</ImportGroup>
+	<PropertyGroup>
+		<conan_libdeflate_props_imported>True</conan_libdeflate_props_imported>
+	</PropertyGroup>
+	<PropertyGroup>
+		<LocalDebuggerEnvironment>PATH=%PATH%;$(ConanlibdeflateBinaryDirectories)$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+		<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+	</PropertyGroup>
+	<ItemDefinitionGroup>
+		<ClCompile>
+			<AdditionalIncludeDirectories>$(ConanlibdeflateIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(ConanlibdeflatePreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(ConanlibdeflateCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<AdditionalLibraryDirectories>$(ConanlibdeflateLibraryDirectories)%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+			<AdditionalDependencies>$(ConanlibdeflateLibraries)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>$(ConanlibdeflateSystemDeps)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalOptions>$(ConanlibdeflateLinkerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</Link>
+		<Midl>
+			<AdditionalIncludeDirectories>$(ConanlibdeflateIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+		</Midl>
+		<ResourceCompile>
+			<AdditionalIncludeDirectories>$(ConanlibdeflateIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(ConanlibdeflatePreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(ConanlibdeflateCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ResourceCompile>
+	</ItemDefinitionGroup>
+</Project>

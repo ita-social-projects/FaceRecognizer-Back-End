@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<ImportGroup Label="ConanDependencies">
+		<Import Condition="'$(conan_zlib_props_imported)' != 'True'" Project="conan_zlib.props"/>
+	</ImportGroup>
+	<ImportGroup Label="Configurations">
+		<Import Condition="'$(Configuration)' == 'Debug' And '$(Platform)' == 'x64'" Project="conan_libpq_debug_x64.props"/>
+	</ImportGroup>
+	<PropertyGroup>
+		<conan_libpq_props_imported>True</conan_libpq_props_imported>
+	</PropertyGroup>
+	<PropertyGroup>
+		<LocalDebuggerEnvironment>PATH=%PATH%;$(ConanlibpqBinaryDirectories)$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+		<DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+	</PropertyGroup>
+	<ItemDefinitionGroup>
+		<ClCompile>
+			<AdditionalIncludeDirectories>$(ConanlibpqIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(ConanlibpqPreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(ConanlibpqCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<AdditionalLibraryDirectories>$(ConanlibpqLibraryDirectories)%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+			<AdditionalDependencies>$(ConanlibpqLibraries)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalDependencies>$(ConanlibpqSystemDeps)%(AdditionalDependencies)</AdditionalDependencies>
+			<AdditionalOptions>$(ConanlibpqLinkerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</Link>
+		<Midl>
+			<AdditionalIncludeDirectories>$(ConanlibpqIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+		</Midl>
+		<ResourceCompile>
+			<AdditionalIncludeDirectories>$(ConanlibpqIncludeDirectories)%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>$(ConanlibpqPreprocessorDefinitions)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalOptions>$(ConanlibpqCompilerFlags) %(AdditionalOptions)</AdditionalOptions>
+		</ResourceCompile>
+	</ItemDefinitionGroup>
+</Project>

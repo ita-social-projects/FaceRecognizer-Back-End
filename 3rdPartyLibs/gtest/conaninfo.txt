@@ -1,0 +1,40 @@
+[settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=Visual Studio
+    compiler.runtime=MDd
+    compiler.version=16
+    os=Windows
+
+[requires]
+
+
+[options]
+    build_gmock=True
+    debug_postfix=d
+    hide_symbols=False
+    shared=True
+
+[full_settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=Visual Studio
+    compiler.runtime=MDd
+    compiler.version=16
+    os=Windows
+
+[full_requires]
+
+
+[full_options]
+    build_gmock=True
+    debug_postfix=d
+    hide_symbols=False
+    no_main=False
+    shared=True
+
+[recipe_hash]
+    0c895f60b461f8fee0da53a84d659131
+
+[env]
+

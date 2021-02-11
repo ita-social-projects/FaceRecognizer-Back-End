@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="ConanVariables">
+    <ConanjasperRootFolder>C:\Users\mac\.conan\data\jasper\2.0.24\_\_\package\2278242cc765d77e29f54e7b3e73f056c18d9a10</ConanjasperRootFolder>
+    <ConanjasperCompilerFlags></ConanjasperCompilerFlags>
+    <ConanjasperLinkerFlags></ConanjasperLinkerFlags>
+    <ConanjasperPreprocessorDefinitions></ConanjasperPreprocessorDefinitions>
+    <ConanjasperIncludeDirectories>C:\Users\mac\.conan\data\jasper\2.0.24\_\_\package\2278242cc765d77e29f54e7b3e73f056c18d9a10\include;</ConanjasperIncludeDirectories>
+    <ConanjasperResourceDirectories></ConanjasperResourceDirectories>
+    <ConanjasperLibraryDirectories>C:\Users\mac\.conan\data\jasper\2.0.24\_\_\package\2278242cc765d77e29f54e7b3e73f056c18d9a10\lib;</ConanjasperLibraryDirectories>
+    <ConanjasperBinaryDirectories></ConanjasperBinaryDirectories>
+    <ConanjasperLibraries>jasper.lib;</ConanjasperLibraries>
+    <ConanjasperSystemDeps></ConanjasperSystemDeps>
+  </PropertyGroup>
+</Project>

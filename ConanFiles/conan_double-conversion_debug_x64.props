@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="ConanVariables">
+    <Conandouble-conversionRootFolder>C:\Users\mac\.conan\data\double-conversion\3.1.5\_\_\package\d057732059ea44a47760900cb5e4855d2bea8714</Conandouble-conversionRootFolder>
+    <Conandouble-conversionCompilerFlags></Conandouble-conversionCompilerFlags>
+    <Conandouble-conversionLinkerFlags></Conandouble-conversionLinkerFlags>
+    <Conandouble-conversionPreprocessorDefinitions></Conandouble-conversionPreprocessorDefinitions>
+    <Conandouble-conversionIncludeDirectories>C:\Users\mac\.conan\data\double-conversion\3.1.5\_\_\package\d057732059ea44a47760900cb5e4855d2bea8714\include;</Conandouble-conversionIncludeDirectories>
+    <Conandouble-conversionResourceDirectories></Conandouble-conversionResourceDirectories>
+    <Conandouble-conversionLibraryDirectories>C:\Users\mac\.conan\data\double-conversion\3.1.5\_\_\package\d057732059ea44a47760900cb5e4855d2bea8714\lib;</Conandouble-conversionLibraryDirectories>
+    <Conandouble-conversionBinaryDirectories></Conandouble-conversionBinaryDirectories>
+    <Conandouble-conversionLibraries>double-conversion.lib;</Conandouble-conversionLibraries>
+    <Conandouble-conversionSystemDeps></Conandouble-conversionSystemDeps>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="ConanVariables">
+    <ConanopenglRootFolder>C:\Users\mac\.conan\data\opengl\system\_\_\package\5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9</ConanopenglRootFolder>
+    <ConanopenglCompilerFlags></ConanopenglCompilerFlags>
+    <ConanopenglLinkerFlags></ConanopenglLinkerFlags>
+    <ConanopenglPreprocessorDefinitions></ConanopenglPreprocessorDefinitions>
+    <ConanopenglIncludeDirectories></ConanopenglIncludeDirectories>
+    <ConanopenglResourceDirectories></ConanopenglResourceDirectories>
+    <ConanopenglLibraryDirectories></ConanopenglLibraryDirectories>
+    <ConanopenglBinaryDirectories></ConanopenglBinaryDirectories>
+    <ConanopenglLibraries></ConanopenglLibraries>
+    <ConanopenglSystemDeps>opengl32.lib;</ConanopenglSystemDeps>
+  </PropertyGroup>
+</Project>

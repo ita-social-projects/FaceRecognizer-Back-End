@@ -1,0 +1,102 @@
+[settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=Visual Studio
+    compiler.runtime=MDd
+    compiler.version=16
+    os=Windows
+
+[requires]
+    eigen/3.Y.Z
+    jasper/2.Y.Z
+    libjpeg/9d
+    libpng/1.Y.Z
+    libtiff/4.Y.Z
+    libwebp/1.Y.Z
+    openexr/2.Y.Z
+    quirc/1.Y.Z
+    zlib/1.Y.Z
+
+[options]
+    contrib=False
+    parallel=False
+    shared=True
+    with_eigen=True
+    with_jpeg=libjpeg
+    with_jpeg2000=jasper
+    with_openexr=True
+    with_png=True
+    with_quirc=True
+    with_tiff=True
+    with_webp=True
+
+[full_settings]
+    arch=x86_64
+    build_type=Debug
+    compiler=Visual Studio
+    compiler.runtime=MDd
+    compiler.version=16
+    os=Windows
+
+[full_requires]
+    eigen/3.3.9:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    jasper/2.0.24:2278242cc765d77e29f54e7b3e73f056c18d9a10
+    jbig/20160605:a05a9ef21a91686b7138c926ec52aaeb70439310
+    libdeflate/1.7:d057732059ea44a47760900cb5e4855d2bea8714
+    libjpeg/9d:d057732059ea44a47760900cb5e4855d2bea8714
+    libpng/1.6.37:6acf24cd4adf2df742e006cc0e5f0329e3b6e60b
+    libtiff/4.2.0:e2e95cb5797e0ea720de15db3e7a049a3772be97
+    libwebp/1.1.0:092f77d3b4b4678d81fbffc1fccc9642b870175e
+    openexr/2.5.4:6acf24cd4adf2df742e006cc0e5f0329e3b6e60b
+    quirc/1.1:11b7230897ba30e6da1af1c8b0726ed134f404ee
+    xz_utils/5.2.5:d057732059ea44a47760900cb5e4855d2bea8714
+    zlib/1.2.11:d057732059ea44a47760900cb5e4855d2bea8714
+    zstd/1.4.8:d057732059ea44a47760900cb5e4855d2bea8714
+
+[full_options]
+    contrib=False
+    parallel=False
+    shared=True
+    with_eigen=True
+    with_jpeg=libjpeg
+    with_jpeg2000=jasper
+    with_openexr=True
+    with_png=True
+    with_quirc=True
+    with_tiff=True
+    with_webp=True
+    eigen:MPL2_only=False
+    jasper:shared=False
+    jasper:with_libjpeg=libjpeg
+    jbig:build_executables=True
+    jbig:shared=False
+    libdeflate:shared=False
+    libjpeg:shared=False
+    libpng:api_prefix=None
+    libpng:shared=False
+    libtiff:cxx=True
+    libtiff:jbig=True
+    libtiff:jpeg=libjpeg
+    libtiff:libdeflate=True
+    libtiff:lzma=True
+    libtiff:shared=False
+    libtiff:webp=True
+    libtiff:zlib=True
+    libtiff:zstd=True
+    libwebp:near_lossless=True
+    libwebp:shared=False
+    libwebp:swap_16bit_csp=False
+    libwebp:with_simd=True
+    openexr:shared=False
+    quirc:max_regions=254
+    quirc:shared=False
+    xz_utils:shared=False
+    zlib:minizip=False
+    zlib:shared=False
+    zstd:shared=False
+
+[recipe_hash]
+    2736dbe8c56cbd3bafef50b96f420ce6
+
+[env]
+

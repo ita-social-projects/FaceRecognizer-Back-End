@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="ConanVariables">
+    <ConanlibpngRootFolder>C:\Users\mac\.conan\data\libpng\1.6.37\_\_\package\6acf24cd4adf2df742e006cc0e5f0329e3b6e60b</ConanlibpngRootFolder>
+    <ConanlibpngCompilerFlags></ConanlibpngCompilerFlags>
+    <ConanlibpngLinkerFlags></ConanlibpngLinkerFlags>
+    <ConanlibpngPreprocessorDefinitions></ConanlibpngPreprocessorDefinitions>
+    <ConanlibpngIncludeDirectories>C:\Users\mac\.conan\data\libpng\1.6.37\_\_\package\6acf24cd4adf2df742e006cc0e5f0329e3b6e60b\include;</ConanlibpngIncludeDirectories>
+    <ConanlibpngResourceDirectories></ConanlibpngResourceDirectories>
+    <ConanlibpngLibraryDirectories>C:\Users\mac\.conan\data\libpng\1.6.37\_\_\package\6acf24cd4adf2df742e006cc0e5f0329e3b6e60b\lib;</ConanlibpngLibraryDirectories>
+    <ConanlibpngBinaryDirectories></ConanlibpngBinaryDirectories>
+    <ConanlibpngLibraries>libpng16d.lib;</ConanlibpngLibraries>
+    <ConanlibpngSystemDeps></ConanlibpngSystemDeps>
+  </PropertyGroup>
+</Project>

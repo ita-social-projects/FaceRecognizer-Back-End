@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="ConanVariables">
+    <Conansqlite3RootFolder>C:\Users\mac\.conan\data\sqlite3\3.33.0\_\_\package\1617ad9ee038b5cd488d456e6e66e06830a591ce</Conansqlite3RootFolder>
+    <Conansqlite3CompilerFlags></Conansqlite3CompilerFlags>
+    <Conansqlite3LinkerFlags></Conansqlite3LinkerFlags>
+    <Conansqlite3PreprocessorDefinitions></Conansqlite3PreprocessorDefinitions>
+    <Conansqlite3IncludeDirectories>C:\Users\mac\.conan\data\sqlite3\3.33.0\_\_\package\1617ad9ee038b5cd488d456e6e66e06830a591ce\include;</Conansqlite3IncludeDirectories>
+    <Conansqlite3ResourceDirectories></Conansqlite3ResourceDirectories>
+    <Conansqlite3LibraryDirectories>C:\Users\mac\.conan\data\sqlite3\3.33.0\_\_\package\1617ad9ee038b5cd488d456e6e66e06830a591ce\lib;</Conansqlite3LibraryDirectories>
+    <Conansqlite3BinaryDirectories>C:\Users\mac\.conan\data\sqlite3\3.33.0\_\_\package\1617ad9ee038b5cd488d456e6e66e06830a591ce\bin;</Conansqlite3BinaryDirectories>
+    <Conansqlite3Libraries>sqlite3.lib;</Conansqlite3Libraries>
+    <Conansqlite3SystemDeps></Conansqlite3SystemDeps>
+  </PropertyGroup>
+</Project>
