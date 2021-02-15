@@ -35,7 +35,6 @@ bool SocketServer::CreateListeningSocket()
 		WSACleanup();
 		return false;
 	}
-
 	server_is_up = true;
 
 	return true;
@@ -115,7 +114,6 @@ bool SocketServer::StartListening(bool& ret_value)
 			ret_value = false;
 			break;
 		}
-	return true;
 	}
 	return ret_value;
 }
