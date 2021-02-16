@@ -35,7 +35,6 @@ bool SocketServer::CreateListeningSocket()
 		WSACleanup();
 		return false;
 	}
-
 	server_is_up = true;
 
 	return true;
