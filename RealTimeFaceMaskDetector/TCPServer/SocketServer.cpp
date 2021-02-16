@@ -226,7 +226,7 @@ bool SocketServer::UpdateDataBase()
 	return true;
 }
 
-void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server)
+void SocketServer::CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_server)
 {
 	if (!sql_server->CheckTableExists())
 	{
@@ -331,13 +331,11 @@ void SocketServer::ReplaceForbiddenSymbol(char& symbol)
 
 void SocketServer::ConnectToSQL()
 {
-	sql_server = std::make_shared<SQLServer>();
+	sql_server = std::make_unique<SQLServer>();
 	try
 	{
 		sql_server->GetIniParams(CONFIG_FILE);
 
-		//ConnectParams db{ "MAC14BF\SQLEXPRESS", "","", "MaskPhotosDatabase", "Photos" };
-		//sql_server->Connect(db);
 		sql_server->Connect();
 		CreateTableIfNeeded(sql_server);
 	}
