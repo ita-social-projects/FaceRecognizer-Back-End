@@ -74,7 +74,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         }
 
         QImage frame = mat2QImage(image);
-        QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
+        QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), Qt::KeepAspectRatio, Qt::FastTransformation));
         ui.frame->setPixmap(map);
         ui.frame->show();
 
