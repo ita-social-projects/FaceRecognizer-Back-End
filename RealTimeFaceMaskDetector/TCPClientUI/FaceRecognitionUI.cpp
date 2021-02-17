@@ -32,15 +32,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
     while (!m_exit_button_clicked)
     {
-        /*cv::VideoCapture m_camera;
-        if (!m_camera.open(0))
-        {
-            throw std::runtime_error("can't load camera");
-        }*/
-
         cv::Mat image;
         faceInfo faces;
-        
         //get info from FaceRecognizer
         img_data.GetData(image, faces);
 
@@ -55,8 +48,6 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             if (!face.second)
             {
                 cv::Mat face_img(image, face.first);
-
-                // replace with same person check
                 new_send_time = get_current_time_fenced();
                 if (to_us(new_send_time - send_time) >= 5)
                 {
@@ -64,16 +55,14 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                     sendImage(client, face_img.clone());
                     qDebug() << "Image_sent\n";
                 }
-                
-
                 is_all_in_mask = is_all_in_mask && face.second; 
-
                 auto rect_color = face.second == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
                 cv::rectangle(image,face.first,rect_color, 3, 8, 0);
 
                 qDebug() << "Face:)\n";
             }
         }
+
         if (!(faces.empty())) {
             if (is_all_in_mask)
             {
