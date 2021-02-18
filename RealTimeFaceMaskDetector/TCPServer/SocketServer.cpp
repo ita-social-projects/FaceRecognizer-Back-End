@@ -61,8 +61,6 @@ bool SocketServer::BindListeningSocket()
 
 bool SocketServer::AcceptConnection()
 {
-	//Accepts only one connection. 
-	//Do not continue until accepted
 	std::cout << "Waiting connection" << std::endl;
 	//Here make async wait
 	bool ready = false, stop = false;
@@ -77,19 +75,16 @@ bool SocketServer::AcceptConnection()
 			return result;
 		});
 	
-	std::cout << "Waiting...     Press \'1\' to stop the Server\n" << std::flush;
+	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
 
 	bool key = { false };
 	bool old_key = { false };
 	while (!ready)
 	{
 		//wait
-
-		key = GetAsyncKeyState('1') & 0x8000;
-
+		key = GetAsyncKeyState(VK_ESCAPE) & 0x01;
 		if (key && !old_key)
 		{
-			std::cout << "Stopping..." << std::endl;
 			server_is_up = false;
 
 			sockaddr_in clientService;
@@ -106,8 +101,6 @@ bool SocketServer::AcceptConnection()
 	}
 	m_client_socket = cl_socket.get();
 	
-	//m_client_socket = accept(m_listen_socket, NULL, NULL);
-	std::cout << "AcceptedConnection" << std::endl;
 	if (m_client_socket == INVALID_SOCKET)
 	{	
 		std::cout << "INVALID_SOCKET" << std::endl;

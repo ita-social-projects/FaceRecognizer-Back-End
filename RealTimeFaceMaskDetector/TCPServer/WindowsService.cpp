@@ -111,7 +111,6 @@ bool Service::Initialize(const unsigned short argc, const wchar_t* const argv[])
 	ReportStatus(SERVICE_RUNNING, NO_ERROR, DEFAULT_WAIT_HINT);	// Start the thread that will perform the main task of the service
 
 	CreateServer();
-	std::cout << " After CreateServer..." << std::endl;
 	WaitForSingleObject(s_service_stop_event, INFINITE); // Wait event to be Signaled	
 
 	LOG_MSG << "Initialize end";
@@ -334,11 +333,6 @@ bool Service::Start()
 
 		if (!is_started)
 		{
-			std::cout << "Shuting down Server..." << std::endl;
-			if (ShutdownServer())
-			{
-				std::cout << "Shut down Server..." << std::endl;
-			}
 			Stop();
 			std::cout << "Stop service..." << std::endl;
 			is_started = true;
@@ -347,14 +341,12 @@ bool Service::Start()
 	try
 	{
 		CloseServiceHandle(handle_open_service);
-		std::cout << "Close Service Handle ..." << std::endl;
 	}
 	catch (const std::exception&)
 	{
 		std::cout << GetLastError() << std::endl;
 	}
 	CloseServiceHandle(handle_open_SCM);
-	std::cout << "Close Service Handle handle_open_SCM ..." << std::endl;
 	LOG_MSG << "Start end";
 	return is_opened && is_started;
 }
