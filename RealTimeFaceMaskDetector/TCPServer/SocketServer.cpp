@@ -1,3 +1,4 @@
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "SocketServer.h"
 #include "Ws2spi.h"
 
@@ -89,6 +90,16 @@ bool SocketServer::AcceptConnection()
 		if (key && !old_key)
 		{
 			std::cout << "Stopping..." << std::endl;
+			server_is_up = false;
+
+			sockaddr_in clientService;
+			clientService.sin_family = AF_INET;
+			clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
+			clientService.sin_port = htons(27015);
+			SOCKET mock_socket = INVALID_SOCKET;
+			mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
+			connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+			stop = true;
 		}
 
 		old_key= key;
@@ -107,7 +118,11 @@ bool SocketServer::AcceptConnection()
 		LOG_WARNING << "AcceptConnection: failed to accept client";
 		return false;
 	}
-	
+	if (stop)
+	{
+		std::cout << "Stop!" << std::endl;
+		return false;
+	}
 	return true;
 }
 
@@ -116,7 +131,7 @@ void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 	if (AcceptConnection())
 	{	
 		std::cout << "Begin..." << std::endl;
-		StartMessagingWintClient(ret_value);		
+		StartMessagingWintClient(ret_value);	
 	}
 	else
 	{
@@ -148,8 +163,11 @@ bool SocketServer::StartListening(bool& ret_value)
 		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
 		{	
 			TryAcceptAndStartMessaging(ret_value);
-			if (!ret_value) 
+			if (!ret_value)
+			{
+				std::cout << "Exiting..." << std::endl;
 				break;
+			}
 		}
 		else 
 		{

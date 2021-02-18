@@ -111,6 +111,7 @@ bool Service::Initialize(const unsigned short argc, const wchar_t* const argv[])
 	ReportStatus(SERVICE_RUNNING, NO_ERROR, DEFAULT_WAIT_HINT);	// Start the thread that will perform the main task of the service
 
 	CreateServer();
+	std::cout << " After CreateServer..." << std::endl;
 	WaitForSingleObject(s_service_stop_event, INFINITE); // Wait event to be Signaled	
 
 	LOG_MSG << "Initialize end";
@@ -120,7 +121,10 @@ bool Service::Initialize(const unsigned short argc, const wchar_t* const argv[])
 
 void Service::StartServerWork(bool& is_listening_started)
 {
-	std::thread listen_multiple_clients([&]() {s_socket_server.StartListening(is_listening_started); });
+	std::thread listen_multiple_clients([&]() 
+		{
+			s_socket_server.StartListening(is_listening_started); 
+		});
 	if (listen_multiple_clients.joinable())
 	{
 		listen_multiple_clients.join();
@@ -135,7 +139,7 @@ bool Service::CreateServer()
 	bool is_listening_started;
 	
 	StartServerWork(is_listening_started);
-	
+	std::cout << " After StartServerWork..." << std::endl;
 	LOG_MSG << "CreateServer end";
 	return is_server_initialized && 
 		is_socked_created &&
@@ -305,7 +309,7 @@ bool Service::Start()
 		return false;
 	}
 
-	bool is_opened = true, is_started = true;
+	bool is_opened = true, is_started = true, is_stopped = false;
 
 	handle_open_service = OpenService(
 		handle_open_SCM,									// SCM Handle
@@ -320,10 +324,24 @@ bool Service::Start()
 	else if (is_opened)
 	{
 		TryStartService(handle_open_service, is_started);
-		CloseServiceHandle(handle_open_service);
+		std::cout << "After TryStartService" << std::endl;
+		if (!is_started)
+		{
+			std::cout << "Shuting down Server..." << std::endl;
+			ShutdownServer();
+		}
+		Stop();
+		std::cout << "Stop service..." << std::endl;
 	}
-	CloseServiceHandle(handle_open_SCM);
-
+	try
+	{
+		CloseServiceHandle(handle_open_SCM);
+	}
+	catch (const std::exception&)
+	{
+		std::cout << GetLastError() << std::endl;
+	}
+	std::cout << "CloseServiceHandle..." << std::endl;
 	LOG_MSG << "Start end";
 	return is_opened && is_started;
 }
