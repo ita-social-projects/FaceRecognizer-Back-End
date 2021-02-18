@@ -1,4 +1,5 @@
 #include "SocketServer.h"
+#include "Ws2spi.h"
 
 bool SocketServer::InitSocketServer()
 {
@@ -29,6 +30,7 @@ bool SocketServer::InitSocketServer()
 bool SocketServer::CreateListeningSocket()
 {
 	m_listen_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
+
 	if (m_listen_socket == INVALID_SOCKET)
 	{
 		freeaddrinfo(m_host_info);
@@ -58,26 +60,67 @@ bool SocketServer::BindListeningSocket()
 
 bool SocketServer::AcceptConnection()
 {
-	m_client_socket = accept(m_listen_socket, NULL, NULL);
-	if (m_client_socket == INVALID_SOCKET)
+	//Accepts only one connection. 
+	//Do not continue until accepted
+	std::cout << "Waiting connection" << std::endl;
+	//Here make async wait
+	bool ready = false, stop = false;
+
+	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
+		{ 
+			SOCKET result;
+
+			result = accept(m_listen_socket, NULL, NULL);
+
+			ready = true;
+			return result;
+		});
+	
+	std::cout << "Waiting...     Press \'1\' to stop the Server\n" << std::flush;
+
+	bool key = { false };
+	bool old_key = { false };
+	while (!ready)
 	{
+		//wait
+
+		key = GetAsyncKeyState('1') & 0x8000;
+
+		if (key && !old_key)
+		{
+			std::cout << "Stopping..." << std::endl;
+		}
+
+		old_key= key;
+	}
+	m_client_socket = cl_socket.get();
+
+	std::cout << "Done!\nResults are: " << m_client_socket << ' ' << '\n';
+	
+	//m_client_socket = accept(m_listen_socket, NULL, NULL);
+	std::cout << "AcceptedConnection" << std::endl;
+	if (m_client_socket == INVALID_SOCKET)
+	{	
+		std::cout << "INVALID_SOCKET" << std::endl;
 		closesocket(m_listen_socket);
 		WSACleanup();
 		LOG_WARNING << "AcceptConnection: failed to accept client";
 		return false;
 	}
+	
 	return true;
 }
 
 void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 {
-
 	if (AcceptConnection())
-	{
-		StartMessagingWintClient(ret_value);
+	{	
+		std::cout << "Begin..." << std::endl;
+		StartMessagingWintClient(ret_value);		
 	}
 	else
 	{
+		std::cout << "Stopped..." << std::endl;
 		ret_value = false;
 	}
 }
@@ -89,6 +132,7 @@ void SocketServer::StartMessagingWintClient(bool& ret_value)
 	{
 		th.join();
 	}
+	std::cout << "Stopped connection" << std::endl;
 }
 
 bool SocketServer::StartListening(bool& ret_value)
@@ -102,7 +146,7 @@ bool SocketServer::StartListening(bool& ret_value)
 	while(server_is_up)
 	{
 		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
-		{
+		{	
 			TryAcceptAndStartMessaging(ret_value);
 			if (!ret_value) 
 				break;
@@ -178,10 +222,12 @@ bool SocketServer::ReceiveMessage(bool& ret_value)
 
 	while (client_connected)
 	{
+		
 		m_buffer.clear();
 		try
 		{
 			TryReceiveAndSendMessage(client_connected);
+			
 		}
 		catch(const std::string& msg)
 		{

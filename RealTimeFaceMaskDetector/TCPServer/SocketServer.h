@@ -4,6 +4,7 @@
 #include "Logger.h"
 #include "SQLServer.h"
 #include "mutex"
+#include <future>
 
 #pragma comment (lib, "Ws2_32.lib")
 
