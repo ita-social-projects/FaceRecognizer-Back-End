@@ -66,7 +66,7 @@ bool SocketServer::AcceptConnection()
 	std::cout << "Waiting connection" << std::endl;
 	//Here make async wait
 	bool ready = false, stop = false;
-
+	SOCKET mock_socket = INVALID_SOCKET;
 	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
 		{ 
 			SOCKET result;
@@ -96,7 +96,7 @@ bool SocketServer::AcceptConnection()
 			clientService.sin_family = AF_INET;
 			clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
 			clientService.sin_port = htons(27015);
-			SOCKET mock_socket = INVALID_SOCKET;
+			
 			mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
 			connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
 			stop = true;
@@ -105,8 +105,6 @@ bool SocketServer::AcceptConnection()
 		old_key= key;
 	}
 	m_client_socket = cl_socket.get();
-
-	std::cout << "Done!\nResults are: " << m_client_socket << ' ' << '\n';
 	
 	//m_client_socket = accept(m_listen_socket, NULL, NULL);
 	std::cout << "AcceptedConnection" << std::endl;
@@ -120,7 +118,10 @@ bool SocketServer::AcceptConnection()
 	}
 	if (stop)
 	{
-		std::cout << "Stop!" << std::endl;
+		closesocket(m_listen_socket);
+		closesocket(mock_socket);
+		WSACleanup();
+		sql_server->Disconnect();
 		return false;
 	}
 	return true;
@@ -142,7 +143,10 @@ void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 
 void SocketServer::StartMessagingWintClient(bool& ret_value)
 {
-	std::thread th = std::thread([&]() {ReceiveMessage(ret_value); });
+	std::thread th = std::thread([&]() 
+		{
+			ReceiveMessage(ret_value); 
+		});
 	if (th.joinable()) 
 	{
 		th.join();
@@ -178,6 +182,7 @@ bool SocketServer::StartListening(bool& ret_value)
 			break;
 		}
 	}
+	
 	return ret_value;
 }
 
@@ -290,7 +295,7 @@ bool SocketServer::UpdateDataBase()
 	return true;
 }
 
-void SocketServer::CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_server)
+void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server)
 {
 	if (!sql_server->CheckTableExists())
 	{
@@ -313,7 +318,15 @@ bool SocketServer::ShutdownServer()
 	closesocket(m_client_socket);
 	closesocket(m_listen_socket);
 	WSACleanup();
-	sql_server->Disconnect();
+	try
+	{
+		sql_server->Disconnect();
+	}
+	catch (const SQLException& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	
 	return true;
 }
 
@@ -395,7 +408,7 @@ void SocketServer::ReplaceForbiddenSymbol(char& symbol)
 
 void SocketServer::ConnectToSQL()
 {
-	sql_server = std::make_unique<SQLServer>();
+	sql_server = std::make_shared<SQLServer>();
 	try
 	{
 		sql_server->GetIniParams(CONFIG_FILE);

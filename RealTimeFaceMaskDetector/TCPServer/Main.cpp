@@ -28,8 +28,15 @@ int wmain(unsigned argc, wchar_t* argv[])
 
 		InteractWithServiceUsingSCM(service_table);
 	}
-
-	return 0;
+	try
+	{
+		return 0;
+	}
+	catch (const std::exception&)
+	{
+		std::cout << GetLastError() << std::endl;
+		return 0;
+	}
 }
 
 bool InteractWithServiceUsingCommandPrompt(const unsigned argc, const wchar_t* const argv[])

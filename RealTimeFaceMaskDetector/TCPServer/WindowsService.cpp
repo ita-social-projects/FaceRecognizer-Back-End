@@ -123,7 +123,12 @@ void Service::StartServerWork(bool& is_listening_started)
 {
 	std::thread listen_multiple_clients([&]() 
 		{
-			s_socket_server.StartListening(is_listening_started); 
+			s_socket_server.StartListening(is_listening_started);
+			if (!is_listening_started)
+			{
+				
+				return;
+			}
 		});
 	if (listen_multiple_clients.joinable())
 	{
@@ -134,13 +139,15 @@ void Service::StartServerWork(bool& is_listening_started)
 bool Service::CreateServer()
 {
 	LOG_MSG << "CreateServer begin";
-	bool is_server_initialized = s_socket_server.InitSocketServer();
-	bool is_socked_created = s_socket_server.CreateListeningSocket();
-	bool is_listening_started;
+	bool is_server_initialized = false;
+	is_server_initialized = s_socket_server.InitSocketServer();
+	bool is_socked_created =false;
+	is_socked_created = s_socket_server.CreateListeningSocket();
+	bool is_listening_started=false;
 	
 	StartServerWork(is_listening_started);
-	std::cout << " After StartServerWork..." << std::endl;
 	LOG_MSG << "CreateServer end";
+	s_socket_server.ShutdownServer();
 	return is_server_initialized && 
 		is_socked_created &&
 		is_listening_started;
@@ -324,24 +331,30 @@ bool Service::Start()
 	else if (is_opened)
 	{
 		TryStartService(handle_open_service, is_started);
-		std::cout << "After TryStartService" << std::endl;
+
 		if (!is_started)
 		{
 			std::cout << "Shuting down Server..." << std::endl;
-			ShutdownServer();
+			if (ShutdownServer())
+			{
+				std::cout << "Shut down Server..." << std::endl;
+			}
+			Stop();
+			std::cout << "Stop service..." << std::endl;
+			is_started = true;
 		}
-		Stop();
-		std::cout << "Stop service..." << std::endl;
 	}
 	try
 	{
-		CloseServiceHandle(handle_open_SCM);
+		CloseServiceHandle(handle_open_service);
+		std::cout << "Close Service Handle ..." << std::endl;
 	}
 	catch (const std::exception&)
 	{
 		std::cout << GetLastError() << std::endl;
 	}
-	std::cout << "CloseServiceHandle..." << std::endl;
+	CloseServiceHandle(handle_open_SCM);
+	std::cout << "Close Service Handle handle_open_SCM ..." << std::endl;
 	LOG_MSG << "Start end";
 	return is_opened && is_started;
 }
