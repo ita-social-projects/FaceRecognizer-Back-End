@@ -1,4 +1,13 @@
 #include "SocketServer.h"
+std::shared_ptr<SocketServer> SocketServer::s_instance = {};
+SocketServer& SocketServer::getInstance()
+{
+	if (!s_instance.get())
+	{
+		s_instance = std::shared_ptr<SocketServer>{ new SocketServer };
+	}
+	return *s_instance;
+}
 
 bool SocketServer::InitSocketServer()
 {

@@ -1,13 +1,19 @@
 #include "WindowsService.h"
+#include <memory>
 #include <thread>
+
 #pragma region Variables
 
-SocketServer Service::s_socket_server{};
 SERVICE_STATUS Service::s_service_status{};
 SERVICE_STATUS_HANDLE Service::s_service_status_handle{};
 HANDLE Service::s_service_stop_event{};
 std::shared_ptr<Service>Service::s_instance{};
 std::wstring Service::s_service_name{};
+
+#pragma endregion
+
+
+#pragma region Getters and Seters
 
 const std::wstring& Service::get_service_name()
 {
@@ -30,12 +36,14 @@ void Service::set_service_name(const std::wstring& str)
 
 #pragma endregion
 
+
 #pragma region Service Control Manager
 
 // The entry point for a service
 bool Service::Main(const unsigned short argc, const wchar_t* const argv[])
 {
 	LOG_MSG << "Main begin";
+	out << "Main)()()()()\n";
 
 	s_service_status_handle = RegisterServiceCtrlHandler(Service::get_instance().s_service_name.c_str(),
 		reinterpret_cast<LPHANDLER_FUNCTION>(CtrlHandler));
@@ -92,11 +100,11 @@ bool Service::ReportStatus(const unsigned short current_state, const unsigned sh
 	return true;
 }
 
-
 bool Service::Initialize(const unsigned short argc, const wchar_t* const argv[])
 {
 	LOG_MSG << "Initialize begin";
 
+	out << "Initialize begin\n";
 	s_service_stop_event = CreateEvent( // Create a service stop event to wait on later
 		nullptr,						// Security Attributes
 		true,							// MANUAL Reset Event
@@ -108,120 +116,59 @@ bool Service::Initialize(const unsigned short argc, const wchar_t* const argv[])
 		return ReportStatus(SERVICE_STOPPED, NO_ERROR, DEFAULT_WAIT_HINT);
 	}
 
-	ReportStatus(SERVICE_RUNNING, NO_ERROR, DEFAULT_WAIT_HINT);	// Start the thread that will perform the main task of the service
+	ReportStatus(SERVICE_RUNNING, NO_ERROR, DEFAULT_WAIT_HINT);	
 
-	CreateServer();
+	// Start the thread that will perform the main task of the service
+	bool is_started = false;
+	//TryCreateServer(is_started);
+
+	STARTUPINFO si;
+	PROCESS_INFORMATION pi;
+
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	CreateProcess(SERVER_EXE_PATH, (LPWSTR)START.data(), NULL, NULL, false, 0, NULL, NULL, &si, &pi);
+
 	WaitForSingleObject(s_service_stop_event, INFINITE); // Wait event to be Signaled	
+		// Wait until child process exits.
+	WaitForSingleObject(pi.hProcess, INFINITE);
+
+	// Close process and thread handles. 
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
 
 	LOG_MSG << "Initialize end";
 	LOG_MSG << "Main end";
 	return ReportStatus(SERVICE_STOPPED, NO_ERROR, DEFAULT_WAIT_HINT);
 }
 
-void Service::StartServerWork(bool& is_listening_started)
-{
-	std::thread listen_multiple_clients([&]() {s_socket_server.StartListening(is_listening_started); });
-	if (listen_multiple_clients.joinable())
-	{
-		listen_multiple_clients.join();
-	}
-}
-
-bool Service::CreateServer()
-{
-	LOG_MSG << "CreateServer begin";
-	bool is_server_initialized = s_socket_server.InitSocketServer();
-	bool is_socked_created = s_socket_server.CreateListeningSocket();
-	bool is_listening_started;
-	
-	StartServerWork(is_listening_started);
-	
-	LOG_MSG << "CreateServer end";
-	return is_server_initialized && 
-		is_socked_created &&
-		is_listening_started;
-}
-
-void Service::TryCreateServer(bool& is_started)
-{
-	is_started = CreateServer();
-	if (!is_started)
-	{
-		LOG_WARNING << "Start: CreateServer: ERROR " << GetLastError();
-	}
-	else
-	{
-		LOG_MSG << "Start: succeeded :)";
-	}
-}
-
-void Service::TryStopService(SC_HANDLE handle_open_service, SERVICE_STATUS_PROCESS status_process, bool& is_stopped)
-{
-	if (!ControlService(handle_open_service, SERVICE_CONTROL_STOP, reinterpret_cast<LPSERVICE_STATUS>(&status_process)))
-	{
-		int error_code = GetLastError();
-		if (!error_code)
-		{
-			LOG_MSG << "Stop: succeeded :)";
-		}
-		else
-		{
-			LOG_ERROR << "Stop: ControlService: ERROR " << GetLastError();
-			is_stopped = false;
-		}
-	}
-}
-
-void Service::TryDeleteService(SC_HANDLE handle_service, bool& is_deleted)
-{
-	if (!DeleteService(handle_service))
-	{
-		LOG_ERROR << "Uninstall: DeleteService: ERROR " << GetLastError();
-		is_deleted = false;
-	}
-	else
-	{
-		LOG_MSG << "Uninstall: succeeded :)";
-	}
-}
-
-void Service::TryStartService(SC_HANDLE handle_open_service, bool& is_started)
-{
-	if (!StartService(handle_open_service, false, nullptr))
-	{
-		LOG_ERROR << "Start: StartService: ERROR " << GetLastError();
-		is_started = false;
-	}
-	else
-	{
-		TryCreateServer(is_started);
-	}
-}
-
-bool Service::ShutdownServer()
-{
-	return s_socket_server.ShutdownServer();	
-}
-
-bool Service::CtrlHandler(const unsigned short request)
+void Service::CtrlHandler(const unsigned short request)
 {
 	LOG_MSG << "CtrlHandler begin";
 
 	switch (request)
 	{
 	case SERVICE_CONTROL_STOP:
-		if (s_service_status.dwCurrentState != SERVICE_RUNNING) break;
-
+		if (s_service_status.dwCurrentState != SERVICE_RUNNING) 
+		{
+			break;
+		}
 		ShutdownServer();
-		return ReportStatus(SERVICE_STOPPED, NO_ERROR, DEFAULT_WAIT_HINT);
-
-	default: break;
+		
+		ReportStatus(SERVICE_STOPPED, NO_ERROR, DEFAULT_WAIT_HINT);
+		break;
+	default: 
+		break;
 	}
+
 	LOG_MSG << "CtrlHandler end";
-	return false;
+	return;
 }
 
 #pragma endregion
+
 
 #pragma region Command Prompt
 
@@ -232,7 +179,7 @@ bool Service::Install()
 	SC_HANDLE handle_SCM = nullptr;
 	SC_HANDLE handle_service = nullptr;
 	wchar_t path[MAX_PATH];
-
+	
 	/*Get the path to Executable file from SCM.
 	If param 0 is nullptr, writes path to current .exe */
 	if (!GetModuleFileName(nullptr, path, MAX_PATH))
@@ -262,7 +209,7 @@ bool Service::Install()
 		SERVICE_WIN32_OWN_PROCESS,						// Service Type
 		SERVICE_DEMAND_START,							// Service Start Type
 		SERVICE_ERROR_NORMAL,							// Service Error Code
-		path,											// Path to .exe
+		SERVER_EXE_PATH,											// Path to .exe
 		nullptr,									    // Load ordering group
 		nullptr,                                        // Tag ID
 		nullptr,	                                    // Dependencies
@@ -431,6 +378,99 @@ bool Service::Uninstall()
 
 	LOG_MSG << "Uninstall end";
 	return is_opened && is_deleted;
+}
+
+#pragma endregion
+
+
+#pragma region Interracting with server
+
+void Service::StartServerWork(bool& is_listening_started)
+{
+	std::thread listen_multiple_clients([&]() {SocketServer::getInstance().StartListening(is_listening_started); });
+	if (listen_multiple_clients.joinable())
+	{
+		listen_multiple_clients.join();
+	}
+}
+
+bool Service::CreateServer()
+{
+	LOG_MSG << "CreateServer begin";
+	bool is_server_initialized = SocketServer::getInstance().InitSocketServer();
+	bool is_socked_created = SocketServer::getInstance().CreateListeningSocket();
+	bool is_listening_started;
+
+	StartServerWork(is_listening_started);
+
+	LOG_MSG << "CreateServer end";
+	return is_server_initialized &&
+		is_socked_created &&
+		is_listening_started;
+	return true;
+}
+
+void Service::TryCreateServer(bool& is_started)
+{
+	is_started = CreateServer();
+	if (!is_started)
+	{
+		LOG_WARNING << "TryCreateServer: ERROR " << GetLastError();
+	}
+	else
+	{
+		LOG_MSG << "TryCreateServer: succeeded :)";
+	}
+}
+
+void Service::TryStopService(SC_HANDLE handle_open_service, SERVICE_STATUS_PROCESS status_process, bool& is_stopped)
+{
+	if (!ControlService(handle_open_service, SERVICE_CONTROL_STOP, reinterpret_cast<LPSERVICE_STATUS>(&status_process)))
+	{
+		int error_code = GetLastError();
+		if (!error_code)
+		{
+			LOG_MSG << "Stop: succeeded :)";
+		}
+		else
+		{
+			LOG_ERROR << "Stop: ControlService: ERROR " << GetLastError();
+			is_stopped = false;
+		}
+	}
+}
+
+void Service::TryDeleteService(SC_HANDLE handle_service, bool& is_deleted)
+{
+	if (!DeleteService(handle_service))
+	{
+		LOG_ERROR << "Uninstall: DeleteService: ERROR " << GetLastError();
+		is_deleted = false;
+	}
+	else
+	{
+		LOG_MSG << "Uninstall: succeeded :)";
+	}
+}
+
+void Service::TryStartService(SC_HANDLE handle_open_service, bool& is_started)
+{
+	const wchar_t* args[] = {START.data()};
+	if (!StartService(handle_open_service, 1, args))
+	{
+		LOG_ERROR << "Start: StartService: ERROR " << GetLastError();
+		is_started = false;
+	}
+	else
+	{
+		LOG_MSG << "Start succeeded :)";
+		//TryCreateServer(is_started);
+	}
+}
+
+bool Service::ShutdownServer()
+{
+	return SocketServer::getInstance().ShutdownServer();
 }
 
 #pragma endregion

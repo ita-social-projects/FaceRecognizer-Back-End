@@ -11,26 +11,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsService.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SocketServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="server_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WindowsService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="easylogging++.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
     <ClInclude Include="SocketServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
