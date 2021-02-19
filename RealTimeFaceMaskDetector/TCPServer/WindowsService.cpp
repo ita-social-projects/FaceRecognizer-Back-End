@@ -2,7 +2,8 @@
 #include <thread>
 #pragma region Variables
 
-SocketServer Service::s_socket_server{};
+//SocketServer Service::s_socket_server{};
+//std::unique_ptr<SocketServer> Service::s_socket_server = std::make_unique<SocketServer>();
 SERVICE_STATUS Service::s_service_status{};
 SERVICE_STATUS_HANDLE Service::s_service_status_handle{};
 HANDLE Service::s_service_stop_event{};
@@ -19,6 +20,7 @@ Service& Service::get_instance()
 	if (!s_instance.get())
 	{
 		s_instance = std::shared_ptr<Service>{ new Service };
+		s_instance->s_socket_server = std::make_unique<SocketServer>();
 	}
 	return *s_instance;
 }
@@ -122,7 +124,7 @@ void Service::StartServerWork(bool& is_listening_started)
 {
 	std::thread listen_multiple_clients([&]() 
 		{
-			s_socket_server.StartListening(is_listening_started);
+			s_instance->s_instance->s_socket_server->StartListening(is_listening_started);
 			if (!is_listening_started)
 			{
 				
@@ -139,14 +141,14 @@ bool Service::CreateServer()
 {
 	LOG_MSG << "CreateServer begin";
 	bool is_server_initialized = false;
-	is_server_initialized = s_socket_server.InitSocketServer();
+	is_server_initialized = s_instance->s_socket_server->InitSocketServer();
 	bool is_socked_created =false;
-	is_socked_created = s_socket_server.CreateListeningSocket();
+	is_socked_created = s_instance->s_socket_server->CreateListeningSocket();
 	bool is_listening_started=false;
 	
 	StartServerWork(is_listening_started);
 	LOG_MSG << "CreateServer end";
-	s_socket_server.ShutdownServer();
+	s_instance->s_socket_server->ShutdownServer();
 	return is_server_initialized && 
 		is_socked_created &&
 		is_listening_started;
@@ -210,7 +212,7 @@ void Service::TryStartService(SC_HANDLE handle_open_service, bool& is_started)
 
 bool Service::ShutdownServer()
 {
-	return s_socket_server.ShutdownServer();	
+	return s_instance->s_socket_server->ShutdownServer();
 }
 
 bool Service::CtrlHandler(const unsigned short request)
