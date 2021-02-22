@@ -46,7 +46,7 @@ private:
 
 	static bool ShutdownServer();
 
-	static std::unique_ptr<SocketServer> s_socket_server;
+	std::unique_ptr<SocketServer> s_socket_server;
 	static SERVICE_STATUS s_service_status;
 	static SERVICE_STATUS_HANDLE s_service_status_handle;
 	static HANDLE s_service_stop_event;
