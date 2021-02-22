@@ -8,7 +8,6 @@
 
 #pragma comment (lib, "Ws2_32.lib")
 
-const char* const DEFAULT_PORT = "27015";
 const int  DEFAULT_BUFLEN = 512;
 
 class SocketServer
@@ -69,5 +68,8 @@ private:
 	/*When listening socket is created, this variable will be set to <true>.
 	When Server will shut down, varible will be set to <false> */
 	bool server_is_up;
+	/*ip and port from config.ini*/
+	std::string m_ip;
+	std::string m_port;
 };
 

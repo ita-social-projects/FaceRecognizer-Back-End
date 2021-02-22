@@ -5,6 +5,10 @@
 bool SocketServer::InitSocketServer()
 {
 	ConnectToSQL();
+
+	IniParser ini_parser(CONFIG_FILE);
+	m_ip = ini_parser.GetParam("Client", "ip");
+	m_port = ini_parser.GetParam("Client", "port");
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
 	{
@@ -17,7 +21,7 @@ bool SocketServer::InitSocketServer()
 	hints.ai_protocol = IPPROTO_TCP;
 	hints.ai_flags = AI_PASSIVE;
 
-	m_func_result = getaddrinfo(0, DEFAULT_PORT, &hints, &m_host_info);
+	m_func_result = getaddrinfo(0, m_port.c_str(), &hints, &m_host_info);
 	if (m_func_result != 0)
 	{
 		WSACleanup();
@@ -89,8 +93,8 @@ bool SocketServer::AcceptConnection()
 
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
-			clientService.sin_port = htons(27015);
+			clientService.sin_addr.s_addr = inet_addr(m_ip.c_str());
+			clientService.sin_port = htons(std::stoi(m_port));
 			
 			mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
 			connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
