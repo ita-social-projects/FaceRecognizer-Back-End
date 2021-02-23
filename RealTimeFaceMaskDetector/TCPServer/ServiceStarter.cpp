@@ -26,6 +26,7 @@ ServiceStarter::ServiceStarter(const std::wstring& service_name, bool& service_e
 	{
 		service_exists = false;
 	}
+	LOG_MSG << "ServiceStarter: service name found";
 	service_exists = true;
 	s_service_name = service_name;
 }
@@ -36,6 +37,7 @@ bool ServiceStarter::SetServiceName(const std::wstring& service_name)
 	{
 		return false;
 	}
+	LOG_MSG << "SetServiceName: service name found";
 	s_service_name = service_name;
 	return true;
 }
@@ -47,7 +49,7 @@ const std::wstring& ServiceStarter::GetServiceName()
 
 bool ServiceStarter::ServiceMain(const unsigned short argc, const wchar_t* const argv[])
 {
-	os << "Main begin";
+	LOG_MSG << "ServiceMain: begin";
 
 	s_service_status_handle = RegisterServiceCtrlHandler(
 		s_service_name.c_str(), 
@@ -55,7 +57,7 @@ bool ServiceStarter::ServiceMain(const unsigned short argc, const wchar_t* const
 
 	if (!s_service_status_handle)
 	{
-		os << "Main: RegisterServiceCtrlHandler ERROR " << GetLastError();
+		LOG_ERROR << "ServiceMain: RegisterServiceCtrlHandler ERROR " << GetLastError();
 		return false;
 	}
 
@@ -69,7 +71,7 @@ bool ServiceStarter::ServiceMain(const unsigned short argc, const wchar_t* const
 
 void ServiceStarter::CtrlHandler(const unsigned long request)
 {
-	LOG_MSG << "CtrlHandler begin";
+	LOG_MSG << "CtrlHandler: begin";
 
 	switch (request)
 	{
@@ -86,13 +88,12 @@ void ServiceStarter::CtrlHandler(const unsigned long request)
 		break;
 	}
 
-	LOG_MSG << "CtrlHandler end";
-	return;
+	LOG_MSG << "CtrlHandler: end";
 }
 
 bool ServiceStarter::ReportStatus(const unsigned short current_state, const unsigned short win32_exit_code, const unsigned short wait_hint)
 {
-	LOG_MSG << "ReportStatus begin";
+	LOG_MSG << "ReportStatus: begin";
 
 	static unsigned short s_check_point = 1;
 
@@ -102,6 +103,7 @@ bool ServiceStarter::ReportStatus(const unsigned short current_state, const unsi
 
 	if (current_state == SERVICE_START_PENDING) // Service is about to start
 	{
+		LOG_MSG << "ReportStatus: SERVICE_START_PENDING";
 		s_service_status.dwControlsAccepted = BEGIN_CONTROL_ACCEPTED_VALUE;
 	}
 	else
@@ -111,6 +113,7 @@ bool ServiceStarter::ReportStatus(const unsigned short current_state, const unsi
 
 	if (current_state == SERVICE_RUNNING || current_state == SERVICE_STOPPED)  // Progress for Service operation
 	{
+		LOG_MSG << "ReportStatus: SERVICE_RUNNING || SERVICE_STOPPED";
 		s_service_status.dwCheckPoint = BEGIN_CHECK_POINT_VALUE;
 	}
 	else
@@ -120,17 +123,17 @@ bool ServiceStarter::ReportStatus(const unsigned short current_state, const unsi
 
 	if (!SetServiceStatus(s_service_status_handle, &s_service_status))
 	{
-		LOG_ERROR << "Report Status: ERROR " << GetLastError();
+		LOG_ERROR << "Report Status: SetServiceStatus: ERROR " << GetLastError();
 		return false;
 	}
 
-	LOG_MSG << "ReportStatus end";
+	LOG_MSG << "ReportStatus: end";
 	return true;
 }
 
 bool ServiceStarter::StartServiceWork()
 {
-	os << "ServiceWork begin";
+	LOG_MSG << "StartServiceWork: begin";
 
 	s_service_stop_event = CreateEvent( // Create a service stop event to wait on later
 		nullptr,						// Security Attributes
@@ -140,6 +143,7 @@ bool ServiceStarter::StartServiceWork()
 
 	if (!s_service_stop_event)
 	{
+		LOG_ERROR << "StartServiceWork: CreateEvent: ERROR " << GetLastError();
 		return ReportStatus(SERVICE_STOPPED, NO_ERROR, DEFAULT_WAIT_HINT);
 	}
 
@@ -161,8 +165,8 @@ bool ServiceStarter::StartServiceWork()
 	UnregisterWait(newHandle); // Wait event to be Signaled	in other thread
 */
 	WaitForSingleObject(s_service_stop_event, INFINITE);
-	os << "ServiceWork end";
-	os << "Main end";
+	LOG_MSG << "StartServiceWork: end";
+	LOG_MSG << "ServiceMain: end";
 	return ReportStatus(SERVICE_STOPPED, NO_ERROR, DEFAULT_WAIT_HINT);
 }
 
@@ -199,6 +203,7 @@ bool ServiceStarter::CheckServiceExists(const std::wstring& service_name)
 //------Functions to start server--------
 void ServiceStarter::TryCreateServer(bool& is_started)
 {
+	LOG_MSG << "TryCreateServer: begin";
 	is_started = CreateServer();
 	if (!is_started)
 	{
@@ -208,18 +213,19 @@ void ServiceStarter::TryCreateServer(bool& is_started)
 	{
 		LOG_MSG << "TryCreateServer: succeeded :)";
 	}
+	LOG_MSG << "TryCreateServer: end";
 }
 
 bool ServiceStarter::CreateServer(SocketServer& _server, bool wait_till_finish)
 {
-	LOG_MSG << "CreateServer begin";
+	LOG_MSG << "CreateServer: begin";
 	bool is_server_initialized = _server.InitSocketServer();
 	bool is_socked_created = _server.CreateListeningSocket();
 	bool is_listening_started;
 
 	StartServerInNewThread(is_listening_started, _server, wait_till_finish);
 
-	LOG_MSG << "CreateServer end";
+	LOG_MSG << "CreateServer: end";
 	return is_server_initialized &&
 		is_socked_created &&
 		is_listening_started;

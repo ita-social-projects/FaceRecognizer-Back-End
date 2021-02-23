@@ -11,13 +11,11 @@ void CreateServiceTableEntry(ServiceStarter& service, SERVICE_TABLE_ENTRY(*entry
 
 int wmain(unsigned argc,  wchar_t* argv[])
 {
-	os.open("D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\RealTimeFaceMaskDetector\\x64\\Debug\\AAAout.txt",
-		std::ios_base::app);
-	os << "\nMAIN WORKS\n";
+	LOG_MSG << "wmain: start";
 	
 	bool result = ChooseServerBootOptionAndStart(argc, argv);
-	os.close();
 
+	LOG_MSG << "wmain: finish";
 	return result ? 0 : -1;
 }
 
@@ -26,10 +24,12 @@ bool ChooseServerBootOptionAndStart(const unsigned argc, const wchar_t* const ar
 	bool ret_val = false;
 	if(argc > 1)
 	{
+		LOG_MSG << "ChooseServerBootOptionAndStart: Starting server as service...";
 		ret_val = RunServerUnderService(argv);
 	}
 	else
 	{
+		LOG_MSG << "ChooseServerBootOptionAndStart: Starting server as console app...";
 		ret_val = RunServerItself();
 	}
 	return ret_val;
@@ -41,7 +41,7 @@ bool RunServerUnderService(const wchar_t* const argv[])
 
 	if (!service.SetServiceName(argv[SERVICE_ARGUMENT]))
 	{
-		os << "Invalid name of service\n";
+		LOG_ERROR << "RunServerUnderService: Invalid service name";
 		return false;
 	}
 
@@ -52,20 +52,21 @@ bool RunServerUnderService(const wchar_t* const argv[])
 }
 bool InteractWithServiceUsingSCM(const SERVICE_TABLE_ENTRY* const service_table)
 {
-	os << "Dispatcher\n";
+	LOG_MSG << "InteractWithServiceUsingSCM: calling StartServiceCtrlDispatcher...";
 	StartServiceCtrlDispatcher(service_table); // Connect main thread of service procces with the SCM
 	int error = GetLastError();
 	if (error)
 	{
-		os << "StartServiceCtrlDispatcher ERROR " << error;
+		LOG_ERROR << "StartServiceCtrlDispatcher ERROR " << error;
 		return false;
 	}
-	os << "StartServiceControlDispatcher succeeded :)";
+	LOG_MSG << "StartServiceControlDispatcher succeeded :)";
 	return true;
 }
 
 void CreateServiceTableEntry(ServiceStarter& service, SERVICE_TABLE_ENTRY(*entry_table)[2])
 {
+	LOG_MSG << "CreateServiceTableEntry: Creating table";
 	(*entry_table)[0].lpServiceName = const_cast<wchar_t*>(service.GetServiceName().c_str());
 	(*entry_table)[0].lpServiceProc = reinterpret_cast<LPSERVICE_MAIN_FUNCTION>(service.ServiceMain);
 

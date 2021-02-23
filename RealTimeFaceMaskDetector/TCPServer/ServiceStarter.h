@@ -1,5 +1,4 @@
 #pragma once
-#include <Logger.h>
 #include "SocketServer.h"
 
 class ServiceStarter
@@ -42,17 +41,17 @@ private:
 	handle on service with service_name. 
 	If handle is valid, returns true*/
 	static bool CheckServiceExists(const std::wstring& service_name);
+private:
+	static void TryCreateServer(bool& is_started);
+	static bool CreateServer(SocketServer& _server = server, bool wait_till_finish = false);
+	static void StartServerInNewThread(bool& is_listening_started, SocketServer& _server = server, bool wait_till_finish = false);
+	static void ShutdownServer();
 
 	/*Friend function that starts server work.
 	Can be used in service_main functin
 	to start server NOT under WinServce.
 	Definded in ServiceStarter.h*/
 	friend bool RunServerItself();
-private:
-	static void TryCreateServer(bool& is_started);
-	static bool CreateServer(SocketServer& _server = server, bool wait_till_finish = false);
-	static void StartServerInNewThread(bool& is_listening_started, SocketServer& _server = server, bool wait_till_finish = false);
-	static void ShutdownServer();
 private:
 	/*Variables to control service and it's status*/
 	 static std::wstring s_service_name;

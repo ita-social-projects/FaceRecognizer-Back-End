@@ -2,12 +2,13 @@
 
 bool SocketServer::InitSocketServer()
 {
+	LOG_MSG << "InitSocketServer: begin";
 	ConnectToSQL();
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	os << "\nIniting of server\n";
 	if (m_func_result != 0)
 	{
-		os << "\nWSA ERROR!!\t" << GetLastError() << "\n";
+		LOG_ERROR << "InitSocketServer: WSAStartup: ERROR " << GetLastError();
+		LOG_MSG << "InitSocketServer: end";
 		return false;
 	}
 
@@ -21,53 +22,64 @@ bool SocketServer::InitSocketServer()
 	if (m_func_result != 0)
 	{
 		WSACleanup();
+		LOG_ERROR << "InitSocketServer: getaddrinfo: ERROR " << GetLastError();
+		LOG_MSG << "InitSocketServer: end";
 		return false;
 	}
 
 	SpecifyPathForPhotos();
+	LOG_MSG << "InitSocketServer: end";
 	return true;
 }
 
 bool SocketServer::CreateListeningSocket()
 {
+	LOG_MSG << "CreateListeningSocket: begin";
 	m_listen_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
 	if (m_listen_socket == INVALID_SOCKET)
 	{
+		LOG_ERROR << "CreateListeningSocket: socket: ERROR " << GetLastError();
 		freeaddrinfo(m_host_info);
 		WSACleanup();
+		LOG_MSG << "CreateListeningSocket: end";
 		return false;
 	}
 
 	server_is_up = true;
-
+	LOG_MSG << "CreateListeningSocket: end";
 	return true;
 }
 
 bool SocketServer::BindListeningSocket()
 {
+	LOG_MSG << "BindListeningSocket: begin";
 	m_func_result = bind(m_listen_socket, m_host_info->ai_addr, (int)m_host_info->ai_addrlen);
 	if (m_func_result == SOCKET_ERROR)
 	{
 		freeaddrinfo(m_host_info);
 		closesocket(m_listen_socket);
 		WSACleanup();
-		LOG_ERROR << "BindListeningSocket ERROR: faild to bind socket";
-		LOG_ERROR << GetLastError();
+		LOG_ERROR << "BindListeningSocket: bind: ERROR " << GetLastError();
+		LOG_MSG << "BindListeningSocket: end";
 		return false;
 	}
+	LOG_MSG << "BindListeningSocket: end";
 	return true;
 }
 
 bool SocketServer::AcceptConnection()
 {
+	LOG_MSG << "AcceptConnection: begin";
 	m_client_socket = accept(m_listen_socket, NULL, NULL);
 	if (m_client_socket == INVALID_SOCKET)
 	{
-		closesocket(m_listen_socket);
-		WSACleanup();
-		LOG_WARNING << "AcceptConnection: failed to accept client";
+		closesocket(m_listen_socket); // ASK IF THIS NEEDED
+		WSACleanup(); // ASK IF THIS NEEDED
+		LOG_WARNING << "AcceptConnection: accept: ERROR";
+		LOG_MSG << "AcceptConnection: end";
 		return false;
 	}
+	LOG_MSG << "AcceptConnection: end";
 	return true;
 }
 
