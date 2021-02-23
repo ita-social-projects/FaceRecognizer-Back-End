@@ -14,6 +14,8 @@
 #include <QtGui/QImage>
 #include <QtCore/QBuffer>
 
+#include <opencv2/imgcodecs.hpp>
+
 #pragma comment (lib, "ws2_32.lib")
 
 /* Forward declaration. */
@@ -35,9 +37,7 @@ public:
     bool CreateSocket();
     /* Connects to the server socket. */
     bool Connect();
-    /* Converts image to binary and returns result via second parameter. */
-    //bool ConvertImageToBinary(cv::Mat img, std::vector<char>& buffer);
-    bool ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer);
+    /* Sends vector of bytes to the server. */
     /* Sends vector of bytes to the server. */
     bool SendBinaryMessage(std::vector<char>& buffer);
     /* Diconnects from the server and terminates use of the Winsock DLL  */
