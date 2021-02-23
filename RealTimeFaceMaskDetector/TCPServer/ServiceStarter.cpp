@@ -152,19 +152,8 @@ bool ServiceStarter::StartServiceWork()
 	// Start the thread that will perform the main task of the service
 	bool is_started = false;
 	TryCreateServer(is_started);
-
-/*	HANDLE newHandle;
-	RegisterWaitForSingleObject(
-		&newHandle, 
-		s_service_stop_event, 
-		reinterpret_cast<WAITORTIMERCALLBACK>(nullptr,false), 
-		nullptr, 
-		INFINITE, 
-		WT_EXECUTEONLYONCE);
-
-	UnregisterWait(newHandle); // Wait event to be Signaled	in other thread
-*/
 	WaitForSingleObject(s_service_stop_event, INFINITE);
+	
 	LOG_MSG << "StartServiceWork: end";
 	LOG_MSG << "ServiceMain: end";
 	return ReportStatus(SERVICE_STOPPED, NO_ERROR, DEFAULT_WAIT_HINT);
@@ -182,7 +171,7 @@ bool ServiceStarter::CheckServiceExists(const std::wstring& service_name)
 		SC_MANAGER_ALL_ACCESS);
 	if (!scm_handle)
 	{
-		LOG_ERROR << "CheckServiceExists : OpenSCManager : failed to open manager : " << GetLastError();
+		LOG_ERROR << "CheckServiceExists: OpenSCManager: ERROR " << GetLastError();
 		return false;
 	}
 
@@ -192,10 +181,10 @@ bool ServiceStarter::CheckServiceExists(const std::wstring& service_name)
 		SC_MANAGER_ALL_ACCESS);
 	if (!service_handle)
 	{
-		LOG_ERROR << "CheckServiceExists : OpenService : failed to open service : " << GetLastError();
+		LOG_ERROR << "CheckServiceExists: OpenService: ERROR " << GetLastError();
 		service_exists = false;
-		CloseServiceHandle(service_handle);
 	}
+	CloseServiceHandle(service_handle);
 	CloseServiceHandle(scm_handle);
 	return service_exists;
 }
