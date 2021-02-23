@@ -1,66 +1,58 @@
 #include <iostream>
-#include "SocketServer.h"
+#include "ServiceStarter.h"
+const short int TABLE_ENTRY_SIZE = 2;
+const short int SERVICE_ARGUMENT = 1;
 
-bool ManageServer(unsigned argc, wchar_t* option[]);
-bool StartServerWork();
-bool RestartServerWork();
-bool StopServerWork();
-void ListenInNewThread(bool& is_listening_started);
+bool InteractWithServiceUsingSCM(const SERVICE_TABLE_ENTRY* const service_table);
+void CreateServiceTableEntry(ServiceStarter& service, SERVICE_TABLE_ENTRY(*entry_table)[2]);
 
 int wmain(unsigned argc,  wchar_t* argv[])
 {
-	LOG_MSG << "Sevrer MAIN function BEGIN!!!";
-	ManageServer(argc, argv);
+	os.open("D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\RealTimeFaceMaskDetector\\x64\\Debug\\AAAout.txt",
+		std::ios_base::app);
+	os << "\nMAIN WORKS\n";
+	
+	ServiceStarter service;
+
+	if(!service.SetServiceName(argv[SERVICE_ARGUMENT]))
+	{
+		os << "Invalid name of service\n";
+		return 1;
+	}
+
+	SERVICE_TABLE_ENTRY service_table[TABLE_ENTRY_SIZE];
+	CreateServiceTableEntry(service, &service_table);
+
+	/*service_table[0].lpServiceName = const_cast<wchar_t*>(service.GetServiceName().c_str());
+	service_table[0].lpServiceProc = reinterpret_cast<LPSERVICE_MAIN_FUNCTION>(service.ServiceMain);
+
+	service_table[1].lpServiceName = nullptr;
+	service_table[1].lpServiceProc = nullptr;*/
+
+	InteractWithServiceUsingSCM(service_table);
+	os.close();
 	return 0;
 }
 
-
-bool ManageServer(unsigned argc, wchar_t* option[])
+bool InteractWithServiceUsingSCM(const SERVICE_TABLE_ENTRY* const service_table)
 {
-	if (argc > 1)
+	os << "Dispatcher\n";
+	StartServiceCtrlDispatcher(service_table); // Connect main thread of service procces with the SCM
+	int error = GetLastError();
+	if (error)
 	{
-		LOG_MSG << "Managing started";
-		if (!wcscmp(option[SERVER_MANAGE_OPTION], START.data()))			return StartServerWork();
-		else if (!wcscmp(option[SERVER_MANAGE_OPTION], STOP.data()))			return StopServerWork();
-		else if (!wcscmp(option[SERVER_MANAGE_OPTION], RESTART.data()))		return RestartServerWork();
-		else std::cerr << "Invalid input\n";
-		LOG_MSG << "Managing ERRROOROROR";
+		os << "StartServiceCtrlDispatcher ERROR " << error;
+		return false;
 	}
-	return false;
+	os << "StartServiceControlDispatcher succeeded :)";
+	return true;
 }
 
-bool StartServerWork()
+void CreateServiceTableEntry(ServiceStarter& service, SERVICE_TABLE_ENTRY(*entry_table)[2])
 {
-	LOG_MSG << "CreateServer begin";
+	(*entry_table)[0].lpServiceName = const_cast<wchar_t*>(service.GetServiceName().c_str());
+	(*entry_table)[0].lpServiceProc = reinterpret_cast<LPSERVICE_MAIN_FUNCTION>(service.ServiceMain);
 
-	bool is_server_initialized = SocketServer::getInstance().InitSocketServer();
-	bool is_socked_created = SocketServer::getInstance().CreateListeningSocket();
-	bool is_listening_started;
-	SocketServer::getInstance().StartListening(is_listening_started);
-	
-	LOG_MSG << "CreateServer end";
-	return is_server_initialized &&
-		is_socked_created &&
-		is_listening_started;
-}
-
-void ListenInNewThread(bool& is_listening_started)
-{
-	auto thread = std::thread([&]() {SocketServer::getInstance().StartListening(is_listening_started); });
-	if(thread.joinable())
-	{
-		thread.detach();
-	}
-}
-
-bool RestartServerWork()
-{
-	LOG_MSG << "Restarting Server";
-	return StopServerWork() && StartServerWork();
-}
-
-bool StopServerWork()
-{
-	LOG_MSG << "Stopping server";
-	return SocketServer::getInstance().ShutdownServer();
+	(*entry_table)[1].lpServiceName = nullptr;
+	(*entry_table)[1].lpServiceProc = nullptr;
 }

@@ -1,20 +1,13 @@
 #include "SocketServer.h"
-std::shared_ptr<SocketServer> SocketServer::s_instance = {};
-SocketServer& SocketServer::getInstance()
-{
-	if (!s_instance.get())
-	{
-		s_instance = std::shared_ptr<SocketServer>{ new SocketServer };
-	}
-	return *s_instance;
-}
 
 bool SocketServer::InitSocketServer()
 {
 	ConnectToSQL();
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	os << "\nIniting of server\n";
 	if (m_func_result != 0)
 	{
+		os << "\nWSA ERROR!!\t" << GetLastError() << "\n";
 		return false;
 	}
 
@@ -253,7 +246,7 @@ void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_serve
 bool SocketServer::ShutdownServer()
 {
 	server_is_up = false;
-
+	LOG_MSG << "Shutdowning server\n";
 	m_func_result = shutdown(m_client_socket, SD_SEND);
 	if (m_func_result == SOCKET_ERROR)
 	{
@@ -269,6 +262,10 @@ bool SocketServer::ShutdownServer()
 	return true;
 }
 
+SocketServer::~SocketServer()
+{
+	ShutdownServer();
+}
 /*Functions for making directory for photos, 
 and creating particular name for each photo,
 containing date and time

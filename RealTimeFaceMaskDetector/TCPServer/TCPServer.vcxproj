@@ -125,6 +125,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)Logger;..\..\3rdPartyLibs\cryptopp820\include;C:\SQLAPI\include;$(SolutionDir)SQLServerDLL;$(SolutionDir)EncryptDecryptECBMode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CallingConvention>Cdecl</CallingConvention>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -162,10 +163,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="server_main.cpp" />
+    <ClCompile Include="ServiceStarter.cpp" />
     <ClCompile Include="SocketServer.cpp" />
     <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ServiceStarter.h" />
     <ClInclude Include="SocketServer.h" />
     <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
