@@ -1,8 +1,14 @@
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "SocketServer.h"
+#include "Ws2spi.h"
 
 bool SocketServer::InitSocketServer()
 {
 	ConnectToSQL();
+
+	IniParser ini_parser(CONFIG_FILE);
+	m_ip = ini_parser.GetParam("Client", "ip");
+	m_port = ini_parser.GetParam("Client", "port");
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
 	{
@@ -15,7 +21,7 @@ bool SocketServer::InitSocketServer()
 	hints.ai_protocol = IPPROTO_TCP;
 	hints.ai_flags = AI_PASSIVE;
 
-	m_func_result = getaddrinfo(0, DEFAULT_PORT, &hints, &m_host_info);
+	m_func_result = getaddrinfo(0, m_port.c_str(), &hints, &m_host_info);
 	if (m_func_result != 0)
 	{
 		WSACleanup();
@@ -29,6 +35,7 @@ bool SocketServer::InitSocketServer()
 bool SocketServer::CreateListeningSocket()
 {
 	m_listen_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
+
 	if (m_listen_socket == INVALID_SOCKET)
 	{
 		freeaddrinfo(m_host_info);
@@ -57,12 +64,60 @@ bool SocketServer::BindListeningSocket()
 
 bool SocketServer::AcceptConnection()
 {
-	m_client_socket = accept(m_listen_socket, NULL, NULL);
-	if (m_client_socket == INVALID_SOCKET)
+	std::cout << "Waiting connection" << std::endl;
+	//Here make async wait
+	bool ready = false, stop = false;
+	SOCKET mock_socket = INVALID_SOCKET;
+	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
+		{ 
+			SOCKET result;
+
+			result = accept(m_listen_socket, NULL, NULL);
+
+			ready = true;
+			return result;
+		});
+	
+	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
+
+	bool key = { false };
+	bool old_key = { false };
+	while (!ready)
 	{
+		//wait
+		key = GetAsyncKeyState(VK_ESCAPE) & 0x01;
+		if (key && !old_key)
+		{
+			server_is_up = false;
+
+			sockaddr_in clientService;
+			clientService.sin_family = AF_INET;
+			clientService.sin_addr.s_addr = inet_addr(m_ip.c_str());
+			clientService.sin_port = htons(std::stoi(m_port));
+			
+			mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
+			connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+			stop = true;
+		}
+
+		old_key= key;
+	}
+	m_client_socket = cl_socket.get();
+	
+	if (m_client_socket == INVALID_SOCKET)
+	{	
+		std::cout << "INVALID_SOCKET" << std::endl;
 		closesocket(m_listen_socket);
 		WSACleanup();
 		LOG_WARNING << "AcceptConnection: failed to accept client";
+		return false;
+	}
+	if (stop)
+	{
+		closesocket(m_listen_socket);
+		closesocket(mock_socket);
+		WSACleanup();
+		sql_server->Disconnect();
 		return false;
 	}
 	return true;
@@ -70,24 +125,29 @@ bool SocketServer::AcceptConnection()
 
 void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 {
-
 	if (AcceptConnection())
-	{
-		StartMessagingWintClient(ret_value);
+	{	
+		std::cout << "Begin..." << std::endl;
+		StartMessagingWintClient(ret_value);	
 	}
 	else
 	{
+		std::cout << "Stopped..." << std::endl;
 		ret_value = false;
 	}
 }
 
 void SocketServer::StartMessagingWintClient(bool& ret_value)
 {
-	std::thread th = std::thread([&]() {ReceiveMessage(ret_value); });
+	std::thread th = std::thread([&]() 
+		{
+			ReceiveMessage(ret_value); 
+		});
 	if (th.joinable()) 
 	{
 		th.join();
 	}
+	std::cout << "Stopped connection" << std::endl;
 }
 
 bool SocketServer::StartListening(bool& ret_value)
@@ -101,10 +161,13 @@ bool SocketServer::StartListening(bool& ret_value)
 	while(server_is_up)
 	{
 		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
-		{
+		{	
 			TryAcceptAndStartMessaging(ret_value);
-			if (!ret_value) 
+			if (!ret_value)
+			{
+				std::cout << "Exiting..." << std::endl;
 				break;
+			}
 		}
 		else 
 		{
@@ -115,6 +178,7 @@ bool SocketServer::StartListening(bool& ret_value)
 			break;
 		}
 	}
+	
 	return ret_value;
 }
 
@@ -177,10 +241,12 @@ bool SocketServer::ReceiveMessage(bool& ret_value)
 
 	while (client_connected)
 	{
+		
 		m_buffer.clear();
 		try
 		{
 			TryReceiveAndSendMessage(client_connected);
+			
 		}
 		catch(const std::string& msg)
 		{
@@ -248,7 +314,15 @@ bool SocketServer::ShutdownServer()
 	closesocket(m_client_socket);
 	closesocket(m_listen_socket);
 	WSACleanup();
-	sql_server->Disconnect();
+	try
+	{
+		sql_server->Disconnect();
+	}
+	catch (const SQLException& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	
 	return true;
 }
 
@@ -335,8 +409,6 @@ void SocketServer::ConnectToSQL()
 	{
 		sql_server->GetIniParams(CONFIG_FILE);
 
-		//ConnectParams db{ "MAC14BF\SQLEXPRESS", "","", "MaskPhotosDatabase", "Photos" };
-		//sql_server->Connect(db);
 		sql_server->Connect();
 		CreateTableIfNeeded(sql_server);
 	}

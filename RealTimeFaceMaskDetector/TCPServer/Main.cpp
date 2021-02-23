@@ -28,8 +28,15 @@ int wmain(unsigned argc, wchar_t* argv[])
 
 		InteractWithServiceUsingSCM(service_table);
 	}
-
-	return 0;
+	try
+	{
+		return 0;
+	}
+	catch (const std::exception&)
+	{
+		std::cout << GetLastError() << std::endl;
+		return 0;
+	}
 }
 
 bool InteractWithServiceUsingCommandPrompt(const unsigned argc, const wchar_t* const argv[])
@@ -41,11 +48,27 @@ bool InteractWithServiceUsingCommandPrompt(const unsigned argc, const wchar_t* c
 			return Service::get_instance().Install();
 		}
 
-		else if (!wcscmp(argv[SERVICE_ARGUMENT], START.data()))			return Service::get_instance().Start();
-		else if (!wcscmp(argv[SERVICE_ARGUMENT], STOP.data()))			return Service::get_instance().Stop();
-		else if (!wcscmp(argv[SERVICE_ARGUMENT], RESTART.data()))		return Service::get_instance().Restart();
-		else if (!wcscmp(argv[SERVICE_ARGUMENT], UNINSTALL.data()))		return Service::get_instance().Uninstall();
-		else std::cerr << "Invalid input\n";
+		else if (!wcscmp(argv[SERVICE_ARGUMENT], START.data()))
+		{
+			return Service::get_instance().Start();
+		}
+		else if (!wcscmp(argv[SERVICE_ARGUMENT], STOP.data()))
+		{
+			return Service::get_instance().Stop();
+		}
+		else if (!wcscmp(argv[SERVICE_ARGUMENT], RESTART.data()))
+		{
+			return Service::get_instance().Restart();
+		}
+
+		else if (!wcscmp(argv[SERVICE_ARGUMENT], UNINSTALL.data()))
+		{
+			return Service::get_instance().Uninstall();
+		}
+		else
+		{
+			std::cerr << "Invalid input\n";
+		}
 	}	
 	return false;
 }

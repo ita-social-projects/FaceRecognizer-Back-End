@@ -42,7 +42,7 @@ public:
     virtual void RollBack() abstract;
     /*Disconnect from the server*/
     virtual void Disconnect() abstract;
-    /*Delete all records from the Photos table*/
+    /*Delete all records from the table*/
     virtual void ClearTable(const std::string& table) abstract;
     /*Delete one record from the Photos table*/
     virtual void DeleteRecord(int id) abstract;
