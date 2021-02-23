@@ -122,7 +122,7 @@ void Service::StartServerWork(bool& is_listening_started)
 {
 	std::thread listen_multiple_clients([&]() 
 		{
-			s_instance->s_instance->s_socket_server->StartListening(is_listening_started);
+			s_instance->s_socket_server->StartListening(is_listening_started);
 			if (!is_listening_started)
 			{
 				
