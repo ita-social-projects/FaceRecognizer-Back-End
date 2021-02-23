@@ -11,9 +11,9 @@ STOP = L"stop",
 RESTART = L"restart",
 UNINSTALL = L"uninstall";
 
-const wchar_t SERVICE_NAME[] = L"ABC_server";
+const wchar_t SERVICE_NAME[] = L"ABB_server";
 const wchar_t SERVER_EXE_PATH[] = L"D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\"
-									"RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe ABC_server";
+									"RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe ABB_server";
 
 std::ofstream os;
 /*Singletone class that provides comunication with SCM 

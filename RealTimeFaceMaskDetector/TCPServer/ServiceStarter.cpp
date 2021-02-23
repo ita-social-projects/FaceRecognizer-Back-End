@@ -210,27 +210,30 @@ void ServiceStarter::TryCreateServer(bool& is_started)
 	}
 }
 
-bool ServiceStarter::CreateServer()
+bool ServiceStarter::CreateServer(SocketServer& _server, bool wait_till_finish)
 {
 	LOG_MSG << "CreateServer begin";
-	bool is_server_initialized = server.InitSocketServer();
-	bool is_socked_created = server.CreateListeningSocket();
+	bool is_server_initialized = _server.InitSocketServer();
+	bool is_socked_created = _server.CreateListeningSocket();
 	bool is_listening_started;
 
-	StartServerInNewThread(is_listening_started);
+	StartServerInNewThread(is_listening_started, _server, wait_till_finish);
 
 	LOG_MSG << "CreateServer end";
 	return is_server_initialized &&
 		is_socked_created &&
 		is_listening_started;
-	return true;
 }
 
-void ServiceStarter::StartServerInNewThread(bool& is_listening_started)
+void ServiceStarter::StartServerInNewThread(bool& is_listening_started, SocketServer& _server, bool wait_till_finish)
 {
-	std::thread listen_multiple_clients([&]() {server.StartListening(is_listening_started); });
+	std::thread listen_multiple_clients([&]() {_server.StartListening(is_listening_started); });
 	if (listen_multiple_clients.joinable())
 	{
+		wait_till_finish
+		?
+		listen_multiple_clients.join()
+		:
 		listen_multiple_clients.detach();
 	}
 }
