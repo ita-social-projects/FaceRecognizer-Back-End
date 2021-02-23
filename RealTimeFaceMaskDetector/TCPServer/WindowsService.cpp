@@ -2,7 +2,6 @@
 #include <thread>
 #pragma region Variables
 
-SocketServer Service::s_socket_server{};
 SERVICE_STATUS Service::s_service_status{};
 SERVICE_STATUS_HANDLE Service::s_service_status_handle{};
 HANDLE Service::s_service_stop_event{};
@@ -19,6 +18,7 @@ Service& Service::get_instance()
 	if (!s_instance.get())
 	{
 		s_instance = std::shared_ptr<Service>{ new Service };
+		s_instance->s_socket_server = std::make_unique<SocketServer>();
 	}
 	return *s_instance;
 }
@@ -120,7 +120,15 @@ bool Service::Initialize(const unsigned short argc, const wchar_t* const argv[])
 
 void Service::StartServerWork(bool& is_listening_started)
 {
-	std::thread listen_multiple_clients([&]() {s_socket_server.StartListening(is_listening_started); });
+	std::thread listen_multiple_clients([&]() 
+		{
+			s_instance->s_socket_server->StartListening(is_listening_started);
+			if (!is_listening_started)
+			{
+				
+				return;
+			}
+		});
 	if (listen_multiple_clients.joinable())
 	{
 		listen_multiple_clients.join();
@@ -130,13 +138,15 @@ void Service::StartServerWork(bool& is_listening_started)
 bool Service::CreateServer()
 {
 	LOG_MSG << "CreateServer begin";
-	bool is_server_initialized = s_socket_server.InitSocketServer();
-	bool is_socked_created = s_socket_server.CreateListeningSocket();
-	bool is_listening_started;
+	bool is_server_initialized = false;
+	is_server_initialized = s_instance->s_socket_server->InitSocketServer();
+	bool is_socked_created =false;
+	is_socked_created = s_instance->s_socket_server->CreateListeningSocket();
+	bool is_listening_started=false;
 	
 	StartServerWork(is_listening_started);
-	
 	LOG_MSG << "CreateServer end";
+	s_instance->s_socket_server->ShutdownServer();
 	return is_server_initialized && 
 		is_socked_created &&
 		is_listening_started;
@@ -200,7 +210,7 @@ void Service::TryStartService(SC_HANDLE handle_open_service, bool& is_started)
 
 bool Service::ShutdownServer()
 {
-	return s_socket_server.ShutdownServer();	
+	return s_instance->s_socket_server->ShutdownServer();
 }
 
 bool Service::CtrlHandler(const unsigned short request)
@@ -305,7 +315,7 @@ bool Service::Start()
 		return false;
 	}
 
-	bool is_opened = true, is_started = true;
+	bool is_opened = true, is_started = true, is_stopped = false;
 
 	handle_open_service = OpenService(
 		handle_open_SCM,									// SCM Handle
@@ -320,10 +330,23 @@ bool Service::Start()
 	else if (is_opened)
 	{
 		TryStartService(handle_open_service, is_started);
+
+		if (!is_started)
+		{
+			Stop();
+			std::cout << "Stop service..." << std::endl;
+			is_started = true;
+		}
+	}
+	try
+	{
 		CloseServiceHandle(handle_open_service);
 	}
+	catch (const std::exception&)
+	{
+		std::cout << GetLastError() << std::endl;
+	}
 	CloseServiceHandle(handle_open_SCM);
-
 	LOG_MSG << "Start end";
 	return is_opened && is_started;
 }
