@@ -5,7 +5,7 @@
 #include "SQLServer.h"
 #include <mutex>
 #include <thread>
-#include <ostream>
+#include <future>
 #pragma comment (lib, "Ws2_32.lib")
 
 const int  DEFAULT_BUFLEN = 512;

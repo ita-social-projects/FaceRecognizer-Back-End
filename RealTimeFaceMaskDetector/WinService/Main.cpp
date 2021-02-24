@@ -6,15 +6,10 @@ bool InteractWithServiceUsingCommandPrompt(const unsigned argc, const wchar_t* c
 
 int wmain(unsigned argc, wchar_t* argv[])
 {
-	os.open("D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\RealTimeFaceMaskDetector\\x64\\Debug\\AAAsevice.txt",
-		std::ios_base::app);
-	
-	os << "wmain\n";
-
+	LOG_MSG << "WinService controller: wmain";
 	Service::set_service_name(SERVICE_NAME);
 
 	InteractWithServiceUsingCommandPrompt(argc, argv);
-	os.close();
 	return 0;
 }
 
@@ -44,7 +39,7 @@ bool InteractWithServiceUsingCommandPrompt(const unsigned argc, const wchar_t* c
 		}
 		else 
 		{
-			os << "Invalid input\n";
+			LOG_ERROR << "Invalid input";
 		}
 	}	
 	return false;

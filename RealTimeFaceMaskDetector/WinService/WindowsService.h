@@ -1,8 +1,7 @@
 #pragma once
 #include <ws2tcpip.h>
-//#include "Logger.h"
+#include "Logger.h"
 #include <string_view>
-#include <fstream>
 
 const std::wstring_view
 INSTALL = L"install",
@@ -11,11 +10,10 @@ STOP = L"stop",
 RESTART = L"restart",
 UNINSTALL = L"uninstall";
 
-const wchar_t SERVICE_NAME[] = L"ABB_server";
+const wchar_t SERVICE_NAME[] = L"A_server";
 const wchar_t SERVER_EXE_PATH[] = L"D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\"
-									"RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe ABB_server";
+									"RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe A_server";
 
-std::ofstream os;
 /*Singletone class that provides comunication with SCM 
 and creates service to run as server*/
 class Service

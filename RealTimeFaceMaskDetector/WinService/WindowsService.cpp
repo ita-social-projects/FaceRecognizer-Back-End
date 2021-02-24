@@ -44,7 +44,7 @@ SC_HANDLE Service::OpenControlManager()
 
 		if (!scm_handle)
 		{
-			os << "OpenControlManager: OpenSCManager: ERROR " << GetLastError();
+			LOG_ERROR << "OpenControlManager: OpenSCManager: ERROR " << GetLastError();
 			return nullptr;
 		}
 	}
@@ -62,7 +62,7 @@ SC_HANDLE Service::GetServiceFromSCM(SC_HANDLE scm_handle)
 
 		if (!service_handle)
 		{
-			os << "GetServiceFromSCM: OpenService: ERROR " << GetLastError();
+			LOG_ERROR << "GetServiceFromSCM: OpenService: ERROR " << GetLastError();
 			return nullptr;
 		}
 	}
@@ -96,12 +96,12 @@ bool Service::CreateServiceInSCM(SC_HANDLE scm_handle)
 	if (!service_handle)
 	{
 		is_created = false;
-		os << "Install:CreateServiceInSCM: CreateService: ERROR " << GetLastError();
+		LOG_ERROR << "Install: CreateServiceInSCM: CreateService: ERROR " << GetLastError();
 	}
 	else
 	{
 		is_created = true;
-		os << "Install:CreateServiceInSCM: succeeded :)";
+		LOG_MSG << "Install: CreateServiceInSCM: succeeded :)";
 		CloseHandleAndNull(service_handle);
 	}
 	CloseHandleAndNull(scm_handle);
@@ -112,7 +112,7 @@ bool Service::CreateServiceInSCM(SC_HANDLE scm_handle)
 #pragma region Command Prompt
 bool Service::Install()
 {
-	os << "Install begin";
+	LOG_MSG << "Install: begin";
 
 	if((scm_handle = OpenControlManager()) == nullptr)
 	{
@@ -120,14 +120,13 @@ bool Service::Install()
 	}
 	bool is_created = CreateServiceInSCM(scm_handle);
 
-	os << "\nInstall end\n";
-	os.close();
+	LOG_MSG << "Install: end";
 	return is_created;
 }
 
 bool Service::Start()
 {
-	os << "Start begin\n";
+	LOG_MSG << "Start: begin";
 
 	bool is_opened = true, is_started = true;
 
@@ -146,14 +145,13 @@ bool Service::Start()
 	}
 	CloseHandleAndNull(scm_handle);
 
-	os << "Start end\n";
-	os.close();
+	LOG_MSG << "Start: end";
 	return is_opened && is_started;
 }
 
 bool Service::Stop()
 {
-	os << "Stop begin";
+	LOG_MSG << "Stop: begin";
 
 	SERVICE_STATUS_PROCESS status_process{};
 	bool is_opened = true, is_stopped = true;
@@ -174,33 +172,32 @@ bool Service::Stop()
 	}
 	CloseHandleAndNull(scm_handle);
 
-	os << "Stop end";
-	os.close();
+	LOG_MSG << "Stop: end";
 	return is_opened && is_stopped;
 }
 
 bool Service::Restart()
 {
-	os << "Restart begin";
+	LOG_MSG << "Restart: begin";
 
 	bool is_restarted = false;
 
 	if (Service::get_instance().Stop() && Service::get_instance().Start())
 	{
 		is_restarted = true;
-		os << "Restart: succeeded :)";
+		LOG_MSG << "Restart: succeeded :)";
 	}
 	else
 	{
-		os << "Restart: ERROR " << GetLastError();
+		LOG_ERROR << "Restart: ERROR " << GetLastError();
 	}
-	os << "Restart end";
+	LOG_MSG << "Restart: end";
 	return is_restarted;
 }
 
 bool Service::Uninstall()
 {
-	os << "Uninstall begin";
+	LOG_MSG << "Uninstall: begin";
 	bool is_opened = true, is_deleted = true;
 
 	if ((scm_handle = OpenControlManager()) == nullptr)
@@ -219,7 +216,7 @@ bool Service::Uninstall()
 	}
 	CloseHandleAndNull(scm_handle);
 
-	os << "Uninstall end";
+	LOG_MSG << "Uninstall: end";
 	return is_opened && is_deleted;
 }
 
@@ -231,14 +228,13 @@ void Service::TryStartService(SC_HANDLE service_handle, bool& is_started)
 	const wchar_t* args[] = { s_service_name.c_str() };
 	if (!StartService(service_handle, 1, args))
 	{
-		os << "Start: StartService: ERROR " << GetLastError() << std::endl;
-		os.close();
+		LOG_ERROR << "TryStartService: StartService: ERROR " << GetLastError() << std::endl;
 		is_started = false;
 	}
 	else
 	{
 		is_started = true;
-		os << "Start succeeded :)";
+		LOG_MSG << "TryStartService: succeeded :)";
 	}
 }
 
@@ -249,11 +245,11 @@ void Service::TryStopService(SC_HANDLE handle_open_service, SERVICE_STATUS_PROCE
 		int error_code = GetLastError();
 		if (!error_code)
 		{
-			os << "Stop: succeeded :)";
+			LOG_MSG << "Stop: succeeded :)";
 		}
 		else
 		{
-			os << "Stop: ControlService: ERROR " << GetLastError();
+			LOG_ERROR << "Stop: ControlService: ERROR " << GetLastError();
 			is_stopped = false;
 		}
 	}
@@ -263,13 +259,13 @@ void Service::TryDeleteService(SC_HANDLE handle_service, bool& is_deleted)
 {
 	if (!DeleteService(handle_service))
 	{
-		os << "Uninstall: DeleteService: ERROR " << GetLastError();
+		LOG_ERROR << "Uninstall: DeleteService: ERROR " << GetLastError();
 		is_deleted = false;
 	}
 	else
 	{
 		is_deleted = true;
-		os << "Uninstall: succeeded :)";
+		LOG_MSG << "Uninstall: succeeded :)";
 	}
 }
 
