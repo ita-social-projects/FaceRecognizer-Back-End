@@ -28,9 +28,6 @@
     <ClInclude Include="WindowsService.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="easylogging++.h">
-      <Filter>Logger</Filter>
-    </ClInclude>
     <ClInclude Include="SocketServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
