@@ -3,9 +3,9 @@
 #include <ws2tcpip.h>
 #include "Logger.h"
 #include "SQLServer.h"
-#include "mutex"
+#include <mutex>
+#include <thread>
 #include <future>
-
 #pragma comment (lib, "Ws2_32.lib")
 
 const int  DEFAULT_BUFLEN = 512;
@@ -19,7 +19,10 @@ public:
 	bool ShutdownServer();
 	int GetMessageLength();
 
+	SocketServer() = default;
+	~SocketServer();
 private:
+
 	void ConnectToSQL();
 
 	bool BindListeningSocket();
