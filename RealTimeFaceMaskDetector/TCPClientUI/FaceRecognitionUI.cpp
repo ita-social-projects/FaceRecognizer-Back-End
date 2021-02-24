@@ -34,7 +34,6 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     {
         cv::Mat image;
         faceInfo faces;
-        
         //get info from FaceRecognizer
         img_data.GetData(image, faces);
 
@@ -49,8 +48,6 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             if (!face.second)
             {
                 cv::Mat face_img(image, face.first);
-
-                // replace with same person check
                 new_send_time = get_current_time_fenced();
                 if (to_us(new_send_time - send_time) >= 5)
                 {
@@ -60,7 +57,6 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                 }
                 
                 is_all_in_mask = is_all_in_mask && face.second; 
-
                 auto rect_color = face.second == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
                 cv::rectangle(image,face.first,rect_color, 3, 8, 0);
             }
@@ -78,7 +74,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         }
 
         QImage frame = mat2QImage(image);
-        QPixmap map = QPixmap::fromImage(frame.scaled(640, 480, Qt::KeepAspectRatio, Qt::FastTransformation));
+        QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), Qt::KeepAspectRatio, Qt::FastTransformation));
         ui.frame->setPixmap(map);
         ui.frame->show();
 
