@@ -16,6 +16,9 @@ public:
 	DateTime(const std::string& datetime_) : datetime{ datetime_ } {
 		parse();
 	}
+
+	DateTime() : year{ 0 }, month{ 0 }, day{ 0 }, hour{ 0 }, minutes{ 0 }, seconds{ 0 } {}
+
 	bool operator<(const DateTime&);
 	bool operator>(const DateTime&);
 	bool operator<=(const DateTime&);
@@ -29,6 +32,7 @@ public:
 	unsigned int hour;
 	unsigned int minutes;
 	unsigned int seconds;
+	static std::regex datetime_pat; // Pattern to check that format is right
 private:
 	// Parse string to the int parts
 	void parse();
@@ -40,7 +44,6 @@ private:
 	void check_pattern();
 
 	std::string datetime;
-	std::regex pat{ R"(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})" }; // Pattern to check that format is right
 };
 
 #endif // !DATETIMEDLL_DATETIME_H

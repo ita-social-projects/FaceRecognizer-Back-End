@@ -4,12 +4,13 @@
 #include <vector>
 #include <fstream>
 #include <regex>
+#include "../DateTimeDLL/DateTime.h"
 
 namespace logger {
 	enum class LogOptions {
 		INFO,
 		WARNING,
-		ERROR,
+		ERR,
 		DEBUG,
 		FATAL
 	};
@@ -34,7 +35,12 @@ namespace logger {
 			open_file();
 			parse_with_options();
 		}
-
+		Parser( const std::string& path_, const std::string& datetime_) :
+			path{ path_ }, datetime{datetime_}
+		{
+			open_file();
+			parse_with_time();
+		}
 		~Parser() {
 			fs.close();
 		}
@@ -44,18 +50,24 @@ namespace logger {
 		void parse_all();
 		void parse_with_options();
 		void find_type();
+		void parse_with_time();
+		void find_time();
+
 		bool match{ false };
 		std::string path;
 		std::vector<LogOptions> options;
 		std::vector<LogStruct> logs;
 		std::fstream fs;
 		std::string line;
+
 		std::regex info_pat{R"(\[INFO\]{1})"};
 		std::regex warning_pat{ R"(\[WARNING\]{1})" };
 		std::regex error_pat{ R"(\[ERROR\]{1})" };
 		std::regex debug_pat{ R"(\[DEBUG\]{1})" };
 		std::regex fatal_pat{ R"(\[FATAL\]{1})" };
+		
 		LogStruct current_log;
+		DateTime datetime;
 	};
 
 }

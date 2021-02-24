@@ -23,6 +23,17 @@ TEST(DateTimeTests, CreateDateTime) {
 	EXPECT_EQ(datetime.seconds, seconds);
 }
 
+TEST(DateTimeTests, DefaultConstructor) {
+	DateTime datetime{};
+
+	EXPECT_EQ(datetime.year, 0);
+	EXPECT_EQ(datetime.month, 0);
+	EXPECT_EQ(datetime.day, 0);
+	EXPECT_EQ(datetime.hour, 0);
+	EXPECT_EQ(datetime.minutes, 0);
+	EXPECT_EQ(datetime.seconds, 0);
+}
+
 TEST(DateTimeTests, MonthException) {
 	const std::string datetime_str{ "2021-14-11 16:44:19" };
 	check_exception(datetime_str);

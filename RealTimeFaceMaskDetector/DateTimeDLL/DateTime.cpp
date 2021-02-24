@@ -12,7 +12,7 @@ void DateTime::parse() {
 }
 
 void DateTime::check_pattern() {
-	if (!std::regex_search(datetime, pat)) {
+	if (!std::regex_search(datetime, datetime_pat)) {
 		throw DateTimeException("A format of datetime is invalid");
 	}
 }
@@ -173,3 +173,5 @@ bool DateTime::operator!=(const DateTime& datetime) {
 	}
 	return true;
 }
+
+std::regex DateTime::datetime_pat{ R"(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})" };
