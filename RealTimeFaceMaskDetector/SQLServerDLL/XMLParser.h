@@ -2,11 +2,11 @@
 
 #include "ConfigReader.h"
 
-class INIPARSER_API IniParser: public ConfigReader
+class INIPARSER_API XMLParser : public ConfigReader
 {
 public:
-	IniParser(std::string ini);
-	
+	XMLParser(std::string ini);
+
 	/*Get the name of the config file*/
 	void ReadFile(std::string filename);
 

@@ -7,9 +7,9 @@ bool SocketServer::InitSocketServer()
 	LOG_MSG << "InitSocketServer: begin";
 	ConnectToSQL();
 
-	IniParser ini_parser(CONFIG_FILE);
-	m_ip = ini_parser.GetParam("Client", "ip");
-	m_port = ini_parser.GetParam("Client", "port");
+	std::unique_ptr<ConfigReader> ini_parser = std::make_unique<XMLParser>(CONFIG_FILE);
+	m_ip = ini_parser->GetParam("Client", "ip");
+	m_port = ini_parser->GetParam("Client", "port");
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
 	{

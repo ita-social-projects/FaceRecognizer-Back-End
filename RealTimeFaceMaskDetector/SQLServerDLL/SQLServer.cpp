@@ -195,12 +195,12 @@ bool SQLServer::CheckTableExists()
 
 void SQLServer::GetIniParams(const std::string& path)
 {
-	IniParser parser(path);
-	params.server = parser.GetParam("Server", "name");                    // "" if server exists on your local machine
-	params.database = parser.GetParam("Server", "database");
-	params.username = parser.GetParam("Server", "username");              // "" if Windows authentification
-	params.password = parser.GetParam("Server", "password");              // "" if Windows authentification
-	params.table = parser.GetParam("Server", "table");
+	std::unique_ptr<ConfigReader> parser =std::make_unique<XMLParser>(path);
+	params.server = parser->GetParam("Server", "name");                    // "" if server exists on your local machine
+	params.database = parser->GetParam("Server", "database");
+	params.username = parser->GetParam("Server", "username");              // "" if Windows authentification
+	params.password = parser->GetParam("Server", "password");              // "" if Windows authentification
+	params.table = parser->GetParam("Server", "table");
 }
 
 std::string SQLServer::ExePath()
