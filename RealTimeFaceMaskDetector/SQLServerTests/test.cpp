@@ -53,7 +53,7 @@ TEST(TestXMLParser, TestParseXML)
 	ASSERT_EQ("val1", parser.GetParam("Client", "par1"));
 	ASSERT_EQ("val2", parser.GetParam("Client", "par2"));
 	ASSERT_EQ("No such parameter", parser.GetParam("Client", "par3"));
-	//remove("Test.txt");
+	remove("Test.txt");
 }
 
 TEST(TestSQLServer, TestCreateTable)
