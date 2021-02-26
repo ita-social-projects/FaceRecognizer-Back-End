@@ -331,6 +331,7 @@ bool SocketServer::ShutdownServer()
 	try
 	{
 		sql_server->Disconnect();
+		LOG_MSG << "SQL server disconnected!";
 	}
 	catch (const SQLException& e)
 	{
@@ -354,7 +355,6 @@ std::filesystem::path SocketServer::GetCurrentPath()
 	GetModuleFileName(nullptr, path, MAX_PATH);
 	std::filesystem::path current_directory(path);
 	current_directory.remove_filename();
-
 	return current_directory;
 }
 

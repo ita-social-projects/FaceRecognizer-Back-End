@@ -74,9 +74,18 @@ void Service::CloseHandleAndNull(SC_HANDLE handle)
 	CloseServiceHandle(handle);
 	handle = nullptr;
 }
+std::wstring Service::GetPathToModule()
+{
+	wchar_t path[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, path);
+	return std::wstring(path);
+}
+
 bool Service::CreateServiceInSCM(SC_HANDLE scm_handle)
 {
 	bool is_created;
+
+	SERVER_EXE_PATH += L" " + SERVICE_NAME + L" " + GetPathToModule();
 
 	service_handle = CreateService(
 		scm_handle,										// SCM Handle
@@ -86,7 +95,7 @@ bool Service::CreateServiceInSCM(SC_HANDLE scm_handle)
 		SERVICE_WIN32_OWN_PROCESS,						// Service Type
 		SERVICE_DEMAND_START,							// Service Start Type
 		SERVICE_ERROR_NORMAL,							// Service Error Code
-		SERVER_EXE_PATH,								// Path to .exe
+		SERVER_EXE_PATH.c_str(),						// Path to .exe
 		nullptr,									    // Load ordering group
 		nullptr,                                        // Tag ID
 		nullptr,	                                    // Dependencies
@@ -222,13 +231,14 @@ bool Service::Uninstall()
 
 #pragma endregion
 
-
 void Service::TryStartService(SC_HANDLE service_handle, bool& is_started)
 {
-	const wchar_t* args[] = { s_service_name.c_str() };
-	if (!StartService(service_handle, 1, args))
+	
+	auto path_to_current_module = GetPathToModule();
+	const wchar_t* args[] = { s_service_name.c_str(), path_to_current_module.c_str()};
+	if (!StartService(service_handle, 2, args))
 	{
-		LOG_ERROR << "TryStartService: StartService: ERROR " << GetLastError() << std::endl;
+		LOG_ERROR << "TryStartService: StartService: ERROR " << GetLastError();
 		is_started = false;
 	}
 	else
