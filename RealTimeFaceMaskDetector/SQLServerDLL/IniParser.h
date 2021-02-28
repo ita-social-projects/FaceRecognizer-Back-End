@@ -2,7 +2,7 @@
 
 #include "ConfigReader.h"
 
-class INIPARSER_API IniParser: public ConfigReader
+class CONFIGREADER_API IniParser: public ConfigReader
 {
 public:
 	IniParser(std::string ini);

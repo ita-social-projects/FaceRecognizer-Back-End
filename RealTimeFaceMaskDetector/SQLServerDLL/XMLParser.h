@@ -2,7 +2,7 @@
 
 #include "ConfigReader.h"
 
-class INIPARSER_API XMLParser : public ConfigReader
+class CONFIGREADER_API XMLParser : public ConfigReader
 {
 public:
 	XMLParser(std::string ini);
