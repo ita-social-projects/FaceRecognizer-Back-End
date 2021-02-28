@@ -1,8 +1,8 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QTableWidget>
-#include <memory>
+#include <QTableWidget>
+#include <qDebug>
 #include "ui_LogViewer.h"
 
 class LogViewer : public QMainWindow
@@ -12,10 +12,15 @@ class LogViewer : public QMainWindow
 public:
     LogViewer(QWidget *parent = Q_NULLPTR);
 
+private slots:
+    // TODO: implement refreshing table, also implement filters feature
+    void OnRefreshButtonClicked();
+
 private:
     void CreateUi(const QStringList& headers);
-    void AddRow(const int id);
+    // TODO: void AddRow(...);
 
 private:
     Ui::LogViewerClass ui;
+    // TODO: add container of elements for further
 };
