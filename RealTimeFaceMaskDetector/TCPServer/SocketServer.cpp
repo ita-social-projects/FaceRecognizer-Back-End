@@ -76,7 +76,8 @@ void SocketServer::MakeAccept()
 	clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
 	clientService.sin_port = htons(std::stoi(m_port));
 
-	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
+	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, 
+		m_host_info->ai_protocol);
 	connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
 	closesocket(mock_socket);
 }
@@ -94,18 +95,15 @@ bool SocketServer::AcceptConnection()
 		});	
 	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
 	bool key = { false };
-	bool old_key = { false };
 	while (!ready)
 	{
 		key = GetAsyncKeyState(VK_ESCAPE);
-		if (key && !old_key)
+		if (key)
 		{
 			server_is_up = false;
 			MakeAccept();
 			stop = true;
 		}
-
-		old_key= key;
 	}
 	m_client_socket = cl_socket.get();
 	
