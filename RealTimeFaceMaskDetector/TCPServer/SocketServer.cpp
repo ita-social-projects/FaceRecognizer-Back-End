@@ -68,11 +68,23 @@ bool SocketServer::BindListeningSocket()
 	return true;
 }
 
+void SocketServer::MakeAccept()
+{
+	SOCKET mock_socket = INVALID_SOCKET;
+	sockaddr_in clientService;
+	clientService.sin_family = AF_INET;
+	clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
+	clientService.sin_port = htons(std::stoi(m_port));
+
+	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
+	connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+	closesocket(mock_socket);
+}
+
 bool SocketServer::AcceptConnection()
 {
 	std::cout << "Waiting connection" << std::endl;
 	bool ready = false, stop = false;
-	SOCKET mock_socket = INVALID_SOCKET;
 	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
 		{ 
 			SOCKET result;
@@ -85,18 +97,11 @@ bool SocketServer::AcceptConnection()
 	bool old_key = { false };
 	while (!ready)
 	{
-		key = GetAsyncKeyState(VK_ESCAPE) & 0x01;
+		key = GetAsyncKeyState(VK_ESCAPE);
 		if (key && !old_key)
 		{
 			server_is_up = false;
-
-			sockaddr_in clientService;
-			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr(m_ip.c_str());
-			clientService.sin_port = htons(std::stoi(m_port));
-			
-			mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
-			connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+			MakeAccept();
 			stop = true;
 		}
 
@@ -115,7 +120,6 @@ bool SocketServer::AcceptConnection()
 	if (stop)
 	{
 		closesocket(m_listen_socket);
-		closesocket(mock_socket);
 		WSACleanup();
 		sql_server->Disconnect();
 		return false;

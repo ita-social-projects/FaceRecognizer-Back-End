@@ -50,6 +50,8 @@ private:
 	initialise <file_specificator> with converted date*/
 	void CreateFileNameSpecificator(std::string& file_specificator);
 	void ReplaceForbiddenSymbol(char& symbol);
+	/*Implement mock accept*/
+	void MakeAccept();
 
 	WSADATA wsaData;
 	int m_func_result;
