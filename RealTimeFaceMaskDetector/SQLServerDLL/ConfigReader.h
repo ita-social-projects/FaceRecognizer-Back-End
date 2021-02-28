@@ -24,4 +24,5 @@ public:
 	virtual void ReadFile(std::string filename)=0;
 	/*Get value of the parameter with the given section and parameter name*/
 	virtual std::string GetParam(const std::string& section, const std::string& param)=0;
+	virtual ~ConfigReader() {};
 };

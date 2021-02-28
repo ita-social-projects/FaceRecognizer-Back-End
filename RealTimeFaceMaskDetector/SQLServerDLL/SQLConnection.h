@@ -54,4 +54,5 @@ public:
     virtual void GetIniParams(const std::string& path) = 0;
     /*Remove a table from the database*/
     virtual void DeleteTable(const std::string& table) = 0;
+    virtual ~SQLConnection() {};
 };
