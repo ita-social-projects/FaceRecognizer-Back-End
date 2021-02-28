@@ -1,11 +1,19 @@
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "SocketServer.h"
+#include "Ws2spi.h"
 
 bool SocketServer::InitSocketServer()
 {
+	LOG_MSG << "InitSocketServer: begin";
 	ConnectToSQL();
+
+	IniParser ini_parser(CONFIG_FILE);
+	m_ip = ini_parser.GetParam("Client", "ip");
+	m_port = ini_parser.GetParam("Client", "port");
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
 	{
+		LOG_ERROR << "InitSocketServer: WSAStartup: ERROR " << GetLastError();
 		return false;
 	}
 
@@ -15,29 +23,32 @@ bool SocketServer::InitSocketServer()
 	hints.ai_protocol = IPPROTO_TCP;
 	hints.ai_flags = AI_PASSIVE;
 
-	m_func_result = getaddrinfo(0, DEFAULT_PORT, &hints, &m_host_info);
+	m_func_result = getaddrinfo(0, m_port.c_str(), &hints, &m_host_info);
 	if (m_func_result != 0)
 	{
 		WSACleanup();
+		LOG_ERROR << "InitSocketServer: getaddrinfo: ERROR " << GetLastError();
 		return false;
 	}
 
 	SpecifyPathForPhotos();
+	LOG_MSG << "InitSocketServer: cuccess!";
 	return true;
 }
 
 bool SocketServer::CreateListeningSocket()
 {
 	m_listen_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
+
 	if (m_listen_socket == INVALID_SOCKET)
 	{
+		LOG_ERROR << "CreateListeningSocket: socket: ERROR " << GetLastError();
 		freeaddrinfo(m_host_info);
 		WSACleanup();
 		return false;
 	}
-
 	server_is_up = true;
-
+	LOG_MSG << "CreateListeningSocket: created!";
 	return true;
 }
 
@@ -49,46 +60,100 @@ bool SocketServer::BindListeningSocket()
 		freeaddrinfo(m_host_info);
 		closesocket(m_listen_socket);
 		WSACleanup();
-		LOG_ERROR << "BindListeningSocket ERROR: faild to bind socket";
-		LOG_ERROR << GetLastError();
+		LOG_ERROR << "BindListeningSocket: bind: ERROR " << GetLastError();
 		return false;
 	}
+	LOG_MSG << "BindListeningSocket: binded!";
 	return true;
 }
 
 bool SocketServer::AcceptConnection()
 {
-	m_client_socket = accept(m_listen_socket, NULL, NULL);
-	if (m_client_socket == INVALID_SOCKET)
+	std::cout << "Waiting connection" << std::endl;
+	//Here make async wait
+	bool ready = false, stop = false;
+	SOCKET mock_socket = INVALID_SOCKET;
+	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
+		{ 
+			SOCKET result;
+
+			result = accept(m_listen_socket, NULL, NULL);
+
+			ready = true;
+			return result;
+		});
+	
+	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
+
+	bool key = { false };
+	bool old_key = { false };
+	while (!ready)
 	{
+		//wait
+		key = GetAsyncKeyState(VK_ESCAPE) & 0x01;
+		if (key && !old_key)
+		{
+			server_is_up = false;
+
+			sockaddr_in clientService;
+			clientService.sin_family = AF_INET;
+			clientService.sin_addr.s_addr = inet_addr(m_ip.c_str());
+			clientService.sin_port = htons(std::stoi(m_port));
+			
+			mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
+			connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+			stop = true;
+		}
+
+		old_key= key;
+	}
+	m_client_socket = cl_socket.get();
+	
+	if (m_client_socket == INVALID_SOCKET)
+	{	
+		std::cout << "INVALID_SOCKET" << std::endl;
 		closesocket(m_listen_socket);
 		WSACleanup();
 		LOG_WARNING << "AcceptConnection: failed to accept client";
 		return false;
 	}
+	if (stop)
+	{
+		closesocket(m_listen_socket);
+		closesocket(mock_socket);
+		WSACleanup();
+		sql_server->Disconnect();
+		return false;
+	}
+	LOG_MSG << "AcceptConnection: accepted!";
 	return true;
 }
 
 void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 {
-
 	if (AcceptConnection())
-	{
-		StartMessagingWintClient(ret_value);
+	{	
+		std::cout << "Begin..." << std::endl;
+		StartMessagingWintClient(ret_value);	
 	}
 	else
 	{
+		std::cout << "Stopped..." << std::endl;
 		ret_value = false;
 	}
 }
 
 void SocketServer::StartMessagingWintClient(bool& ret_value)
 {
-	std::thread th = std::thread([&]() {ReceiveMessage(ret_value); });
+	std::thread th = std::thread([&]() 
+		{
+			ReceiveMessage(ret_value); 
+		});
 	if (th.joinable()) 
 	{
 		th.join();
 	}
+	std::cout << "Stopped connection" << std::endl;
 }
 
 bool SocketServer::StartListening(bool& ret_value)
@@ -98,24 +163,28 @@ bool SocketServer::StartListening(bool& ret_value)
 		return ret_value;
 
 	freeaddrinfo(m_host_info);
-
+	LOG_MSG << "StartListening: Server work begin...";
 	while(server_is_up)
 	{
 		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
-		{
+		{	
 			TryAcceptAndStartMessaging(ret_value);
-			if (!ret_value) 
+			if (!ret_value)
+			{
+				std::cout << "Exiting..." << std::endl;
 				break;
+			}
 		}
 		else 
 		{
-			LOG_ERROR << "StartListening: failed to listen socket";
-			closesocket(m_listen_socket);
-			WSACleanup();
+			LOG_ERROR << "StartListening: listen: failed to listen socket";
+			closesocket(m_listen_socket);//ask to delete
+			WSACleanup();//ask to delete
 			ret_value = false;
 			break;
 		}
 	}
+	LOG_MSG << "StartListening: Server work end!";
 	return ret_value;
 }
 
@@ -134,6 +203,7 @@ bool SocketServer::ReceiveFullMessage()
 
 	if (total_bytes_count == 0)
 	{
+		LOG_WARNING << "ReceiveFullMessage: GetMessageLength: incorrect message length";
 		recv_mutex.unlock();
 		return false;
 	}
@@ -152,8 +222,8 @@ bool SocketServer::ReceiveFullMessage()
 	}
 	else // error when receiving message. <Check possible errors in documentation for 'recv' function>
 	{
-		closesocket(m_client_socket);
-		WSACleanup();
+		closesocket(m_client_socket);//ask to delete
+		WSACleanup();//ask to delete
 		throw std::string("Receive ERROR");
 	}
 	return true;
@@ -173,15 +243,18 @@ void SocketServer::TryReceiveAndSendMessage(bool& client_connected)
 
 bool SocketServer::ReceiveMessage(bool& ret_value)
 {	
+	LOG_MSG << "ReceiveMessage: begin: work with client";
 	ret_value = true;
 	bool client_connected = true;
 
 	while (client_connected)
 	{
+		
 		m_buffer.clear();
 		try
 		{
 			TryReceiveAndSendMessage(client_connected);
+			
 		}
 		catch(const std::string& msg)
 		{
@@ -190,6 +263,7 @@ bool SocketServer::ReceiveMessage(bool& ret_value)
 			break;
 		}
 	}
+	LOG_MSG << "ReceiveMessage: end: work with client";
 	return ret_value;
 }
 
@@ -202,6 +276,7 @@ void SocketServer::SaveAndSendData()
 		return;
 	}
 	recv_mutex.lock();
+	LOG_MSG << "SaveAndSendData: writing photo to file...";
 	recv_data.write(m_buffer.data(), m_buffer.size());
 	recv_data.close();
 	recv_mutex.unlock();
@@ -213,14 +288,16 @@ void SocketServer::SaveAndSendData()
 
 bool SocketServer::UpdateDataBase()
 {
+	LOG_MSG << "UpdateDataBase: updating databse...";
 	try
 	{
 		std::lock_guard<std::mutex> lock(sql_mutex);
 		sql_server->InsertPhoto(m_photo_to_send);
+		LOG_MSG << "UpdateDataBase: database updated";
 	}
 	catch (const SQLException& e)
 	{
-		std::cout << e.what() << std::endl;
+		LOG_WARNING << e.what();
 	}
 
 	return true;
@@ -230,17 +307,19 @@ void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_serve
 {
 	if (!sql_server->CheckTableExists())
 	{
+		LOG_MSG << "CreateTableIfNeeded: table doesn't exist. Creating new one...";
 		sql_server->CreatePhotosTable();
 	}
 }
 
 bool SocketServer::ShutdownServer()
 {
+	LOG_MSG << "ShutdownServer: begin";
 	server_is_up = false;
-
 	m_func_result = shutdown(m_client_socket, SD_SEND);
 	if (m_func_result == SOCKET_ERROR)
 	{
+		LOG_ERROR << "ShutdownServer: shutdown: ERROR " << GetLastError();
 		closesocket(m_client_socket);
 		WSACleanup();
 		return false;
@@ -249,10 +328,22 @@ bool SocketServer::ShutdownServer()
 	closesocket(m_client_socket);
 	closesocket(m_listen_socket);
 	WSACleanup();
-	sql_server->Disconnect();
+	try
+	{
+		sql_server->Disconnect();
+	}
+	catch (const SQLException& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	LOG_MSG << "ShutdownServer: end";
 	return true;
 }
 
+SocketServer::~SocketServer()
+{
+	ShutdownServer();
+}
 /*Functions for making directory for photos, 
 and creating particular name for each photo,
 containing date and time
@@ -297,11 +388,13 @@ bool SocketServer::OpenParticularFile(std::ofstream& stream)
 	
 	if (std::filesystem::exists(photo_path))
 	{
+		LOG_WARNING << "OpenParticularFile: photo_path doesn't exist";
 		return false;
 	}
 	stream.open(photo_path, std::ios::binary);
 	if (!stream.is_open())
 	{
+		LOG_WARNING << "OpenParticularFile: ofstream:open: fail to open";
 		return false;
 	}
 
@@ -334,15 +427,16 @@ void SocketServer::ConnectToSQL()
 	sql_server = std::make_shared<SQLServer>();
 	try
 	{
+		LOG_MSG << "ConnectToSQL: begin";
 		sql_server->GetIniParams(CONFIG_FILE);
 
-		//ConnectParams db{ "MAC14BF\SQLEXPRESS", "","", "MaskPhotosDatabase", "Photos" };
-		//sql_server->Connect(db);
 		sql_server->Connect();
+		LOG_MSG << "ConnectToSQL: connected!";
 		CreateTableIfNeeded(sql_server);
+		LOG_MSG << "ConnectToSQL: end";
 	}
 	catch (const SQLException& e)
 	{
-		std::cout << e.what() << std::endl;
+		LOG_ERROR << e.what();
 	}
 }

@@ -3,11 +3,11 @@
 #include <ws2tcpip.h>
 #include "Logger.h"
 #include "SQLServer.h"
-#include "mutex"
-
+#include <mutex>
+#include <thread>
+#include <future>
 #pragma comment (lib, "Ws2_32.lib")
 
-const char* const DEFAULT_PORT = "27015";
 const int  DEFAULT_BUFLEN = 512;
 
 class SocketServer
@@ -19,7 +19,10 @@ public:
 	bool ShutdownServer();
 	int GetMessageLength();
 
+	SocketServer() = default;
+	~SocketServer();
 private:
+
 	void ConnectToSQL();
 
 	bool BindListeningSocket();
@@ -68,5 +71,8 @@ private:
 	/*When listening socket is created, this variable will be set to <true>.
 	When Server will shut down, varible will be set to <false> */
 	bool server_is_up;
+	/*ip and port from config.ini*/
+	std::string m_ip;
+	std::string m_port;
 };
 

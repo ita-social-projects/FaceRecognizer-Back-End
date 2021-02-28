@@ -29,22 +29,6 @@ bool TCPClient::Connect()
     return connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) != SOCKET_ERROR;
 }
 
-bool TCPClient::ConvertImageToBinary(std::ifstream& image, std::vector<char>& buffer)
-{
-    image.open("image_face.png", std::ios::in | std::ios::binary);
-    
-    while (!image.eof())
-    {
-        buffer.push_back(image.get());
-    }
-
-    buffer.pop_back();
-
-    image.close();
-
-    return true;
-}
-
 bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
 {
     if (buffer.empty())
