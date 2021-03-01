@@ -36,10 +36,6 @@ void XMLParser::Parse()
         {
             continue;
         }
-        if (text.find(";") == 0)
-        {
-            continue;
-        }
         if (text.find("<?xml")==0)
         {
             //beginning of the file
