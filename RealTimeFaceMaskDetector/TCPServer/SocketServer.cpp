@@ -7,9 +7,10 @@ bool SocketServer::InitSocketServer()
 	LOG_MSG << "InitSocketServer: begin";
 	ConnectToSQL();
 
-	IniParser ini_parser(CONFIG_FILE);
-	m_ip = ini_parser.GetParam("Client", "ip");
-	m_port = ini_parser.GetParam("Client", "port");
+	std::unique_ptr<ConfigReader>parser = std::make_unique<XMLParser>(CONFIG_FILE);
+
+	m_ip = parser->GetParam("Client", "ip");
+	m_port = parser->GetParam("Client", "port");
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
 	{
@@ -67,45 +68,42 @@ bool SocketServer::BindListeningSocket()
 	return true;
 }
 
+void SocketServer::MakeAccept()
+{
+	SOCKET mock_socket = INVALID_SOCKET;
+	sockaddr_in clientService;
+	clientService.sin_family = AF_INET;
+	clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
+	clientService.sin_port = htons(std::stoi(m_port));
+
+	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, 
+		m_host_info->ai_protocol);
+	connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+	closesocket(mock_socket);
+}
+
 bool SocketServer::AcceptConnection()
 {
 	std::cout << "Waiting connection" << std::endl;
-	//Here make async wait
 	bool ready = false, stop = false;
-	SOCKET mock_socket = INVALID_SOCKET;
 	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
 		{ 
 			SOCKET result;
-
 			result = accept(m_listen_socket, NULL, NULL);
-
 			ready = true;
 			return result;
-		});
-	
+		});	
 	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
-
 	bool key = { false };
-	bool old_key = { false };
 	while (!ready)
 	{
-		//wait
-		key = GetAsyncKeyState(VK_ESCAPE) & 0x01;
-		if (key && !old_key)
+		key = GetAsyncKeyState(VK_ESCAPE);
+		if (key)
 		{
 			server_is_up = false;
-
-			sockaddr_in clientService;
-			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr(m_ip.c_str());
-			clientService.sin_port = htons(std::stoi(m_port));
-			
-			mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
-			connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+			MakeAccept();
 			stop = true;
 		}
-
-		old_key= key;
 	}
 	m_client_socket = cl_socket.get();
 	
@@ -120,7 +118,6 @@ bool SocketServer::AcceptConnection()
 	if (stop)
 	{
 		closesocket(m_listen_socket);
-		closesocket(mock_socket);
 		WSACleanup();
 		sql_server->Disconnect();
 		return false;
@@ -303,7 +300,7 @@ bool SocketServer::UpdateDataBase()
 	return true;
 }
 
-void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server)
+void SocketServer::CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_server)
 {
 	if (!sql_server->CheckTableExists())
 	{
@@ -314,12 +311,12 @@ void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_serve
 
 bool SocketServer::ShutdownServer()
 {
-	LOG_MSG << "ShutdownServer: begin";
+	//LOG_MSG << "ShutdownServer: begin";
 	server_is_up = false;
 	m_func_result = shutdown(m_client_socket, SD_SEND);
 	if (m_func_result == SOCKET_ERROR)
 	{
-		LOG_ERROR << "ShutdownServer: shutdown: ERROR " << GetLastError();
+		//LOG_ERROR << "ShutdownServer: shutdown: ERROR " << GetLastError();
 		closesocket(m_client_socket);
 		WSACleanup();
 		return false;
@@ -336,7 +333,7 @@ bool SocketServer::ShutdownServer()
 	{
 		std::cout << e.what() << std::endl;
 	}
-	LOG_MSG << "ShutdownServer: end";
+	//LOG_MSG << "ShutdownServer: end";
 	return true;
 }
 
@@ -424,7 +421,7 @@ void SocketServer::ReplaceForbiddenSymbol(char& symbol)
 
 void SocketServer::ConnectToSQL()
 {
-	sql_server = std::make_shared<SQLServer>();
+	sql_server = std::make_unique<SQLServer>();
 	try
 	{
 		LOG_MSG << "ConnectToSQL: begin";

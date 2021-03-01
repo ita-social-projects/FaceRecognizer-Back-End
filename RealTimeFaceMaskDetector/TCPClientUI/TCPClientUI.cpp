@@ -1,13 +1,13 @@
 #include "TCPClientUI.h"
 #include "TCPClient.h"
-#include "IniParser.h"
+#include "XMLParser.h"
 
 #include "FaceRecognitionUI.h"
 
 #include <QtGui/QRegExpValidator>
 #include <QtWidgets/qmessagebox>
 
-#define CONFIG_FILE "config.ini"
+#define CONFIG_FILE "config.xml"
 
 /* These are global variables.
    g_ip stores server ip & g_port stores server port.
@@ -40,9 +40,10 @@ TCPClientUI::TCPClientUI(QWidget *parent)
     connect(ui.Save, &QPushButton::clicked, this, &TCPClientUI::Save);
 
     //reading data about ip and port from config file
-    IniParser parser(CONFIG_FILE);
-    auto std_string_ip = parser.GetParam("Client", "ip");
-    auto std_string_port = parser.GetParam("Client", "port");
+    std::unique_ptr<ConfigReader> parser = std::make_unique<XMLParser>(CONFIG_FILE);
+
+    auto std_string_ip = parser->GetParam("Client", "ip");
+    auto std_string_port = parser->GetParam("Client", "port");
 
     const QString default_ip = QString::fromStdString(std_string_ip);
     const QString default_port = QString::fromStdString(std_string_port);

@@ -33,25 +33,26 @@ class SQLSERVER_API SQLConnection abstract
 {
 public:
     /*Connect to database with params from inifile*/
-    virtual void Connect() abstract;
+    virtual void Connect() = 0;
     /*Connect to database with preset parameters*/
-    virtual void Connect(const ConnectParams& connect_string) abstract;
+    virtual void Connect(const ConnectParams& connect_string) = 0;
     /*Insert one photo record into the table*/
-    virtual void InsertPhoto(const Photo& photo) abstract;
+    virtual void InsertPhoto(const Photo& photo) = 0;
     /*Rollback all actions in case of error occurence*/
-    virtual void RollBack() abstract;
+    virtual void RollBack() = 0;
     /*Disconnect from the server*/
-    virtual void Disconnect() abstract;
+    virtual void Disconnect() = 0;
     /*Delete all records from the table*/
-    virtual void ClearTable(const std::string& table) abstract;
+    virtual void ClearTable(const std::string& table) = 0;
     /*Delete one record from the Photos table*/
-    virtual void DeleteRecord(int id) abstract;
+    virtual void DeleteRecord(int id) = 0;
     /*Check if the table for Photos exists*/
-    virtual bool CheckTableExists() abstract;
+    virtual bool CheckTableExists() = 0;
     /*Create the table for Photos*/
-    virtual void CreatePhotosTable() abstract;
+    virtual void CreatePhotosTable() = 0;
     /*Get connection parameters from ini file in the application folder*/
-    virtual void GetIniParams(const std::string& path) abstract;
+    virtual void GetIniParams(const std::string& path) = 0;
     /*Remove a table from the database*/
-    virtual void DeleteTable(const std::string& table) abstract;
+    virtual void DeleteTable(const std::string& table) = 0;
+    virtual ~SQLConnection() {};
 };
