@@ -1,6 +1,12 @@
 #ifndef DATETIMEDLL_DATETIME_H
 #define DATETIMEDLL_DATETIME_H
 
+#ifdef DATETIMEDLL_EXPORTS 
+#define DLLEXPORT __declspec(dllexport)  
+#else
+#define DLLEXPORT __declspec(dllimport)  
+#endif
+
 #include "pch.h"
 #include <string>
 #include <regex>
@@ -11,7 +17,7 @@
 * Format of datatime should be "yyyy-mm-dd hh:mm:ss"
 */
 
-class DateTime {
+class DLLEXPORT DateTime {
 public:
 	DateTime(const std::string& datetime_) : datetime{ datetime_ } {
 		parse();
@@ -26,13 +32,14 @@ public:
 	bool operator==(const DateTime&);
 	bool operator!=(const DateTime&);
 
+	const std::regex& regex_pat() const;
+
 	unsigned int year;
 	unsigned int month;
 	unsigned int day;
 	unsigned int hour;
 	unsigned int minutes;
 	unsigned int seconds;
-	static std::regex datetime_pat; // Pattern to check that format is right
 private:
 	// Parse string to the int parts
 	void parse();
@@ -44,6 +51,7 @@ private:
 	void check_pattern();
 
 	std::string datetime;
+	std::regex datetime_pat{ R"(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})" }; // Pattern to check that format is right
 };
 
 #endif // !DATETIMEDLL_DATETIME_H

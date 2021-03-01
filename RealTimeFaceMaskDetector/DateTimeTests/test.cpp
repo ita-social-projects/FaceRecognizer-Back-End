@@ -1,6 +1,5 @@
 #include "pch.h"
-#include "../DateTimeDLL/DateTime.cpp"
-#include "../DateTimeDLL/DateTimeException.cpp"
+#include "../DateTimeDLL/DateTime.h"
 
 void check_exception(const std::string&);
 
@@ -75,7 +74,7 @@ void check_exception(const std::string& datetime_str) {
 }
 
 TEST(DateTimeTests, LessThanTrue) {
-	const std::string datetime1_str{ "2021-11-30 21:43:45" };
+	const std::string datetime1_str{ "2021-09-30 21:43:45" };
 	const std::string datetime2_str{ "2019-10-29 20:41:44" };
 
 	auto datetime1 = DateTime(datetime1_str);
@@ -95,8 +94,8 @@ TEST(DateTimeTests, LessThanFalse) {
 }
 
 TEST(DateTimeTests, MoreThanTrue) {
-	const std::string datetime1_str{ "2021-11-30 21:43:45" };
-	const std::string datetime2_str{ "2019-10-29 20:41:44" };
+	const std::string datetime1_str{ "2022-11-30 21:43:45" };
+	const std::string datetime2_str{ "2021-11-30 21:43:45" };
 
 	auto datetime1 = DateTime(datetime1_str);
 	auto datetime2 = DateTime(datetime2_str);
@@ -115,7 +114,7 @@ TEST(DateTimeTests, MoreThanFalse) {
 }
 
 TEST(DateTimeTests, LessThanEqualTrue) {
-	const std::string datetime1_str{ "2021-11-30 21:43:45" };
+	const std::string datetime1_str{ "2022-11-30 21:43:45" };
 	const std::string datetime2_str{ "2021-11-30 21:43:45" };
 
 	auto datetime1 = DateTime(datetime1_str);
@@ -136,7 +135,7 @@ TEST(DateTimeTests, LessThanEqualFalse) {
 
 TEST(DateTimeTests, MoreEqualThanTrue) {
 	const std::string datetime1_str{ "2021-11-30 21:43:45" };
-	const std::string datetime2_str{ "2021-11-30 21:43:45" };
+	const std::string datetime2_str{ "2022-11-30 21:43:45" };
 
 	auto datetime1 = DateTime(datetime1_str);
 	auto datetime2 = DateTime(datetime2_str);

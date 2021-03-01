@@ -71,15 +71,26 @@ void check_logs_by_options(size_t number_of_logs, std::vector<logger::LogOptions
 }
 
 TEST(LogViewerTest, FromDatetime) {
-	std::string datetime{ "2020-03-11 16:44:19" };
 	const size_t number_of_logs{ 8 };
+	std::string datetime{ "2020-03-11 16:44:19" };
 
 	check_logs_by_time(number_of_logs, datetime);
 }
 
+TEST(LogViewerTest, TillDateTime) {
+	const size_t number_of_logs{ 4 };
+	std::string from{ "0000-00-00 00:00:00" };
+	std::string till{ "2020-02-11 18:00:00" };
+
+	logger::Parser parser{ path, from, till };
+
+	auto logs{ parser.get_logs() };
+	EXPECT_EQ(logs.size(), number_of_logs);
+}
+
 void check_logs_by_time(size_t number_of_logs, const std::string& datetime_str) {
 	logger::Parser parser{ path, datetime_str };
-	auto logs = parser.get_logs();
+	auto logs{ parser.get_logs() };
 
 	EXPECT_EQ(logs.size(), number_of_logs);
 }

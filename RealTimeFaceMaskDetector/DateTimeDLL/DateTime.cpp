@@ -58,91 +58,55 @@ void DateTime::parse_seconds() {
 }
 
 bool DateTime::operator<(const DateTime& datetime) {
-	if (year >= datetime.year) {
-		return false;
-	}
-	else if (month >= datetime.month) {
-		return false;
-	}
-	else if (day >= datetime.day) {
-		return false;
-	}
-	else if (hour >= datetime.hour) {
-		return false;
-	}
-	else if (minutes >= datetime.minutes) {
-		return false;
-	}
-	else if (seconds >= datetime.seconds) {
-		return false;
-	}
-	return true;
+	return year < datetime.year || year == datetime.year && \
+			(month < datetime.month || month == datetime.month && \
+				(day < datetime.day || day == datetime.day && \
+					(hour < datetime.hour || hour == datetime.hour && \
+						(minutes < datetime.minutes || minutes == datetime.minutes && \
+							(seconds < datetime.seconds)
+						)
+					)
+				)
+			);
 }
 
 bool DateTime::operator>(const DateTime& datetime) {
-	if (year <= datetime.year) {
-		return false;
-	}
-	else if (month <= datetime.month) {
-		return false;
-	}
-	else if (day <= datetime.day) {
-		return false;
-	}
-	else if (hour <= datetime.hour) {
-		return false;
-	}
-	else if (minutes <= datetime.minutes) {
-		return false;
-	}
-	else if (seconds <= datetime.seconds) {
-		return false;
-	}
-	return true;
+	return year > datetime.year || year == datetime.year && \
+			(month > datetime.month || month == datetime.month && \
+				(day > datetime.day || day == datetime.day && \
+					(hour > datetime.hour || hour == datetime.hour && \
+						(minutes > datetime.minutes || minutes == datetime.minutes && \
+							(seconds > datetime.seconds)
+						)
+					)
+				)
+			);
 }
 
 bool DateTime::operator<=(const DateTime& datetime) {
-	if (year > datetime.year) {
-		return false;
-	}
-	else if (month > datetime.month) {
-		return false;
-	}
-	else if (day > datetime.day) {
-		return false;
-	}
-	else if (hour > datetime.hour) {
-		return false;
-	}
-	else if (minutes > datetime.minutes) {
-		return false;
-	}
-	else if (seconds > datetime.seconds) {
-		return false;
-	}
-	return true;
+	return year < datetime.year || year == datetime.year && \
+		(month < datetime.month || month == datetime.month && \
+			(day < datetime.day || day == datetime.day && \
+				(hour < datetime.hour || hour == datetime.hour && \
+					(minutes < datetime.minutes || minutes == datetime.minutes && \
+						(seconds <= datetime.seconds)
+						)
+					)
+				)
+			);
 }
 
 bool DateTime::operator>=(const DateTime& datetime) {
-	if (year < datetime.year) {
-		return false;
-	}
-	else if (month < datetime.month) {
-		return false;
-	}
-	else if (day < datetime.day) {
-		return false;
-	}
-	else if (hour < datetime.hour) {
-		return false;
-	}
-	else if (minutes < datetime.minutes) {
-		return false;
-	}
-	else if (seconds < datetime.seconds) {
-		return false;
-	}
-	return true;
+	return year > datetime.year || year == datetime.year && \
+		(month > datetime.month || month == datetime.month && \
+			(day > datetime.day || day == datetime.day && \
+				(hour > datetime.hour || hour == datetime.hour && \
+					(minutes > datetime.minutes || minutes == datetime.minutes && \
+						(seconds >= datetime.seconds)
+						)
+					)
+				)
+			);
 }
 
 bool DateTime::operator==(const DateTime& datetime) {
@@ -174,4 +138,6 @@ bool DateTime::operator!=(const DateTime& datetime) {
 	return true;
 }
 
-std::regex DateTime::datetime_pat{ R"(\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2})" };
+const std::regex& DateTime::regex_pat() const {
+	return datetime_pat;
+}

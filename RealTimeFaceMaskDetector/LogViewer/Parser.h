@@ -16,9 +16,9 @@ namespace logger {
 	};
 
 	struct LogStruct {
-		std::string time;
+		DateTime time;
 		LogOptions option;
-		std::string trace_track;
+		std::string trace;
 		std::string message;
 	};
 
@@ -35,23 +35,36 @@ namespace logger {
 			open_file();
 			parse_with_options();
 		}
-		Parser( const std::string& path_, const std::string& datetime_) :
-			path{ path_ }, datetime{datetime_}
+
+		Parser( const std::string& path_, const std::string& from_) :
+			path{ path_ }, from{ from_ }
 		{
 			open_file();
-			parse_with_time();
+			parse_from_time();
 		}
+
+		Parser ( const std::string& path_, const std::string& from_, const std::string& till_) :
+			path{ path_ }, from{ from_ }, till{ till_ } 
+		{
+			open_file();
+			parse_from_till_time();
+		}
+		
 		~Parser() {
 			fs.close();
 		}
+
 		const std::vector<LogStruct>& get_logs() const { return logs; }
 	private:
 		void open_file();
 		void parse_all();
 		void parse_with_options();
 		void find_type();
-		void parse_with_time();
+		void parse_from_time();
+		void parse_from_till_time();
 		void find_time();
+		void find_trace();
+		void find_message();
 
 		bool match{ false };
 		std::string path;
@@ -65,9 +78,12 @@ namespace logger {
 		std::regex error_pat{ R"(\[ERROR\]{1})" };
 		std::regex debug_pat{ R"(\[DEBUG\]{1})" };
 		std::regex fatal_pat{ R"(\[FATAL\]{1})" };
+		std::regex trace_pat{ R"(-\s\[.*\])" };
+		std::regex message_pat{ R"(\w(\w|\s)*$)" };
 		
 		LogStruct current_log;
-		DateTime datetime;
+		DateTime from;
+		DateTime till;
 	};
 
 }
