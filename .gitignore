@@ -9,7 +9,7 @@
 
 ### Configuration files ###
 *.ini
-config.xml
+*.xml
 
 ## additional directories
 3rdPartyLibs/
