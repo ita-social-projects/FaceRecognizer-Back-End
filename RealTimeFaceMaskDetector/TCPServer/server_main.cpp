@@ -12,7 +12,9 @@ void CreateServiceTableEntry(ServiceStarter& service, SERVICE_TABLE_ENTRY(*entry
 
 
 int wmain(unsigned argc,  wchar_t* argv[])
-{	
+{
+	LOG_MSG << "wmain: start";
+	
 	bool result = ChooseServerBootOptionAndStart(argc, argv);
 
 	LOG_MSG << "wmain: finish";
@@ -26,7 +28,7 @@ bool ChooseServerBootOptionAndStart(const unsigned argc, const wchar_t* const ar
 	if(argc > 2)
 	{
 		if(!SetCurrentDirectory(argv[WORKING_DIRECTORY]))
-		{
+	{
 			LOG_WARNING << "SetCurrentDirectory: ERROR: " << GetLastError();
 			return false;
 		}

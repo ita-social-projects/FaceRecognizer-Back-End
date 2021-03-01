@@ -30,7 +30,7 @@ private:
 	void TryAcceptAndStartMessaging(bool& ret_value);
 	void SaveAndSendData();
 	bool UpdateDataBase();
-	void CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server);
+	void CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_server);
 
 	bool ReceiveMessage(bool& ret_value);
 	void StartMessagingWintClient(bool& ret_value);
@@ -50,6 +50,8 @@ private:
 	initialise <file_specificator> with converted date*/
 	void CreateFileNameSpecificator(std::string& file_specificator);
 	void ReplaceForbiddenSymbol(char& symbol);
+	/*Implement mock accept*/
+	void MakeAccept();
 
 	WSADATA wsaData;
 	int m_func_result;
@@ -61,7 +63,7 @@ private:
 	std::mutex recv_mutex;
 	std::mutex sql_mutex;
 
-	std::shared_ptr<SQLConnection>sql_server;
+	std::unique_ptr<SQLConnection>sql_server;
 
 	/*Photo that will be sent to database. 
 	It's fields will be rewritten with each

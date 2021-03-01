@@ -231,6 +231,7 @@ bool Service::Uninstall()
 
 #pragma endregion
 
+
 void Service::TryStartService(SC_HANDLE service_handle, bool& is_started)
 {
 	

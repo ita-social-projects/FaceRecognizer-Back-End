@@ -1,8 +1,8 @@
 #pragma once
 
 #include "SQLConnection.h"
-#include "IniParser.h"
-#define CONFIG_FILE "config.ini"
+#include "XMLParser.h"
+#define CONFIG_FILE "config.xml"
 
 class SQLSERVER_API SQLServer : public SQLConnection
 {
