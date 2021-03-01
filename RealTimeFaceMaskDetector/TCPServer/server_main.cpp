@@ -21,15 +21,16 @@ int wmain(unsigned argc,  wchar_t* argv[])
 
 bool ChooseServerBootOptionAndStart(const unsigned argc, const wchar_t* const argv[])
 {
-	Logger::SetConfiguration(LOG_FILENAME);
 	bool ret_val = false;
-	if(argc > 1)
+	Logger::SetConfiguration(LOG_FILENAME);
+	if(argc > 2)
 	{
 		if(!SetCurrentDirectory(argv[WORKING_DIRECTORY]))
 		{
 			LOG_WARNING << "SetCurrentDirectory: ERROR: " << GetLastError();
 			return false;
 		}
+		
 		LOG_MSG << "ChooseServerBootOptionAndStart: Starting server as service...";
 		ret_val = RunServerUnderService(argv);
 	}

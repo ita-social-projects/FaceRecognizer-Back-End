@@ -99,7 +99,7 @@ bool Service::CreateServiceInSCM(SC_HANDLE scm_handle)
 		nullptr,									    // Load ordering group
 		nullptr,                                        // Tag ID
 		nullptr,	                                    // Dependencies
-		nullptr,						                // Service start name (account)
+		nullptr,										// Service start name (account)
 		nullptr);                                       // Password
 
 	if (!service_handle)
