@@ -10,9 +10,9 @@ STOP = L"stop",
 RESTART = L"restart",
 UNINSTALL = L"uninstall";
 
-const wchar_t SERVICE_NAME[] = L"A_server";
-const wchar_t SERVER_EXE_PATH[] = L"D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\"
-									"RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe A_server";
+std::wstring SERVICE_NAME = L"A_server";
+std::wstring SERVER_EXE_PATH = L"D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\"
+									"RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe";
 
 /*Singletone class that provides comunication with SCM 
 and creates service to run as server*/
@@ -47,6 +47,8 @@ private:
 	SC_HANDLE GetServiceFromSCM(SC_HANDLE scm_handle);
 
 	void CloseHandleAndNull(SC_HANDLE handle);
+
+	std::wstring GetPathToModule();
 
 	bool CreateServiceInSCM(SC_HANDLE scm_handle);
 	/*Calls StartService function and 

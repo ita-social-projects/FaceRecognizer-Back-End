@@ -76,7 +76,7 @@ void SocketServer::MakeAccept()
 	clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
 	clientService.sin_port = htons(std::stoi(m_port));
 
-	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, 
+	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype,
 		m_host_info->ai_protocol);
 	connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
 	closesocket(mock_socket);
@@ -86,13 +86,13 @@ bool SocketServer::AcceptConnection()
 {
 	std::cout << "Waiting connection" << std::endl;
 	bool ready = false, stop = false;
-	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
-		{ 
-			SOCKET result;
-			result = accept(m_listen_socket, NULL, NULL);
-			ready = true;
-			return result;
-		});	
+	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this, &ready]
+	{
+		SOCKET result;
+		result = accept(m_listen_socket, NULL, NULL);
+		ready = true;
+		return result;
+	});
 	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
 	bool key = { false };
 	while (!ready)
@@ -106,9 +106,9 @@ bool SocketServer::AcceptConnection()
 		}
 	}
 	m_client_socket = cl_socket.get();
-	
+
 	if (m_client_socket == INVALID_SOCKET)
-	{	
+	{
 		std::cout << "INVALID_SOCKET" << std::endl;
 		closesocket(m_listen_socket);
 		WSACleanup();
@@ -129,9 +129,9 @@ bool SocketServer::AcceptConnection()
 void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 {
 	if (AcceptConnection())
-	{	
+	{
 		std::cout << "Begin..." << std::endl;
-		StartMessagingWintClient(ret_value);	
+		StartMessagingWintClient(ret_value);
 	}
 	else
 	{
@@ -142,11 +142,11 @@ void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
 
 void SocketServer::StartMessagingWintClient(bool& ret_value)
 {
-	std::thread th = std::thread([&]() 
-		{
-			ReceiveMessage(ret_value); 
-		});
-	if (th.joinable()) 
+	std::thread th = std::thread([&]()
+	{
+		ReceiveMessage(ret_value);
+	});
+	if (th.joinable())
 	{
 		th.join();
 	}
@@ -161,10 +161,10 @@ bool SocketServer::StartListening(bool& ret_value)
 
 	freeaddrinfo(m_host_info);
 	LOG_MSG << "StartListening: Server work begin...";
-	while(server_is_up)
+	while (server_is_up)
 	{
 		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
-		{	
+		{
 			TryAcceptAndStartMessaging(ret_value);
 			if (!ret_value)
 			{
@@ -172,7 +172,7 @@ bool SocketServer::StartListening(bool& ret_value)
 				break;
 			}
 		}
-		else 
+		else
 		{
 			LOG_ERROR << "StartListening: listen: failed to listen socket";
 			closesocket(m_listen_socket);//ask to delete
@@ -210,7 +210,7 @@ bool SocketServer::ReceiveFullMessage()
 	recv_mutex.unlock();
 	if (m_func_result > 0) // correctrly receided message
 	{
-		LOG_MSG << "Total bytes: "<< total_bytes_count <<" Received: " << m_func_result;
+		LOG_MSG << "Total bytes: " << total_bytes_count << " Received: " << m_func_result;
 	}
 	else if (m_func_result == 0) // client closed connection
 	{
@@ -239,21 +239,21 @@ void SocketServer::TryReceiveAndSendMessage(bool& client_connected)
 }
 
 bool SocketServer::ReceiveMessage(bool& ret_value)
-{	
+{
 	LOG_MSG << "ReceiveMessage: begin: work with client";
 	ret_value = true;
 	bool client_connected = true;
 
 	while (client_connected)
 	{
-		
+
 		m_buffer.clear();
 		try
 		{
 			TryReceiveAndSendMessage(client_connected);
-			
+
 		}
-		catch(const std::string& msg)
+		catch (const std::string& msg)
 		{
 			LOG_ERROR << msg;
 			ret_value = false;
@@ -311,12 +311,10 @@ void SocketServer::CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_serve
 
 bool SocketServer::ShutdownServer()
 {
-	//LOG_MSG << "ShutdownServer: begin";
 	server_is_up = false;
 	m_func_result = shutdown(m_client_socket, SD_SEND);
 	if (m_func_result == SOCKET_ERROR)
 	{
-		//LOG_ERROR << "ShutdownServer: shutdown: ERROR " << GetLastError();
 		closesocket(m_client_socket);
 		WSACleanup();
 		return false;
@@ -333,7 +331,6 @@ bool SocketServer::ShutdownServer()
 	{
 		std::cout << e.what() << std::endl;
 	}
-	//LOG_MSG << "ShutdownServer: end";
 	return true;
 }
 
@@ -341,7 +338,7 @@ SocketServer::~SocketServer()
 {
 	ShutdownServer();
 }
-/*Functions for making directory for photos, 
+/*Functions for making directory for photos,
 and creating particular name for each photo,
 containing date and time
 */
@@ -382,7 +379,7 @@ bool SocketServer::OpenParticularFile(std::ofstream& stream)
 	std::string photo_path{ m_photo_to_send.path +
 							m_photo_to_send.name + "." +
 							m_photo_to_send.extension };
-	
+
 	if (std::filesystem::exists(photo_path))
 	{
 		LOG_WARNING << "OpenParticularFile: photo_path doesn't exist";

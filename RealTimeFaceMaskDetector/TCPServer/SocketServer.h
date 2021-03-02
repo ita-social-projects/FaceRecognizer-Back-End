@@ -1,4 +1,3 @@
-
 #pragma once
 #include <ws2tcpip.h>
 #include "Logger.h"
@@ -39,14 +38,14 @@ private:
 
 	/*return path to TCPServer.exe file*/
 	std::filesystem::path GetCurrentPath();
-	
+
 	/*Creates directory for received images*/
 	bool SpecifyPathForPhotos();
 
 	/*Creates and opens .png file with specific filename*/
 	bool OpenParticularFile(std::ofstream& stream);
 
-	/*This function will take current date & time and 
+	/*This function will take current date & time and
 	initialise <file_specificator> with converted date*/
 	void CreateFileNameSpecificator(std::string& file_specificator);
 	void ReplaceForbiddenSymbol(char& symbol);
@@ -65,7 +64,7 @@ private:
 
 	std::unique_ptr<SQLConnection>sql_server;
 
-	/*Photo that will be sent to database. 
+	/*Photo that will be sent to database.
 	It's fields will be rewritten with each
 	received photo from client*/
 	Photo m_photo_to_send;
@@ -77,4 +76,3 @@ private:
 	std::string m_ip;
 	std::string m_port;
 };
-

@@ -71,8 +71,6 @@ bool ServiceStarter::ServiceMain(const unsigned short argc, const wchar_t* const
 
 void ServiceStarter::CtrlHandler(const unsigned long request)
 {
-	LOG_MSG << "CtrlHandler: begin";
-
 	switch (request)
 	{
 	case SERVICE_CONTROL_STOP:
@@ -87,8 +85,6 @@ void ServiceStarter::CtrlHandler(const unsigned long request)
 	default:
 		break;
 	}
-
-	LOG_MSG << "CtrlHandler: end";
 }
 
 bool ServiceStarter::ReportStatus(const unsigned short current_state, const unsigned short win32_exit_code, const unsigned short wait_hint)
