@@ -258,3 +258,8 @@ void SQLServer::DeleteTable(const std::string& table)
 		throw sql_error;
 	}
 }
+
+bool SQLServer::IsConnected()
+{
+	return m_connection.isConnected();
+}

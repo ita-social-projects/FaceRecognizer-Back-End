@@ -31,6 +31,7 @@ public:
     void GetIniParams(const std::string& path) override;
     void CreatePhotosTable();
     void DeleteTable(const std::string& table) override;
+    bool IsConnected();
 protected:
     /*Nested class for exceptions*/
     class SQLServerException :public SQLException

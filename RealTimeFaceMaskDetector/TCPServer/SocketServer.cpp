@@ -427,7 +427,20 @@ void SocketServer::ConnectToSQL()
 		LOG_MSG << "ConnectToSQL: begin";
 		sql_server->GetIniParams(CONFIG_FILE);
 
-		sql_server->Connect();
+		//sql_server->Connect();
+		/*This code is needed when we use a trial version of SQLAPI*/
+		std::thread mythread = std::thread([this] { sql_server->Connect(); });
+		HWND hWnd = 0;
+		while (hWnd==0)
+		{
+			hWnd = FindWindow(NULL, L"SQLAPI++ Registration Reminder");
+			if (hWnd>0)
+			{
+				PostMessage(hWnd, WM_CLOSE, 0, 0);
+			}
+		}
+		mythread.join();
+
 		LOG_MSG << "ConnectToSQL: connected!";
 		CreateTableIfNeeded(sql_server);
 		LOG_MSG << "ConnectToSQL: end";

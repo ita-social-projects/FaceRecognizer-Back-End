@@ -10,9 +10,8 @@ STOP = L"stop",
 RESTART = L"restart",
 UNINSTALL = L"uninstall";
 
-const wchar_t SERVICE_NAME[] = L"A_server";
-const wchar_t SERVER_EXE_PATH[] = L"D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\"
-									"RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe A_server";
+const wchar_t SERVICE_NAME[] = L"AA_server";
+const wchar_t SERVER_EXE_PATH[] = L"E:\\Tolik\\c++\\Real-Time-Face-Mask-Detector\\RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe AA_server";
 
 /*Singletone class that provides comunication with SCM 
 and creates service to run as server*/
