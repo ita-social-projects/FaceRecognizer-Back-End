@@ -47,6 +47,8 @@ private:
 
 	void CloseHandleAndNull(SC_HANDLE handle);
 
+	std::wstring GetPathToModule();
+
 	bool CreateServiceInSCM(SC_HANDLE scm_handle);
 	/*Calls StartService function and 
 	if suceed takes up the server*/

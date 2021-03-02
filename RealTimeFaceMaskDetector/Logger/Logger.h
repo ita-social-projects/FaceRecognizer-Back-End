@@ -14,7 +14,7 @@ INITIALIZE_EASYLOGGINGPP
 	class Logger {
 	public:
 		static bool					SetConfiguration();
-
+		static bool					SetConfiguration(std::string& conf_filename);
 	private:
 		Logger() = default;
 		Logger(const Logger&) = default;
@@ -24,6 +24,7 @@ INITIALIZE_EASYLOGGINGPP
 
 		static bool					LogsRollout(const char* file_name, size_t file_size);
 		static bool					ReadConfiguration();
+		static bool					ReadConfiguration(const std::string& conf_filename);
 		static std::string			CreateLogFileName();
 		static int					FileCount();
 
