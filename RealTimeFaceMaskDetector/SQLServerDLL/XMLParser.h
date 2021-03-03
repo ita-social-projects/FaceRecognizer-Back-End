@@ -12,7 +12,7 @@ public:
 	std::string GetParam(const std::string& section, 
 		const std::string& param);
 private:
-	/*Parse records from ini file*/
+	/*Parse records from xml file*/
 	void Parse();
 	std::vector<Section> contents;
 	std::string inipath;

@@ -76,7 +76,7 @@ void SocketServer::MakeAccept()
 	clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
 	clientService.sin_port = htons(std::stoi(m_port));
 
-	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype,
+	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, 
 		m_host_info->ai_protocol);
 	connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
 	closesocket(mock_socket);
@@ -86,13 +86,17 @@ bool SocketServer::AcceptConnection()
 {
 	std::cout << "Waiting connection" << std::endl;
 	bool ready = false, stop = false;
-	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this, &ready]
-	{
-		SOCKET result;
-		result = accept(m_listen_socket, NULL, NULL);
-		ready = true;
-		return result;
-	});
+	SOCKET mock_socket = INVALID_SOCKET;
+	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
+		{ 
+			SOCKET result;
+
+			result = accept(m_listen_socket, NULL, NULL);
+
+			ready = true;
+			return result;
+		});
+	
 	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
 	bool key = { false };
 	while (!ready)
@@ -423,8 +427,20 @@ void SocketServer::ConnectToSQL()
 	{
 		LOG_MSG << "ConnectToSQL: begin";
 		sql_server->GetIniParams(CONFIG_FILE);
+		//sql_server->Connect();
+		/*This code is needed when we use a trial version of SQLAPI*/
+		std::thread mythread = std::thread([this] { sql_server->Connect(); });
+		HWND hWnd = 0;
+		while (hWnd==0)
+		{
+			hWnd = FindWindow(NULL, L"SQLAPI++ Registration Reminder");
+			if (hWnd>0)
+			{
+				PostMessage(hWnd, WM_CLOSE, 0, 0);
+			}
+		}
+		mythread.join();
 
-		sql_server->Connect();
 		LOG_MSG << "ConnectToSQL: connected!";
 		CreateTableIfNeeded(sql_server);
 		LOG_MSG << "ConnectToSQL: end";
