@@ -1,8 +1,8 @@
 #pragma once
 
 #include "SQLConnection.h"
-#include "IniParser.h"
-#define CONFIG_FILE "config.ini"
+#include "XMLParser.h"
+#define CONFIG_FILE "config.xml"
 
 class SQLSERVER_API SQLServer : public SQLConnection
 {
@@ -23,8 +23,6 @@ public:
     void Connect() override;
     void Connect(const ConnectParams& connect_string) override;
     void InsertPhoto(const Photo& photo) override;
-    /*Get all photos int the vector*/
-    std::vector<PhotoType> GetAllPhotos();
     void RollBack() override;
     void Disconnect() override;
     void ClearTable(const std::string& table) override;
@@ -32,9 +30,8 @@ public:
     bool CheckTableExists() override;
     void GetIniParams(const std::string& path) override;
     void CreatePhotosTable();
-    /*create files from the vector of photos*/
-    static void CreatePhotos(const std::vector<PhotoType>& photos);
     void DeleteTable(const std::string& table) override;
+    bool IsConnected();
 protected:
     /*Nested class for exceptions*/
     class SQLServerException :public SQLException

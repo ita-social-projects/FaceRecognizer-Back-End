@@ -11,12 +11,13 @@
 #include <thread>
 #include <algorithm>
 
-struct FaceWithMaskInfo {
-	cv::Rect face;
-	bool has_mask;
-};
+using faceInfo = std::vector<std::pair<cv::Rect, bool>>;
 
-using faceInfo = std::vector<std::pair<cv::Rect, bool>>;  // TODO: struct instead of pair
+struct HZ
+{
+	cv::Mat m_image;
+	faceInfo m_faces;
+};
 
 class ImageData
 {

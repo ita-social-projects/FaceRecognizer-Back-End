@@ -10,6 +10,8 @@
 ### Configuration files ###
 *.ini
 
+config.xml
+
 ## additional directories
 3rdPartyLibs/
 conafiles/

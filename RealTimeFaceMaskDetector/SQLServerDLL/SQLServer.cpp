@@ -91,53 +91,6 @@ void SQLServer::InsertPhoto(const Photo& photo)
 	}
 }
 
-std::vector<SQLServer::PhotoType> SQLServer::GetAllPhotos()
-{
-	try
-	{
-		std::string table_name{ params.table };
-		std::string column_name_photo{ "Photo" };
-		std::string column_name_photo_name{ "PhotoName" };
-		std::string column_name_photo_extension{ "PhotoExtension" };
-
-		std::string selectStatement =
-			"SELECT " +
-			column_name_photo + ", " +
-			column_name_photo_name + ", " +
-			column_name_photo_extension +
-			" FROM " + table_name;
-
-		SACommand select(&m_connection, _TSA(selectStatement.c_str()));
-
-		select.Execute();
-
-		std::vector<PhotoType> photos;
-
-		if (select.isResultSet())
-		{
-			while (select.FetchNext())
-			{
-				PhotoType photo =
-				{
-					select.Field(_TSA(column_name_photo.c_str())).asLongBinary(),
-					select.Field(_TSA(column_name_photo_name.c_str())).asString(),
-					select.Field(_TSA(column_name_photo_extension.c_str())).asString()
-				};
-
-				photos.push_back(photo);
-			}
-		}
-
-		return photos;
-	}
-	catch (const SAException& ex)
-	{
-		RollBack();
-		sql_error.GetParams(ex);
-		throw sql_error;
-	}
-}
-
 void SQLServer::RollBack()
 {
 	try
@@ -187,18 +140,6 @@ void SQLServer::ClearTable(const std::string& table)
 SQLServer::~SQLServer()
 {
 	Disconnect();
-}
-
-void SQLServer::CreatePhotos(const std::vector<PhotoType>& photos)
-{
-	for (const auto& photo : photos)
-	{
-		std::string fullname = std::string{ photo.photoName } + "." + std::string{ photo.photoExtension };
-
-		std::ofstream fout(fullname, std::ios::binary);
-		fout.write(photo.photoBytes, photo.photoBytes.GetLength());
-		fout.close();
-	}
 }
 
 void SQLServer::ExecSQLQuery(const std::string& query)
@@ -254,12 +195,12 @@ bool SQLServer::CheckTableExists()
 
 void SQLServer::GetIniParams(const std::string& path)
 {
-	IniParser parser(path);
-	params.server = parser.GetParam("Server", "name");                    // "" if server exists on your local machine
-	params.database = parser.GetParam("Server", "database");
-	params.username = parser.GetParam("Server", "username");              // "" if Windows authentification
-	params.password = parser.GetParam("Server", "password");              // "" if Windows authentification
-	params.table = parser.GetParam("Server", "table");
+	std::unique_ptr<ConfigReader> parser = std::make_unique<XMLParser>(path);
+	params.server = parser->GetParam("Server", "name");                    // "" if server exists on your local machine
+	params.database = parser->GetParam("Server", "database");
+	params.username = parser->GetParam("Server", "username");              // "" if Windows authentification
+	params.password = parser->GetParam("Server", "password");              // "" if Windows authentification
+	params.table = parser->GetParam("Server", "table");
 }
 
 std::string SQLServer::ExePath()
@@ -316,4 +257,9 @@ void SQLServer::DeleteTable(const std::string& table)
 		sql_error.GetParams(ex);
 		throw sql_error;
 	}
+}
+
+bool SQLServer::IsConnected()
+{
+	return m_connection.isConnected();
 }
