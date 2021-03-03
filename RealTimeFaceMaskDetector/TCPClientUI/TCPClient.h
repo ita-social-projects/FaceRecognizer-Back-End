@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <mutex>
 
 #include "TCPClientUI.h"
 #include "FaceRecognizer.h"
@@ -45,5 +46,6 @@ public:
 private:
     WSAData m_wsa_data;
     sockaddr_in m_soket_info;
-    SOCKET m_socket;  
+    SOCKET m_socket;
+    std::mutex send_mutex;
 };
