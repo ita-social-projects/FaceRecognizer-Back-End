@@ -16,8 +16,9 @@ class FaceRecognizer
 {
 public:
 	FaceRecognizer(int camera = 0);
+	HZ hz;
 
-	void runAnalysis(ImageData& img_data);
+	HZ& runAnalysis();
 
 	static void FaceRecognizer::SetPanelTextInMask(cv::Mat& image);
 	static void FaceRecognizer::SetPanelTextWithoutMask(cv::Mat& image);
@@ -28,6 +29,4 @@ private:
 	cv::CascadeClassifier m_nose_cascade;
 
 	cv::VideoCapture m_camera;
-
-	ImageData m_data; // ця штука локальна, вона ніяк не впливає на ImageData в FaceRecognitionUI
 };
