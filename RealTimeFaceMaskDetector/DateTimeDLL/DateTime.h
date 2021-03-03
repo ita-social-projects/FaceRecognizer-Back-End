@@ -31,6 +31,7 @@ public:
 	bool operator>=(const DateTime&);
 	bool operator==(const DateTime&);
 	bool operator!=(const DateTime&);
+	bool empty() const;
 
 	const std::regex& regex_pat() const;
 

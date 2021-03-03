@@ -141,3 +141,7 @@ bool DateTime::operator!=(const DateTime& datetime) {
 const std::regex& DateTime::regex_pat() const {
 	return datetime_pat;
 }
+
+bool DateTime::empty() const {
+	return (!year && !month && !day && !hour && !minutes && !seconds);
+}
