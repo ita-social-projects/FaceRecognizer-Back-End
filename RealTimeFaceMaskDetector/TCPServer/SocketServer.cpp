@@ -315,12 +315,10 @@ void SocketServer::CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_serve
 
 bool SocketServer::ShutdownServer()
 {
-	LOG_MSG << "ShutdownServer: begin";
 	server_is_up = false;
 	m_func_result = shutdown(m_client_socket, SD_SEND);
 	if (m_func_result == SOCKET_ERROR)
 	{
-		LOG_ERROR << "ShutdownServer: shutdown: ERROR " << GetLastError();
 		closesocket(m_client_socket);
 		WSACleanup();
 		return false;
@@ -337,7 +335,6 @@ bool SocketServer::ShutdownServer()
 	{
 		std::cout << e.what() << std::endl;
 	}
-	LOG_MSG << "ShutdownServer: end";
 	return true;
 }
 
@@ -430,7 +427,6 @@ void SocketServer::ConnectToSQL()
 	{
 		LOG_MSG << "ConnectToSQL: begin";
 		sql_server->GetIniParams(CONFIG_FILE);
-
 		//sql_server->Connect();
 		/*This code is needed when we use a trial version of SQLAPI*/
 		std::thread mythread = std::thread([this] { sql_server->Connect(); });

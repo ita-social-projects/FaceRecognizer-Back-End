@@ -22,7 +22,7 @@ int wmain(unsigned argc,  wchar_t* argv[])
 bool ChooseServerBootOptionAndStart(const unsigned argc, const wchar_t* const argv[])
 {
 	bool ret_val = false;
-	Logger::SetConfiguration(LOG_FILENAME);
+	//Logger::SetConfiguration(LOG_FILENAME);
 	if(argc > 2)
 	{
 		if(!SetCurrentDirectory(argv[WORKING_DIRECTORY]))
@@ -30,12 +30,13 @@ bool ChooseServerBootOptionAndStart(const unsigned argc, const wchar_t* const ar
 			LOG_WARNING << "SetCurrentDirectory: ERROR: " << GetLastError();
 			return false;
 		}
-		
+		Logger::SetConfiguration(LOG_FILENAME);
 		LOG_MSG << "ChooseServerBootOptionAndStart: Starting server as service...";
 		ret_val = RunServerUnderService(argv);
 	}
 	else
 	{
+		Logger::SetConfiguration(LOG_FILENAME);
 		LOG_MSG << "ChooseServerBootOptionAndStart: Starting server as console app...";
 		ret_val = RunServerItself();
 	}
