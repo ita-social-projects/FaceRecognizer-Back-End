@@ -10,18 +10,17 @@
 #include <conio.h>
 #include <thread>
 
-#include "ImageData.h"
+using faceInfo = std::vector<std::pair<cv::Rect, bool>>;
+
+#define RED cv::Scalar(0, 0, 255)
+#define GREEN cv::Scalar(0, 255, 0)
 
 class FaceRecognizer
 {
 public:
-	FaceRecognizer(int camera = 0);
-	HZ hz;
+	FaceRecognizer();
 
-	HZ& runAnalysis();
-
-	static void FaceRecognizer::SetPanelTextInMask(cv::Mat& image);
-	static void FaceRecognizer::SetPanelTextWithoutMask(cv::Mat& image);
+	faceInfo runAnalysis(cv::Mat color_img);
 
 private:
 	cv::CascadeClassifier m_face_cascade;

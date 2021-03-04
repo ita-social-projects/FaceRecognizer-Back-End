@@ -1,6 +1,6 @@
 #include "FaceRecognizer.h"
 
-FaceRecognizer::FaceRecognizer(int camera)
+FaceRecognizer::FaceRecognizer()
 {
     const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_frontalface_alt.xml";
     const std::string mouth_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_mcs_mouth.xml";
@@ -13,16 +13,16 @@ FaceRecognizer::FaceRecognizer(int camera)
         throw std::runtime_error("can't load cascades"); //exs
     }
 
-    if (!m_camera.open(camera))
+    /*if (!m_camera.open(camera))
     {
-        throw std::runtime_error("can't load camera"); //exs
-    }
+        throw std::runtime_error("can't load camera");
+    }*/
 }
 
-HZ& FaceRecognizer::runAnalysis()
+faceInfo FaceRecognizer::runAnalysis(cv::Mat color_img)
 {
     // current frame of video stream
-    cv::Mat color_img, gray_img;
+    cv::Mat gray_img;
 
     // arrays with rectangles of face\mouth\nose location
     std::vector<cv::Rect> face_rects, mouth_rects, nose_rects;
@@ -30,9 +30,6 @@ HZ& FaceRecognizer::runAnalysis()
     // vector of pairs <'rectangle with face location',
     //                  'if this face in mask'>
     faceInfo faces_with_info;
-
-    // load frame from camera
-    m_camera >> color_img;
 
     // convert image to grayscale for better recognition
     cv::cvtColor(color_img, gray_img, cv::COLOR_BGR2GRAY);
@@ -58,27 +55,6 @@ HZ& FaceRecognizer::runAnalysis()
             face, 
             mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
-    hz.m_image = color_img;
-    hz.m_faces = faces_with_info;
-    return hz;
-}
-
-void FaceRecognizer::SetPanelTextInMask(cv::Mat& image)
-{
-    cv::Mat img_copy = image.clone();
-    auto m_color = cv::Scalar(0, 255, 0);
-
-    rectangle(image, cv::Point(70, 0), cv::Point(600, 50), m_color, cv::FILLED, 8, 0);
-    putText(image, "Thanks for wearing mask :)", cv::Point(150, 30),
-            cv::FONT_HERSHEY_COMPLEX, 0.8, cv::Scalar(0, 0, 0), 1, cv::LINE_AA);
-}
-
-void FaceRecognizer::SetPanelTextWithoutMask(cv::Mat& image)
-{
-    cv::Mat img_copy = image.clone();
-    auto m_color = cv::Scalar(0, 0, 255);
-
-    rectangle(image, cv::Point(70, 0), cv::Point(600, 50), m_color, cv::FILLED, 8, 0);
-    putText(image, "Put on a mask please!", cv::Point(170, 30),
-        cv::FONT_HERSHEY_COMPLEX, 0.8, cv::Scalar(0, 0, 0), 1, cv::LINE_AA);
+    
+    return faces_with_info;
 }
