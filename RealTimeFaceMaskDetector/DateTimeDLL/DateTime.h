@@ -27,8 +27,6 @@ public:
 
 	DateTime() : year{ 0 }, month{ 0 }, day{ 0 }, hour{ 0 }, minutes{ 0 }, seconds{ 0 } {}
 
-	std::string to_string() const;
-
 	bool operator<(const DateTime&);
 	bool operator>(const DateTime&);
 	bool operator<=(const DateTime&);
@@ -36,8 +34,8 @@ public:
 	bool operator==(const DateTime&);
 	bool operator!=(const DateTime&);
 	bool empty() const;
-
-	const std::string str() const;
+	
+	std::string to_string() const;
 	const std::regex& regex_pat() const;
 
 	unsigned int year;

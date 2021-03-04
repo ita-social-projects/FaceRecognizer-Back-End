@@ -160,11 +160,3 @@ const std::regex& DateTime::regex_pat() const {
 bool DateTime::empty() const {
 	return (!year && !month && !day && !hour && !minutes && !seconds);
 }
-
-const std::string DateTime::str() const {
-	std::ostringstream string_stream;
-	string_stream << std::setfill('0') << std::setw(4) << year << "-" << std::setw(2) << month \
-		<< "-" << std::setw(2) << day << " " << std::setw(2) << hour << ":" << std::setw(2) << minutes \
-		<< ":" << std::setw(2) << seconds;
-	return string_stream.str();
-}

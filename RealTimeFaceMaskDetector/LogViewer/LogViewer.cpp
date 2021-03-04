@@ -16,13 +16,6 @@ LogViewer::LogViewer(QWidget* parent)
     );
 }
 
-/*
-* ПЛАН-ЕБЛАН
-* 1. 0 логов = нихуя не рисуем
-* 2. > 0 логов = первый лог рисуем, всё это говно в комбо бокс
-* 3. < 0 логов = пиздец, ш деоать
-*/
-
 void LogViewer::OnSinceCheckBoxChecked(int state)
 {
     if (state == Qt::CheckState::Checked)
@@ -192,7 +185,6 @@ void LogViewer::UpdateLogComboBox()
 
 void LogViewer::OnRefreshButtonClicked()
 {
-    // UpdateLogComboBox();
     UpdateTableContents();
     ui.retranslateUi(this);
 }
