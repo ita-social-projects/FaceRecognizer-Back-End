@@ -7,7 +7,6 @@ FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
 {
     ui.setupUi(this);
     connect(ui.exit_button, &QPushButton::clicked, this, &FaceRecognitionUI::onExitButtonClicked);
-    QMainWindow::statusBar;
 }
 
 void FaceRecognitionUI::onExitButtonClicked()
@@ -109,7 +108,7 @@ void FaceRecognitionUI::displayFrame()
 {
     QImage frame = mat2QImage();
     QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), 
-                                     Qt::KeepAspectRatio, g_video_quality));
+                                     Qt::IgnoreAspectRatio, g_video_quality));
     ui.frame->setPixmap(map);
     ui.frame->show();
 
