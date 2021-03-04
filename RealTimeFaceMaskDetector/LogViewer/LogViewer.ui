@@ -18,16 +18,16 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QComboBox" name="logComboBox"/>
+        </item>
         <item>
          <widget class="QPushButton" name="refreshButton">
           <property name="text">
            <string>Refresh</string>
           </property>
          </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="logComboBox"/>
         </item>
        </layout>
       </item>
@@ -37,31 +37,31 @@
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <layout class="QFormLayout" name="formLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="fromLabel">
-              <property name="text">
-               <string>from</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="1">
              <widget class="QDateTimeEdit" name="fromTimeEdit"/>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="toLabel">
+            <item row="1" column="1">
+             <widget class="QDateTimeEdit" name="toTimeEdit"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="sinceCheckBox">
               <property name="text">
-               <string>to</string>
+               <string>Since</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QDateTimeEdit" name="toTimeEdit"/>
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="untilCheckBox">
+              <property name="text">
+               <string>Until</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout">
-            <item row="1" column="0">
+            <item row="2" column="0">
              <widget class="QCheckBox" name="warningCheckBox">
               <property name="text">
                <string>Warning</string>
@@ -71,17 +71,7 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="2" rowspan="2">
-             <widget class="QCheckBox" name="traceCheckBox">
-              <property name="text">
-               <string>Trace</string>
-              </property>
-              <property name="tristate">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
+            <item row="2" column="1">
              <widget class="QCheckBox" name="debugCheckBox">
               <property name="text">
                <string>Debug</string>
@@ -91,7 +81,7 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
+            <item row="1" column="1">
              <widget class="QCheckBox" name="infoCheckBox">
               <property name="text">
                <string>Info</string>
@@ -101,10 +91,27 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
+            <item row="1" column="0">
              <widget class="QCheckBox" name="errorCheckBox">
               <property name="text">
                <string>Error</string>
+              </property>
+              <property name="tristate">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QCheckBox" name="fatalCheckBox">
+              <property name="text">
+               <string>Fatal</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QCheckBox" name="traceCheckBox">
+              <property name="text">
+               <string>Trace</string>
               </property>
               <property name="tristate">
                <bool>true</bool>

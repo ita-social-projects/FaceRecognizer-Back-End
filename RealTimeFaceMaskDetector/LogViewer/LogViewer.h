@@ -2,8 +2,13 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QTableWidget>
-#include <qDebug>
+#include <QMessageBox>
 #include "ui_LogViewer.h"
+
+#include "LogSearcher.h"
+#include "Parser.h"
+#include "utility.h"
+#include "../DateTimeDLL/DateTime.h"
 
 class LogViewer : public QMainWindow
 {
@@ -13,14 +18,18 @@ public:
     LogViewer(QWidget *parent = Q_NULLPTR);
 
 private slots:
-    // TODO: implement refreshing table, also implement filters feature
     void OnRefreshButtonClicked();
+    void OnSinceCheckBoxChecked(int state);
+    void OnUntilCheckBoxChecked(int state);
 
 private:
     void CreateUi(const QStringList& headers);
-    // TODO: void AddRow(...);
+    void UpdateTableContents();
+    QTableWidgetItem* MakeTableItem(const QString& content) const;
+    std::vector<logger::LogOptions> GetLogLevelFilterOptions() const;
+    void UpdateLogComboBox();
 
 private:
     Ui::LogViewerClass ui;
-    // TODO: add container of elements for further
+    std::vector<std::string> paths_to_log_files;
 };
