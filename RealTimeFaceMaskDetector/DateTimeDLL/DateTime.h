@@ -37,6 +37,7 @@ public:
 	bool operator!=(const DateTime&);
 	bool empty() const;
 
+	const std::string str() const;
 	const std::regex& regex_pat() const;
 
 	unsigned int year;

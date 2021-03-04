@@ -1,4 +1,4 @@
-#include "./Filter.h"
+#include "Filter.h"
 
 logger::Filter::Filter(const std::vector<logger::LogOptions>& options_, const std::string& from_, \
 	const std::string& till_) :

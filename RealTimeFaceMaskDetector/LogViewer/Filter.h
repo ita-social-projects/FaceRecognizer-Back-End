@@ -1,7 +1,7 @@
 #ifndef LOGVIEWER_FILTER_H
 #define LOGVIEWER_FILTER_H
 #include <string>
-#include "./structures.h"
+#include "structures.h"
 
 namespace logger {
 	class Filter {

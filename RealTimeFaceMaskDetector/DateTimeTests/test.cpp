@@ -192,3 +192,12 @@ TEST(DateTimeTests, NotEqualFalse) {
 
 	EXPECT_FALSE(datetime2 != datetime1);
 }
+
+TEST(DateTimeTests, GetString) {
+	const std::string datetime_str{ "2021-01-03 01:03:05" };
+
+	auto datetime = DateTime(datetime_str);
+	const std::string dt = datetime.str();
+
+	EXPECT_TRUE(datetime.str() == datetime_str);
+}
