@@ -23,12 +23,10 @@
 class FaceRecognitionUI;
 
 /* These are global variables.
-   g_ip stores server ip & g_port stores server port
-   g_video_quality stores mode for quality.
+   g_ip stores server ip & g_port stores server port.
    They are defined it TCPClient.cpp file. */
 extern std::string g_ip;
 extern int g_port;
-extern Qt::TransformationMode g_video_quality;
 
 /* This class is designed to interact with server via socket,
    to convert image into binary and send it to the server. */
