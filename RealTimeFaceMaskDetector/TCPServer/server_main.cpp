@@ -1,5 +1,7 @@
 #include <iostream>
 #include "ServiceStarter.h"
+#include "../../RealTimeFaceMaskDetector/EncryptDecryptECBMode/AsyncEncrRSA.h"
+
 const short int TABLE_ENTRY_SIZE = 2;
 const short int SERVICE_NAME_ARGUMENT = 1;
 const short int WORKING_DIRECTORY = 2;
