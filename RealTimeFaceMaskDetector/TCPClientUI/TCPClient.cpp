@@ -5,7 +5,7 @@ constexpr int DEFAULT_SERVICE_PROVIDER_PROTOCOL = 0;
 std::string g_ip;
 int g_port;
 Qt::TransformationMode g_video_quality;
-bool TCPClient::CreateSocket()
+int TCPClient::CreateSocket()
 {
     if (ignore_calls) 
     {
