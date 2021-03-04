@@ -49,12 +49,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
-      <AdditionalDependencies>opencv_core451d.lib;opencv_calib3d451d.lib;opencv_features2d451d.lib;opencv_flann451d.lib;opencv_highgui451d.lib;opencv_imgcodecs451d.lib;opencv_imgproc451d.lib;opencv_ml451d.lib;opencv_objdetect451d.lib;opencv_photo451d.lib;opencv_stitching451d.lib;opencv_video451d.lib;opencv_videoio451d.lib;EncryptDecryptECBMode.lib;Qt5Concurrentd.lib;Qt5Cored.lib;Qt5DBusd.lib;Qt5Guid.lib;Qt5Widgetsd.lib;SQLServerDLL.lib;glew64.lib;glut64.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>E:\Program Files\opencv-4.5.1-vsc16\install\x64\vc16\lib;C:\Qt_vs\lib;..\x64\Debug;C:\Users\danyl\AMD APP SDK\3.0\lib\x86_64;C:\Program Files %28x86%29\OCL_SDK_Light\lib\x86_64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_core450d.lib;opencv_calib3d450d.lib;opencv_features2d450d.lib;opencv_flann450d.lib;opencv_highgui450d.lib;opencv_imgcodecs450d.lib;opencv_imgproc450d.lib;opencv_ml450d.lib;opencv_objdetect450d.lib;opencv_photo450d.lib;opencv_stitching450d.lib;opencv_video450d.lib;opencv_videoio450d.lib;EncryptDecryptECBMode.lib;Qt5Concurrentd.lib;Qt5Cored.lib;Qt5DBusd.lib;Qt5Guid.lib;Qt5Widgetsd.lib;SQLServerDLL.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\lib;C:\Qt_vs\lib;..\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\SQLAPI\include;..\EncryptDecryptECBMode;..\..\3rdPartyLibs\cryptopp820\include;E:\Program Files\opencv-4.5.1-vsc16\install\include;$(SolutionDir)SQLServerDLL;C:\Qt_vs\include;C:\Users\danyl\AMD APP SDK\3.0\include;C:\Program Files (x86)\OCL_SDK_Light\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SQLAPI\include;..\..\3rdPartyLibs\opencv\include;..\..\3rdPartyLibs\cryptopp820\include;$(SolutionDir)SQLServerDLL;C:\Qt_vs\include;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

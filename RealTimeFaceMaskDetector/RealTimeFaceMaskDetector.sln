@@ -31,15 +31,15 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinService", "WinService\WinService.vcxproj", "{B9917E76-8A58-4913-9F29-88C3A06044E9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogViewerTests", "LogViewerTests\LogViewerTests.vcxproj", "{3BE063CC-90FC-4444-8EE4-0035BC879570}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3F95BCF6-64DF-49C1-89A6-DD623D76CE61} = {3F95BCF6-64DF-49C1-89A6-DD623D76CE61}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogViewer", "LogViewer\LogViewer.vcxproj", "{EEDB5044-5C9E-4609-9AA7-40BE4FB86467}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DateTimeDLL", "DateTimeDLL\DateTimeDLL.vcxproj", "{3F95BCF6-64DF-49C1-89A6-DD623D76CE61}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DateTimeTests", "DateTimeTests\DateTimeTests.vcxproj", "{300B35A5-E44C-4A96-ACD3-39B52BE2CB2C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F95BCF6-64DF-49C1-89A6-DD623D76CE61} = {3F95BCF6-64DF-49C1-89A6-DD623D76CE61}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
