@@ -193,14 +193,14 @@ int  SocketServer::GetMessageLength()
 {
 	std::vector<char> bytes_number;
 	bytes_number.resize(DEFAULT_BUFLEN);
-	recv_mutex.lock();
 	recv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
 	return atoi(bytes_number.data());
 }
 
 bool SocketServer::ReceiveFullMessage()
 {
-	int total_bytes_count = GetMessageLength();
+	recv_mutex.lock();
+	size_t total_bytes_count = GetMessageLength();
 
 	if (total_bytes_count == 0)
 	{
