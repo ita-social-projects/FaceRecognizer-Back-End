@@ -106,7 +106,6 @@ void TCPClientUI::Save()
             int ret = msgBox.exec();
             switch (ret) {
             case QMessageBox::Ignore:
-                //do nothing
                 break;
             case QMessageBox::Close:
                 Close();
@@ -116,10 +115,10 @@ void TCPClientUI::Save()
                 return;
                 break;
             default:
-                // should never be reached
                 break;
             }
         } 
+
         Sleep(1000);
         std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
         m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
