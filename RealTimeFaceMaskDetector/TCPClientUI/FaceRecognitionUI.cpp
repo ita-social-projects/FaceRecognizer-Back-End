@@ -120,8 +120,6 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat img)
         //OBROBKA
         //hide()
     }
-
-    // exs
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()

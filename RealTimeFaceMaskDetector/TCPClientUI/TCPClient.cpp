@@ -26,7 +26,7 @@ bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
 {
     if (buffer.empty())
     {
-        return  ;
+        return false;
     }
     std::string buffer_size_s = std::to_string(buffer.size());
     int res;
