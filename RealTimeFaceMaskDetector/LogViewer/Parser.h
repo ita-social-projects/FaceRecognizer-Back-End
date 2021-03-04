@@ -4,7 +4,7 @@
 #include <vector>
 #include <fstream>
 #include <regex>
-#include "./Filter.h"
+#include "Filter.h"
 
 namespace logger {
 	class Parser {
@@ -28,6 +28,7 @@ namespace logger {
 		void find_trace();
 		void find_message();
 
+		void clear();
 		const int number_of_options{ 6 };
 
 		std::vector<LogStruct> logs;

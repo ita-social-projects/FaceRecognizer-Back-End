@@ -1,4 +1,4 @@
-#include "./Parser.h"
+#include "Parser.h"
 #include <iostream>
 
 logger::Parser::Parser(const std::string& path) {
@@ -22,7 +22,9 @@ void logger::Parser::parse
 	const std::string& till
 ) 
 {
+	clear();
 	filter = Filter{ options, from, till };
+
 	while (getline(fs, line)) {
 		const bool match = parse_option() && parse_time();
 
@@ -34,6 +36,12 @@ void logger::Parser::parse
 		find_message();
 		logs.push_back(current_log);
 	}
+}
+
+void logger::Parser::clear() {
+	logs.clear();
+	fs.clear();
+	fs.seekg(0);
 }
 
 bool logger::Parser::parse_option() {
