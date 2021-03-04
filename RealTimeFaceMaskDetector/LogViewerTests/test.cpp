@@ -5,7 +5,7 @@
 #include "../DateTimeDLL/DateTime.cpp"
 #include <list>
 
-const std::string path{ "E:\\Tolik\\c++\\Real-Time-Face-Mask-Detector\\RealTimeFaceMaskDetector\\x64\\Debug\\RTFMD_Logs\\testLog.log" };
+const std::string path{ "../../TestData/testLog.log" };
 void check_logs_by_options(size_t, std::vector<logger::LogOptions>);
 void check_logs_by_time(size_t, const std::string&);
 std::vector<logger::LogOptions> all_options{

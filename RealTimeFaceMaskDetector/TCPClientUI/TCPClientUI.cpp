@@ -94,11 +94,11 @@ void TCPClientUI::Save()
         
         try
         {
-            if (!client.CreateSocket())
+            if (client.CreateSocket())
             {
                 throw "Cannot create socket";
             }
-            if (!client.Connect())
+            if (client.Connect())
             {
                 throw "Cannot connect to server";
             }

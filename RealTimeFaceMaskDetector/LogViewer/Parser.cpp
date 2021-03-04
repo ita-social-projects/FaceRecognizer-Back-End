@@ -25,15 +25,17 @@ void logger::Parser::parse
 	filter = Filter{ options, from, till };
 
 	while (getline(fs, line)) {
-		const bool match = parse_option() && parse_time();
+		if (!line.empty()) {
+			const bool match = parse_option() && parse_time();
 
-		if (!match) {
-			continue;
+			if (!match) {
+				continue;
+			}
+
+			find_trace();
+			find_message();
+			logs.push_back(current_log);
 		}
-
-		find_trace();
-		find_message();
-		logs.push_back(current_log);
 	}
 }
 
