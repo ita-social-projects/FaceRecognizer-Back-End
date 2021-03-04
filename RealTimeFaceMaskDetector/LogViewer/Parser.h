@@ -7,11 +7,11 @@
 #include "Filter.h"
 
 namespace logger {
+	// Class for parsing a log file. It divides logs on datetime parts, message part, trace part and option part.
 	class Parser {
 	public:
 		Parser(const std::string&);
 
-		void open_file(const std::string&);
 		void parse(const std::vector<LogOptions>&, const std::string&, const std::string&);
 
 		~Parser() {
@@ -20,6 +20,8 @@ namespace logger {
 
 		const std::vector<LogStruct>& get_logs() const { return logs; }
 	private:
+		void open_file(const std::string&);
+
 		bool parse_option();
 		bool parse_time();
 

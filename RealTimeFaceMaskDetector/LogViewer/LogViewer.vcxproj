@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Filter.h" />
+    <ClInclude Include="LogViewerException.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="structures.h" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include <iostream>
+#include "LogViewerException.h"
 
 logger::Parser::Parser(const std::string& path) {
 	open_file(path);
@@ -9,9 +10,7 @@ void logger::Parser::open_file(const std::string& path) {
 	fs.open(path, std::ios_base::in);
 
 	if (!fs) {
-		// TODO: Exception
-		std::cerr << "Could not open a file";
-		return;
+		throw LogViewerException("Cannot open a file");
 	}
 }
 
@@ -83,7 +82,7 @@ void logger::Parser::find_type() {
 void logger::Parser::find_time() {
 	std::smatch matches;
 	if (!std::regex_search(line, matches, current_log.datetime.regex_pat())) {
-		// TODO: throw exception
+		throw LogViewerException("There is not datetime in the log line");
 	}
 
 	current_log.datetime = matches[0].str();
