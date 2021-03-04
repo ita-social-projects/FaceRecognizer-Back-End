@@ -67,6 +67,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             }
         }
 
+        //if faces were found, then set info into frame
         if (!faces.empty())
         {
             SetPanelText();
