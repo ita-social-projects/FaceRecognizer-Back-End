@@ -59,6 +59,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
                         std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
                         t.detach();
+                        //handling rethrowed
+                        //image wasn't send
                     }
                 }
                 m_is_all_in_mask &= face.second;
@@ -105,8 +107,7 @@ bool FaceRecognitionUI::is_ready(std::future<faceInfo> const& f)
 void FaceRecognitionUI::displayFrame()
 {
     QImage frame = mat2QImage();
-    QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), 
-                                     Qt::KeepAspectRatio, Qt::FastTransformation));
+    QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), Qt::IgnoreAspectRatio, g_video_quality));
     ui.frame->setPixmap(map);
     ui.frame->show();
 
@@ -137,7 +138,12 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat face_img)
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
-    client.SendBinaryMessage(buffer);
+    try {
+        client.SendBinaryMessage(buffer);
+    }
+    catch (...) {
+    //rethrow
+    }
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()
