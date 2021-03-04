@@ -3,6 +3,19 @@
 #include <iomanip>
 #include "DateTime.h"
 
+#define FORMAT_TWODIGIT_OUTPUT std::setw(2) << std::setfill('0')
+
+std::string DateTime::to_string() const {
+	std::stringstream result;
+	result << year << "-";
+	result << FORMAT_TWODIGIT_OUTPUT << month << "-";
+	result << FORMAT_TWODIGIT_OUTPUT << day << " ";
+	result << FORMAT_TWODIGIT_OUTPUT << hour << ":";
+	result << FORMAT_TWODIGIT_OUTPUT << minutes << ":";
+	result << FORMAT_TWODIGIT_OUTPUT << seconds;
+	return result.str();
+}
+
 void DateTime::parse() {
 	check_pattern();
 	year = std::stoi(datetime.substr(0, 4));
@@ -146,12 +159,4 @@ const std::regex& DateTime::regex_pat() const {
 
 bool DateTime::empty() const {
 	return (!year && !month && !day && !hour && !minutes && !seconds);
-}
-
-const std::string DateTime::str() const {
-	std::ostringstream string_stream;
-	string_stream << std::setfill('0') << std::setw(4) << year << "-" << std::setw(2) << month \
-		<< "-" << std::setw(2) << day << " " << std::setw(2) << hour << ":" << std::setw(2) << minutes \
-		<< ":" << std::setw(2) << seconds;
-	return string_stream.str();
 }

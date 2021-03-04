@@ -3,7 +3,7 @@
 #include "../DateTimeDLL/DateTime.h"
 
 namespace logger {
-	enum class LogOptions {
+	enum LogOptions {
 		INFO,
 		WARNING,
 		ERR,

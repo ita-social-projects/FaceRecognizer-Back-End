@@ -8,7 +8,9 @@
 #endif
 
 #include "pch.h"
+#include <iomanip>
 #include <string>
+#include <sstream>
 #include <regex>
 #include "DateTimeException.h"
 
@@ -32,8 +34,8 @@ public:
 	bool operator==(const DateTime&);
 	bool operator!=(const DateTime&);
 	bool empty() const;
-
-	const std::string str() const;
+	
+	std::string to_string() const;
 	const std::regex& regex_pat() const;
 
 	unsigned int year;
