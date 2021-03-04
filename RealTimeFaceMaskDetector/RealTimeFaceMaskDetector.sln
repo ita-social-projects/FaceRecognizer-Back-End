@@ -41,12 +41,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DateTimeTests", "DateTimeTe
 		{3F95BCF6-64DF-49C1-89A6-DD623D76CE61} = {3F95BCF6-64DF-49C1-89A6-DD623D76CE61}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogViewer", "LogViewer\LogViewer.vcxproj", "{EEDB5044-5C9E-4609-9AA7-40BE4FB86467}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DateTimeDLL", "DateTimeDLL\DateTimeDLL.vcxproj", "{3F95BCF6-64DF-49C1-89A6-DD623D76CE61}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DateTimeTests", "DateTimeTests\DateTimeTests.vcxproj", "{300B35A5-E44C-4A96-ACD3-39B52BE2CB2C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

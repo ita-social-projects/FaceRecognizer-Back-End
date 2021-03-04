@@ -148,15 +148,12 @@
     <QtMoc Include="LogViewer.h" />
     <ClCompile Include="LogViewer.cpp" />
   </ItemGroup>
-<<<<<<< HEAD
   <ItemGroup>
     <ProjectReference Include="..\DateTimeDLL\DateTimeDLL.vcxproj">
       <Project>{3f95bcf6-64df-49c1-89a6-dd623d76ce61}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
-=======
->>>>>>> 972d2b8e14b9abb286908463f9ac2f7c4ec203d6
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />
