@@ -4,8 +4,12 @@ constexpr int EMPTY_FLAGS = 0;
 constexpr int DEFAULT_SERVICE_PROVIDER_PROTOCOL = 0;
 std::string g_ip;
 int g_port;
-bool TCPClient::CreateSocket()
+int TCPClient::CreateSocket()
 {
+    if (ignore_calls) 
+    {
+        return 0;
+    }
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
     m_soket_info.sin_family = AF_INET;
     m_soket_info.sin_addr.s_addr = inet_addr(g_ip.c_str());
@@ -13,33 +17,53 @@ bool TCPClient::CreateSocket()
     m_socket = socket(AF_INET, SOCK_STREAM, EMPTY_FLAGS);
     if (m_socket == INVALID_SOCKET)
     {
-        return false;
+        return INVALID_SOCKET;
     }
-    return true;
+    return 0;
 }
-bool TCPClient::Connect()
+int TCPClient::Connect()
 {
-    return connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) != SOCKET_ERROR;
+    if (ignore_calls)
+    {
+        return 0;
+    }
+    if (connect(m_socket, (sockaddr*)&m_soket_info, sizeof(m_soket_info)) == SOCKET_ERROR) {
+        return WSAGetLastError();
+    }
+    return 0;
 }
-bool TCPClient::SendBinaryMessage(std::vector<char>& buffer)
+int TCPClient::SendBinaryMessage(std::vector<char>& buffer)
 {
+    if (ignore_calls)
+    {
+        return 0;
+    }
     if (buffer.empty())
     {
-        return false;
+        return -1;
     }
     std::string buffer_size_s = std::to_string(buffer.size());
-    int res;
+
     {
         std::lock_guard<std::mutex> lock(send_mutex);
         // Sending count of bytes to the server.
-        res = send(m_socket, buffer_size_s.c_str(), buffer_size_s.length(), EMPTY_FLAGS);
+        if (send(m_socket, buffer_size_s.c_str(), buffer_size_s.length(), EMPTY_FLAGS) == SOCKET_ERROR) {
+            return WSAGetLastError();
+        }
         // Sending image bytes to the server.
-        res += send(m_socket, buffer.data(), buffer.size(), EMPTY_FLAGS);
+        if (send(m_socket, buffer.data(), buffer.size(), EMPTY_FLAGS) == SOCKET_ERROR) {
+            return WSAGetLastError();
+        }
     }
-    return (bool)res;
+    return 0;
 }
-bool TCPClient::CloseSocket()
+int TCPClient::CloseSocket()
 {
+    if (ignore_calls)
+    {
+        return 0;
+    }
+
     if (closesocket(m_socket) != SOCKET_ERROR)
     {
         WSACleanup();
@@ -49,4 +73,8 @@ bool TCPClient::CloseSocket()
     {
         return false;
     }
+}
+
+void TCPClient::Ignore() {
+    ignore_calls = true;
 }
