@@ -1,28 +1,20 @@
 #pragma once
-#include <utility>
-#include <filesystem>
-#include <string>
-#include <vector>
-#include <fstream>
 
-#ifdef SQLSERVER_EXPORTS
-#define INIPARSER_API __declspec(dllexport)
-#else
-#define INIPARSER_API __declspec(dllimport)
-#endif
+#include "ConfigReader.h"
 
-namespace fs = std::filesystem;
-
-class INIPARSER_API IniParser
+class CONFIGREADER_API IniParser: public ConfigReader
 {
 public:
 	IniParser(std::string ini);
-	/*Parse records from ini file*/
-	void Parse();
+	
+	/*Get the name of the config file*/
+	void ReadFile(std::string filename);
+
 	/*Get value of the parameter with the given section and parameter name*/
 	std::string GetParam(const std::string& section, const std::string& param);
 private:
-	std::vector<std::pair<std::string,std::vector<std::pair<std::string, std::string>>>> contents;
-	fs::directory_entry inipath;
-	std::vector<std::string> sections;
+	/*Parse records from ini file*/
+	void Parse();
+	std::vector<Section> contents;
+	std::string inipath;
 };

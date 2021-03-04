@@ -66,5 +66,5 @@ private:
 bool RunServerItself()
 {
 	SocketServer server;
-	return ServiceStarter::CreateServer(server, true);
+	return ServiceStarter::CreateServer( server, true);
 }

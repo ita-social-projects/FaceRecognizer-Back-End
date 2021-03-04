@@ -170,6 +170,8 @@
     <ClInclude Include="SQLConnection.h" />
     <ClInclude Include="SQLException.h" />
     <ClInclude Include="SQLServer.h" />
+    <ClInclude Include="ConfigReader.h" />
+    <ClInclude Include="XMLParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
@@ -182,6 +184,7 @@
     </ClCompile>
     <ClCompile Include="SQLException.cpp" />
     <ClCompile Include="SQLServer.cpp" />
+    <ClCompile Include="XMLParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logger\Logger.vcxproj">

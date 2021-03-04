@@ -13,6 +13,12 @@
 
 using faceInfo = std::vector<std::pair<cv::Rect, bool>>;
 
+struct HZ
+{
+	cv::Mat m_image;
+	faceInfo m_faces;
+};
+
 class ImageData
 {
 	cv::Mat m_image;

@@ -1,4 +1,3 @@
-
 #pragma once
 #include <ws2tcpip.h>
 #include "Logger.h"
@@ -9,6 +8,8 @@
 #pragma comment (lib, "Ws2_32.lib")
 
 const int  DEFAULT_BUFLEN = 512;
+
+enum class ServerStatus { SocketError = -2, NoConnection = -1, Error = 0, Listening, Messaging, ConnectionClosed, ServerIsDown, };
 
 class SocketServer
 {
@@ -27,29 +28,33 @@ private:
 
 	bool BindListeningSocket();
 	bool AcceptConnection();
-	void TryAcceptAndStartMessaging(bool& ret_value);
+	void TryAcceptAndStartMessaging(ServerStatus& ser_status);
 	void SaveAndSendData();
 	bool UpdateDataBase();
-	void CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server);
+	void CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_server);
 
-	bool ReceiveMessage(bool& ret_value);
-	void StartMessagingWintClient(bool& ret_value);
-	bool ReceiveFullMessage();
-	void TryReceiveAndSendMessage(bool& is_client_connected);
+	void ReceiveMessage(ServerStatus& ser_status);
+	void StartMessagingWintClient(ServerStatus& ser_status);
+	bool ReceiveFullMessage(ServerStatus& ser_status);
+	void TryReceiveAndSendMessage(ServerStatus& ser_status);
+
+	bool ServerStatusCheck(ServerStatus& ser_status);
 
 	/*return path to TCPServer.exe file*/
 	std::filesystem::path GetCurrentPath();
-	
+
 	/*Creates directory for received images*/
 	bool SpecifyPathForPhotos();
 
 	/*Creates and opens .png file with specific filename*/
 	bool OpenParticularFile(std::ofstream& stream);
 
-	/*This function will take current date & time and 
+	/*This function will take current date & time and
 	initialise <file_specificator> with converted date*/
 	void CreateFileNameSpecificator(std::string& file_specificator);
 	void ReplaceForbiddenSymbol(char& symbol);
+	/*Implement mock accept*/
+	void MakeAccept();
 
 	WSADATA wsaData;
 	int m_func_result;
@@ -61,9 +66,9 @@ private:
 	std::mutex recv_mutex;
 	std::mutex sql_mutex;
 
-	std::shared_ptr<SQLConnection>sql_server;
+	std::unique_ptr<SQLConnection>sql_server;
 
-	/*Photo that will be sent to database. 
+	/*Photo that will be sent to database.
 	It's fields will be rewritten with each
 	received photo from client*/
 	Photo m_photo_to_send;
@@ -75,4 +80,3 @@ private:
 	std::string m_ip;
 	std::string m_port;
 };
-

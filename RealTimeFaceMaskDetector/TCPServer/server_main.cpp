@@ -1,7 +1,9 @@
 #include <iostream>
 #include "ServiceStarter.h"
 const short int TABLE_ENTRY_SIZE = 2;
-const short int SERVICE_ARGUMENT = 1;
+const short int SERVICE_NAME_ARGUMENT = 1;
+const short int WORKING_DIRECTORY = 2;
+std::string LOG_FILENAME = R"(ServerLogsConfig.conf)";
 
 bool ChooseServerBootOptionAndStart(const unsigned argc, const wchar_t* const argv[]);
 bool RunServerUnderService(const wchar_t* const argv[]);
@@ -11,8 +13,6 @@ void CreateServiceTableEntry(ServiceStarter& service, SERVICE_TABLE_ENTRY(*entry
 
 int wmain(unsigned argc,  wchar_t* argv[])
 {
-	LOG_MSG << "wmain: start";
-	
 	bool result = ChooseServerBootOptionAndStart(argc, argv);
 
 	LOG_MSG << "wmain: finish";
@@ -22,13 +22,21 @@ int wmain(unsigned argc,  wchar_t* argv[])
 bool ChooseServerBootOptionAndStart(const unsigned argc, const wchar_t* const argv[])
 {
 	bool ret_val = false;
-	if(argc > 1)
+	//Logger::SetConfiguration(LOG_FILENAME);
+	if(argc > 2)
 	{
+		if(!SetCurrentDirectory(argv[WORKING_DIRECTORY]))
+	{
+			LOG_WARNING << "SetCurrentDirectory: ERROR: " << GetLastError();
+			return false;
+		}
+		Logger::SetConfiguration(LOG_FILENAME);
 		LOG_MSG << "ChooseServerBootOptionAndStart: Starting server as service...";
 		ret_val = RunServerUnderService(argv);
 	}
 	else
 	{
+		Logger::SetConfiguration(LOG_FILENAME);
 		LOG_MSG << "ChooseServerBootOptionAndStart: Starting server as console app...";
 		ret_val = RunServerItself();
 	}
@@ -39,7 +47,7 @@ bool RunServerUnderService(const wchar_t* const argv[])
 {
 	ServiceStarter service;
 
-	if (!service.SetServiceName(argv[SERVICE_ARGUMENT]))
+	if (!service.SetServiceName(argv[SERVICE_NAME_ARGUMENT]))
 	{
 		LOG_ERROR << "RunServerUnderService: Invalid service name";
 		return false;

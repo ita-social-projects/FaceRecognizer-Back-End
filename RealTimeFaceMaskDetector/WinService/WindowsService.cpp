@@ -53,7 +53,7 @@ SC_HANDLE Service::OpenControlManager()
 
 SC_HANDLE Service::GetServiceFromSCM(SC_HANDLE scm_handle)
 {
-	if(service_handle == nullptr)
+	if (service_handle == nullptr)
 	{
 		service_handle = OpenService(
 			scm_handle,											// SCM Handle
@@ -74,9 +74,18 @@ void Service::CloseHandleAndNull(SC_HANDLE handle)
 	CloseServiceHandle(handle);
 	handle = nullptr;
 }
+std::wstring Service::GetPathToModule()
+{
+	wchar_t path[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, path);
+	return std::wstring(path);
+}
+
 bool Service::CreateServiceInSCM(SC_HANDLE scm_handle)
 {
 	bool is_created;
+
+	std::wstring EXE_PATH = GetPathToModule()+L"\\TCPServer.exe"+ L" " + s_service_name + L" " + GetPathToModule();
 
 	service_handle = CreateService(
 		scm_handle,										// SCM Handle
@@ -86,11 +95,11 @@ bool Service::CreateServiceInSCM(SC_HANDLE scm_handle)
 		SERVICE_WIN32_OWN_PROCESS,						// Service Type
 		SERVICE_DEMAND_START,							// Service Start Type
 		SERVICE_ERROR_NORMAL,							// Service Error Code
-		SERVER_EXE_PATH,								// Path to .exe
+		EXE_PATH.c_str(),						// Path to .exe
 		nullptr,									    // Load ordering group
 		nullptr,                                        // Tag ID
 		nullptr,	                                    // Dependencies
-		nullptr,						                // Service start name (account)
+		nullptr,										// Service start name (account)
 		nullptr);                                       // Password
 
 	if (!service_handle)
@@ -105,7 +114,7 @@ bool Service::CreateServiceInSCM(SC_HANDLE scm_handle)
 		CloseHandleAndNull(service_handle);
 	}
 	CloseHandleAndNull(scm_handle);
-	
+
 	return is_created;
 }
 
@@ -114,7 +123,7 @@ bool Service::Install()
 {
 	LOG_MSG << "Install: begin";
 
-	if((scm_handle = OpenControlManager()) == nullptr)
+	if ((scm_handle = OpenControlManager()) == nullptr)
 	{
 		return false;
 	}
@@ -130,11 +139,11 @@ bool Service::Start()
 
 	bool is_opened = true, is_started = true;
 
-	if((scm_handle = OpenControlManager()) == nullptr)
+	if ((scm_handle = OpenControlManager()) == nullptr)
 	{
 		return false;
 	}
-	if((service_handle = GetServiceFromSCM(scm_handle)) == nullptr)
+	if ((service_handle = GetServiceFromSCM(scm_handle)) == nullptr)
 	{
 		is_opened = false;
 	}
@@ -225,10 +234,12 @@ bool Service::Uninstall()
 
 void Service::TryStartService(SC_HANDLE service_handle, bool& is_started)
 {
-	const wchar_t* args[] = { s_service_name.c_str() };
-	if (!StartService(service_handle, 1, args))
+
+	auto path_to_current_module = GetPathToModule()+L"\\";
+	const wchar_t* args[] = { s_service_name.c_str(), path_to_current_module.c_str() };
+	if (!StartService(service_handle, 2, args))
 	{
-		LOG_ERROR << "TryStartService: StartService: ERROR " << GetLastError() << std::endl;
+		LOG_ERROR << "TryStartService: StartService: ERROR " << GetLastError();
 		is_started = false;
 	}
 	else
@@ -268,4 +279,3 @@ void Service::TryDeleteService(SC_HANDLE handle_service, bool& is_deleted)
 		LOG_MSG << "Uninstall: succeeded :)";
 	}
 }
-
