@@ -7,9 +7,10 @@ bool SocketServer::InitSocketServer()
 	LOG_MSG << "InitSocketServer: begin";
 	ConnectToSQL();
 
-	IniParser ini_parser(CONFIG_FILE);
-	m_ip = ini_parser.GetParam("Client", "ip");
-	m_port = ini_parser.GetParam("Client", "port");
+	std::unique_ptr<ConfigReader>parser = std::make_unique<XMLParser>(CONFIG_FILE);
+
+	m_ip = parser->GetParam("Client", "ip");
+	m_port = parser->GetParam("Client", "port");
 	m_func_result = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (m_func_result != 0)
 	{
@@ -67,14 +68,59 @@ bool SocketServer::BindListeningSocket()
 	return true;
 }
 
+bool SocketServer::StartListening(bool& ret_value)
+{
+	ret_value = BindListeningSocket();
+	if (!ret_value)
+	{
+		return ret_value;
+	}
+
+	ServerStatus ser_status = ServerStatus::Listening;
+
+	freeaddrinfo(m_host_info);
+	LOG_MSG << "StartListening: Server work begin...";
+	while (server_is_up)
+	{
+		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
+		{
+			TryAcceptAndStartMessaging(ser_status);
+		}
+		else
+		{
+			LOG_ERROR << "StartListening: listen: failed to listen socket";
+			closesocket(m_listen_socket);//ask to delete
+			WSACleanup();//ask to delete
+			ser_status = ServerStatus::SocketError;
+			break;
+		}
+	}
+	LOG_MSG << "StartListening: Server work end!";
+	ret_value = ServerStatusCheck(ser_status);
+	return ret_value;
+}
+
+void SocketServer::TryAcceptAndStartMessaging(ServerStatus& ser_status)
+{
+	if (AcceptConnection())
+	{
+		std::cout << "Begin..." << std::endl;
+		StartMessagingWintClient(ser_status);
+	}
+	else
+	{
+		std::cout << "Stopped..." << std::endl;
+		ser_status = ServerStatus::NoConnection;
+	}
+}
+
 bool SocketServer::AcceptConnection()
 {
 	std::cout << "Waiting connection" << std::endl;
-	//Here make async wait
 	bool ready = false, stop = false;
 	SOCKET mock_socket = INVALID_SOCKET;
-	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this,&ready] 
-		{ 
+	std::future<SOCKET> cl_socket = std::async(std::launch::async, [this, &ready]
+		{
 			SOCKET result;
 
 			result = accept(m_listen_socket, NULL, NULL);
@@ -82,35 +128,23 @@ bool SocketServer::AcceptConnection()
 			ready = true;
 			return result;
 		});
-	
-	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
 
+	std::cout << "Waiting...     Press \'ESC\' to stop the Server\n" << std::flush;
 	bool key = { false };
-	bool old_key = { false };
 	while (!ready)
 	{
-		//wait
-		key = GetAsyncKeyState(VK_ESCAPE) & 0x01;
-		if (key && !old_key)
+		key = GetAsyncKeyState(VK_ESCAPE);
+		if (key)
 		{
 			server_is_up = false;
-
-			sockaddr_in clientService;
-			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr(m_ip.c_str());
-			clientService.sin_port = htons(std::stoi(m_port));
-			
-			mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype, m_host_info->ai_protocol);
-			connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+			MakeAccept();
 			stop = true;
 		}
-
-		old_key= key;
 	}
 	m_client_socket = cl_socket.get();
-	
+
 	if (m_client_socket == INVALID_SOCKET)
-	{	
+	{
 		std::cout << "INVALID_SOCKET" << std::endl;
 		closesocket(m_listen_socket);
 		WSACleanup();
@@ -120,7 +154,6 @@ bool SocketServer::AcceptConnection()
 	if (stop)
 	{
 		closesocket(m_listen_socket);
-		closesocket(mock_socket);
 		WSACleanup();
 		sql_server->Disconnect();
 		return false;
@@ -129,82 +162,81 @@ bool SocketServer::AcceptConnection()
 	return true;
 }
 
-void SocketServer::TryAcceptAndStartMessaging(bool& ret_value)
+void SocketServer::MakeAccept()
 {
-	if (AcceptConnection())
-	{	
-		std::cout << "Begin..." << std::endl;
-		StartMessagingWintClient(ret_value);	
-	}
-	else
-	{
-		std::cout << "Stopped..." << std::endl;
-		ret_value = false;
-	}
+	SOCKET mock_socket = INVALID_SOCKET;
+	sockaddr_in clientService;
+	clientService.sin_family = AF_INET;
+	clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
+	clientService.sin_port = htons(std::stoi(m_port));
+
+	mock_socket = socket(m_host_info->ai_family, m_host_info->ai_socktype,
+		m_host_info->ai_protocol);
+	connect(mock_socket, (SOCKADDR*)&clientService, sizeof(clientService));
+	closesocket(mock_socket);
 }
 
-void SocketServer::StartMessagingWintClient(bool& ret_value)
+void SocketServer::StartMessagingWintClient(ServerStatus& ser_status)
 {
-	std::thread th = std::thread([&]() 
+	std::thread th = std::thread([&]()
 		{
-			ReceiveMessage(ret_value); 
+			ReceiveMessage(ser_status);
 		});
-	if (th.joinable()) 
+	if (th.joinable())
 	{
 		th.join();
 	}
 	std::cout << "Stopped connection" << std::endl;
 }
 
-bool SocketServer::StartListening(bool& ret_value)
+void SocketServer::ReceiveMessage(ServerStatus& ser_status)
 {
-	ret_value = BindListeningSocket();
-	if (!ret_value)
-		return ret_value;
+	LOG_MSG << "ReceiveMessage: begin: work with client";
+	ser_status = ServerStatus::Messaging;
 
-	freeaddrinfo(m_host_info);
-	LOG_MSG << "StartListening: Server work begin...";
-	while(server_is_up)
+	while (ser_status == ServerStatus::Messaging)
 	{
-		if (listen(m_listen_socket, SOMAXCONN) != SOCKET_ERROR)
-		{	
-			TryAcceptAndStartMessaging(ret_value);
-			if (!ret_value)
-			{
-				std::cout << "Exiting..." << std::endl;
-				break;
-			}
-		}
-		else 
+		m_buffer.clear();
+		try
 		{
-			LOG_ERROR << "StartListening: listen: failed to listen socket";
-			closesocket(m_listen_socket);//ask to delete
-			WSACleanup();//ask to delete
-			ret_value = false;
+			TryReceiveAndSendMessage(ser_status);
+		}
+		catch (const std::string& msg)
+		{
+			LOG_ERROR << msg;
+			ser_status = ServerStatus::Error;
 			break;
 		}
 	}
-	LOG_MSG << "StartListening: Server work end!";
-	return ret_value;
+	LOG_MSG << "ReceiveMessage: end: work with client";
+}
+
+void SocketServer::TryReceiveAndSendMessage(ServerStatus& ser_status)
+{
+	if (ReceiveFullMessage(ser_status))
+	{
+		SaveAndSendData();
+	}
 }
 
 int  SocketServer::GetMessageLength()
 {
 	std::vector<char> bytes_number;
 	bytes_number.resize(DEFAULT_BUFLEN);
-	recv_mutex.lock();
 	recv(m_client_socket, &bytes_number[0], bytes_number.size(), 0);
 	return atoi(bytes_number.data());
 }
 
-bool SocketServer::ReceiveFullMessage()
+bool SocketServer::ReceiveFullMessage(ServerStatus& ser_status)
 {
-	int total_bytes_count = GetMessageLength();
+	recv_mutex.lock();
+	size_t total_bytes_count = GetMessageLength();
 
 	if (total_bytes_count == 0)
 	{
 		LOG_WARNING << "ReceiveFullMessage: GetMessageLength: incorrect message length";
 		recv_mutex.unlock();
+		ser_status = ServerStatus::Listening;
 		return false;
 	}
 
@@ -213,11 +245,12 @@ bool SocketServer::ReceiveFullMessage()
 	recv_mutex.unlock();
 	if (m_func_result > 0) // correctrly receided message
 	{
-		LOG_MSG << "Total bytes: "<< total_bytes_count <<" Received: " << m_func_result;
+		LOG_MSG << "Total bytes: " << total_bytes_count << " Received: " << m_func_result;
 	}
 	else if (m_func_result == 0) // client closed connection
 	{
 		LOG_MSG << "Connection closing...";
+		ser_status = ServerStatus::ConnectionClosed;
 		return false;
 	}
 	else // error when receiving message. <Check possible errors in documentation for 'recv' function>
@@ -227,44 +260,6 @@ bool SocketServer::ReceiveFullMessage()
 		throw std::string("Receive ERROR");
 	}
 	return true;
-}
-
-void SocketServer::TryReceiveAndSendMessage(bool& client_connected)
-{
-	if (ReceiveFullMessage())
-	{
-		SaveAndSendData();
-	}
-	else
-	{
-		client_connected = false;
-	}
-}
-
-bool SocketServer::ReceiveMessage(bool& ret_value)
-{	
-	LOG_MSG << "ReceiveMessage: begin: work with client";
-	ret_value = true;
-	bool client_connected = true;
-
-	while (client_connected)
-	{
-		
-		m_buffer.clear();
-		try
-		{
-			TryReceiveAndSendMessage(client_connected);
-			
-		}
-		catch(const std::string& msg)
-		{
-			LOG_ERROR << msg;
-			ret_value = false;
-			break;
-		}
-	}
-	LOG_MSG << "ReceiveMessage: end: work with client";
-	return ret_value;
 }
 
 void SocketServer::SaveAndSendData()
@@ -303,7 +298,7 @@ bool SocketServer::UpdateDataBase()
 	return true;
 }
 
-void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_server)
+void SocketServer::CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_server)
 {
 	if (!sql_server->CheckTableExists())
 	{
@@ -314,12 +309,10 @@ void SocketServer::CreateTableIfNeeded(std::shared_ptr<SQLConnection>& sql_serve
 
 bool SocketServer::ShutdownServer()
 {
-	LOG_MSG << "ShutdownServer: begin";
 	server_is_up = false;
 	m_func_result = shutdown(m_client_socket, SD_SEND);
 	if (m_func_result == SOCKET_ERROR)
 	{
-		LOG_ERROR << "ShutdownServer: shutdown: ERROR " << GetLastError();
 		closesocket(m_client_socket);
 		WSACleanup();
 		return false;
@@ -336,7 +329,6 @@ bool SocketServer::ShutdownServer()
 	{
 		std::cout << e.what() << std::endl;
 	}
-	LOG_MSG << "ShutdownServer: end";
 	return true;
 }
 
@@ -344,7 +336,7 @@ SocketServer::~SocketServer()
 {
 	ShutdownServer();
 }
-/*Functions for making directory for photos, 
+/*Functions for making directory for photos,
 and creating particular name for each photo,
 containing date and time
 */
@@ -385,12 +377,21 @@ bool SocketServer::OpenParticularFile(std::ofstream& stream)
 	std::string photo_path{ m_photo_to_send.path +
 							m_photo_to_send.name + "." +
 							m_photo_to_send.extension };
-	
-	if (std::filesystem::exists(photo_path))
+
+	int same_filename_counter = 0;
+	while (std::filesystem::exists(photo_path))
 	{
-		LOG_WARNING << "OpenParticularFile: photo_path doesn't exist";
-		return false;
+		++same_filename_counter;
+		photo_path = {		m_photo_to_send.path +
+							m_photo_to_send.name + "(" + (char)same_filename_counter + ")." +
+							m_photo_to_send.extension };
 	}
+
+	if (same_filename_counter != 0)
+	{
+		m_photo_to_send.name += (char)same_filename_counter;
+	}
+
 	stream.open(photo_path, std::ios::binary);
 	if (!stream.is_open())
 	{
@@ -424,13 +425,25 @@ void SocketServer::ReplaceForbiddenSymbol(char& symbol)
 
 void SocketServer::ConnectToSQL()
 {
-	sql_server = std::make_shared<SQLServer>();
+	sql_server = std::make_unique<SQLServer>();
 	try
 	{
 		LOG_MSG << "ConnectToSQL: begin";
 		sql_server->GetIniParams(CONFIG_FILE);
+		//sql_server->Connect();
+		/*This code is needed when we use a trial version of SQLAPI*/
+		std::thread mythread = std::thread([this] { sql_server->Connect(); });
+		HWND hWnd = 0;
+		while (hWnd==0)
+		{
+			hWnd = FindWindow(NULL, L"SQLAPI++ Registration Reminder");
+			if (hWnd>0)
+			{
+				PostMessage(hWnd, WM_CLOSE, 0, 0);
+			}
+		}
+		mythread.join();
 
-		sql_server->Connect();
 		LOG_MSG << "ConnectToSQL: connected!";
 		CreateTableIfNeeded(sql_server);
 		LOG_MSG << "ConnectToSQL: end";
@@ -439,4 +452,9 @@ void SocketServer::ConnectToSQL()
 	{
 		LOG_ERROR << e.what();
 	}
+}
+
+bool SocketServer::ServerStatusCheck(ServerStatus& ser_status)
+{
+	return ((int)ser_status >= 1);
 }

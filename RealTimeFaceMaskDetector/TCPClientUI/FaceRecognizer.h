@@ -10,17 +10,17 @@
 #include <conio.h>
 #include <thread>
 
-#include "ImageData.h"
+using faceInfo = std::vector<std::pair<cv::Rect, bool>>;
+
+#define RED cv::Scalar(0, 0, 255)
+#define GREEN cv::Scalar(0, 255, 0)
 
 class FaceRecognizer
 {
 public:
-	FaceRecognizer(int camera = 0);
+	FaceRecognizer();
 
-	void runAnalysis(ImageData& img_data);
-
-	static void FaceRecognizer::SetPanelTextInMask(cv::Mat& image);
-	static void FaceRecognizer::SetPanelTextWithoutMask(cv::Mat& image);
+	faceInfo runAnalysis(cv::Mat color_img);
 
 private:
 	cv::CascadeClassifier m_face_cascade;
@@ -28,6 +28,4 @@ private:
 	cv::CascadeClassifier m_nose_cascade;
 
 	cv::VideoCapture m_camera;
-
-	ImageData m_data; // ця штука локальна, вона ніяк не впливає на ImageData в FaceRecognitionUI
 };
