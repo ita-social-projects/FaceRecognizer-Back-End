@@ -1,66 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="LogViewer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Filter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="Filter.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="LogViewer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LogSearcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Filter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="structures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LogViewerException.h">
-      <Filter>Header Files</Filter>
-    <ClInclude Include="utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="Filter.h" />
+    <ClInclude Include="LogViewerException.h" />
+    <ClInclude Include="LogSearcher.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="structures.h" />
+    <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-      <ParseFiles>true</ParseFiles>
-    </Filter>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-      <ParseFiles>true</ParseFiles>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{58a912f8-17fb-4f11-9461-67e873875892}</UniqueIdentifier>
-    </Filter>
+    <QtMoc Include="LogViewer.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="LogViewer.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
+    <QtRcc Include="LogViewer.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="LogViewer.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
-    <QtUic Include="LogViewer.ui">
-      <Filter>Resource Files</Filter>
-    </QtUic>
+    <QtUic Include="LogViewer.ui" />
   </ItemGroup>
 </Project>

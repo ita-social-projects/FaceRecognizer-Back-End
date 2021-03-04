@@ -197,7 +197,7 @@ TEST(DateTimeTests, GetString) {
 	const std::string datetime_str{ "2021-01-03 01:03:05" };
 
 	auto datetime = DateTime(datetime_str);
-	const std::string dt = datetime.str();
+	const std::string dt = datetime.to_string();
 
-	EXPECT_TRUE(datetime.str() == datetime_str);
+	EXPECT_TRUE(datetime.to_string() == datetime_str);
 }

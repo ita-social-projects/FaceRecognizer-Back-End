@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "../LogViewer/Parser.cpp"
-#include "../LogViewer/structures.cpp"
+#include "../LogViewer/structures.h"
 #include "../LogViewer/Filter.cpp"
 #include "../DateTimeDLL/DateTime.cpp"
 #include <list>
