@@ -128,8 +128,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/FORCE:MULTIPLE %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SQLServerDLL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);;..\x64\Debug;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,9 +161,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Logger\Logger.vcxproj">
       <Project>{ade47c16-1e41-4168-ad1e-fdf9daeec556}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\SQLServerDLL\SQLServerDLL.vcxproj">
-      <Project>{fdc531f1-1a32-43f3-b452-487a29aab5b0}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

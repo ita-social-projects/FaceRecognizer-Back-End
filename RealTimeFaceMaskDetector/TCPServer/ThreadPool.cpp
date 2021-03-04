@@ -1,5 +1,5 @@
 #include "ThreadPool.h"
-
+/*DO NOT DELETE. CONSEQUENCES IS UNKNOWN*/
 void ThreadPool::Start(std::size_t numThreads)
 {
     for (auto i = 0u; i < numThreads; ++i)

@@ -26,9 +26,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LoggerDLL", "Logger\Logger.vcxproj", "{ADE47C16-1E41-4168-AD1E-FDF9DAEEC556}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinService", "WinService\WinService.vcxproj", "{B9917E76-8A58-4913-9F29-88C3A06044E9}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5AEC37D4-CF31-4A4C-8F6B-D29F49A203C1} = {5AEC37D4-CF31-4A4C-8F6B-D29F49A203C1}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

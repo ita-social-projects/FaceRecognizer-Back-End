@@ -189,7 +189,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Logger\Logger.vcxproj">
       <Project>{ade47c16-1e41-4168-ad1e-fdf9daeec556}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
