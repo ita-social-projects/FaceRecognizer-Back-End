@@ -12,6 +12,12 @@ namespace logger {
 	public:
 		Parser(const std::string&);
 
+		/* 
+		* Method for parsing a file with passed paramaters
+		* options - it's a sequence of options which should be added to the result
+		* from - it's a time from which log shoud be added to the result. If there is no need in this parameter - pass "0000-00-00 00:00:00"
+		* till - it's a time till log should be added to the result. If there is no need in this parameter - pass "0000-00-00 00:00:00"
+		*/
 		void parse(const std::vector<LogOptions>&, const std::string&, const std::string&);
 
 		~Parser() {

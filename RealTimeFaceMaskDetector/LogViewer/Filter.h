@@ -4,6 +4,7 @@
 #include "structures.h"
 
 namespace logger {
+	// Class which provides methods to filter logs
 	class Filter {
 	public:
 		Filter(const std::vector<LogOptions>&, const std::string&, const std::string&);
