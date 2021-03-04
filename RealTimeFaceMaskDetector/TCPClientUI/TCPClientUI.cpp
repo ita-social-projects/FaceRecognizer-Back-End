@@ -10,12 +10,15 @@
 #define CONFIG_FILE "config.xml"
 
 /* These are global variables.
-   g_ip stores server ip & g_port stores server port.
+   g_ip stores server ip & g_port stores server port
+   g_video_quality stores mode for quality.
    They are defined in TCPClient.cpp file. */
 extern std::string g_ip;
 extern int g_port;
+extern Qt::TransformationMode g_video_quality;
 
-TCPClientUI::TCPClientUI(QWidget *parent)
+
+TCPClientUI::TCPClientUI(QWidget* parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
@@ -44,12 +47,22 @@ TCPClientUI::TCPClientUI(QWidget *parent)
 
     auto std_string_ip = parser->GetParam("Client", "ip");
     auto std_string_port = parser->GetParam("Client", "port");
+    // if std_string_ip == "No such param"
 
     const QString default_ip = QString::fromStdString(std_string_ip);
     const QString default_port = QString::fromStdString(std_string_port);
 
     ui.IP->setText(default_ip);
     ui.Port->setText(default_port);
+
+    if (ui.radioButton->isChecked())
+    {
+        g_video_quality = Qt::TransformationMode::FastTransformation;
+    }
+    if (ui.radioButton_2->isChecked())
+    {
+        g_video_quality = Qt::TransformationMode::SmoothTransformation;
+    }
 }
 
 void TCPClientUI::Save()
