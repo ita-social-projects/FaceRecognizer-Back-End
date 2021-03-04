@@ -1,13 +1,6 @@
 #pragma once
 #include "FaceRecognitionUI.h"
-#include <QtCore/QDebug>
-#include <QtGui/QPainter>
-#include <thread>
-#include "TimeCounting.h"
-#include <future>
-#include <utility>
 
-#define IDCAM 0
 
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
@@ -19,8 +12,6 @@ FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
 void FaceRecognitionUI::onExitButtonClicked()
 {
     m_exit_button_clicked = true;
-    run_analizer = false;
-    //thrd.join();
     close();
 };
 
@@ -30,68 +21,104 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     std::chrono::high_resolution_clock::time_point send_time, new_send_time;
     send_time = get_current_time_fenced();
 
-    //thrd  = std::thread(&FaceRecognitionUI::recognize, this, IDCAM);
+    cv::VideoCapture camera;
+    camera.open(IDCAM);
 
-    auto shared_face_recognizer = std::make_shared<FaceRecognizer>(IDCAM);
-    auto& hz = shared_face_recognizer->runAnalysis();
-    cv::Mat image;
+    auto shared_face_recognizer = std::make_shared<FaceRecognizer>();
+
+    std::future<faceInfo> future_faces;
     faceInfo faces;
+    
     while (!m_exit_button_clicked)
     {
-        image = hz.m_image;
-        faces = hz.m_faces;
-        auto future = std::async(std::launch::async, &FaceRecognizer::runAnalysis,
-            shared_face_recognizer);
+        camera >> m_image;
 
-        bool is_all_in_mask = true;
-        for (auto& face : faces) 
+        if (m_async_is_permitted)
         {
-            if (!face.second)
+            future_faces = std::async(std::launch::async, &FaceRecognizer::runAnalysis,
+                shared_face_recognizer, m_image);
+            m_async_is_permitted = false;
+        }
+
+        if (is_ready(future_faces))
+        {
+            m_async_is_permitted = true;
+            faces = future_faces.get();
+
+            m_is_all_in_mask = true;
+            for (auto& face : faces)
             {
-                cv::Mat face_img(image, face.first);
-                new_send_time = get_current_time_fenced();
-                if (to_us(new_send_time - send_time) >= 5)
+                //if current face without mask - trying to send on server
+                if (!face.second)
                 {
-                    send_time = new_send_time;
-                    //sendImage(client, face_img.clone());
-                    std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
-                    t.detach();
+                    cv::Mat face_img(m_image, face.first);
+                    new_send_time = get_current_time_fenced();
+                    if (to_us(new_send_time - send_time) >= TIME_PERIOD)
+                    {
+                        send_time = new_send_time;
+
+                        std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
+                        t.detach();
+                    }
                 }
-                
-                is_all_in_mask = is_all_in_mask && face.second; 
-                auto rect_color = face.second == true ? cv::Scalar(0, 255, 0) : cv::Scalar(0, 0, 255);
-                cv::rectangle(image,face.first,rect_color, 3, 8, 0);
+                m_is_all_in_mask &= face.second;
+                auto rect_color = face.second == true ? GREEN : RED;
+                cv::rectangle(m_image, face.first, rect_color, 3, 8, 0);
             }
         }
-        if (!(faces.empty())) 
+
+        if (!faces.empty())
         {
-            if (is_all_in_mask)
-            {
-                FaceRecognizer::SetPanelTextInMask(image);
-            }
-            else
-            {
-                FaceRecognizer::SetPanelTextWithoutMask(image);
-            }
+            SetPanelText();
         }
 
-        QImage frame = mat2QImage(image);
-        QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), Qt::KeepAspectRatio, Qt::FastTransformation));
-        ui.frame->setPixmap(map);
-        ui.frame->show();
-
-        cv::waitKey(30);
-        hz = future.get();
+        displayFrame();
     }
 }
 
-QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
+
+void FaceRecognitionUI::SetPanelText()
+{
+    cv::Scalar color;
+    std::string message;
+    if (m_is_all_in_mask)
+    {
+        color = GREEN;
+        message = "Thanks for wearing mask :)";
+    }
+    else
+    {
+        color = RED;
+        message = "Put on a mask please!";
+    }
+    rectangle(m_image, cv::Point(70, 0), cv::Point(600, 50), color, cv::FILLED, 8, 0);
+    putText(m_image, message, cv::Point(170, 30),
+        cv::FONT_HERSHEY_COMPLEX, 0.8, cv::Scalar(0, 0, 0), 1, cv::LINE_AA);
+}
+
+bool FaceRecognitionUI::is_ready(std::future<faceInfo> const& f)
+{
+    return f.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
+}
+
+void FaceRecognitionUI::displayFrame()
+{
+    QImage frame = mat2QImage();
+    QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), 
+                                     Qt::KeepAspectRatio, Qt::FastTransformation));
+    ui.frame->setPixmap(map);
+    ui.frame->show();
+
+    cv::waitKey(30);
+}
+
+QImage FaceRecognitionUI::mat2QImage()
 {
     // make the same cv::Mat
     cv::Mat temp;
 
     // cvtColor Makes a copt, that what i need
-    cvtColor(src, temp, cv::COLOR_BGR2RGB);
+    cvtColor(m_image, temp, cv::COLOR_BGR2RGB);
 
     QImage dest((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
     
@@ -102,10 +129,10 @@ QImage FaceRecognitionUI::mat2QImage(cv::Mat const& src)
     return dest;
 }
 
-void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat img)
+void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat face_img)
 {
     std::vector<uchar> ubuffer;
-    cv::imencode(".png", img.clone(), ubuffer);
+    cv::imencode(".png", face_img.clone(), ubuffer);
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
