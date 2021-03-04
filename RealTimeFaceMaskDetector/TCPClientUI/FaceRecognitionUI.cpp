@@ -7,7 +7,6 @@ FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
 {
     ui.setupUi(this);
     connect(ui.exit_button, &QPushButton::clicked, this, &FaceRecognitionUI::onExitButtonClicked);
-    QMainWindow::statusBar;
 }
 
 void FaceRecognitionUI::onExitButtonClicked()
