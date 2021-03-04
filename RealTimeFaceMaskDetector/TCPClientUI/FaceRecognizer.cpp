@@ -10,7 +10,7 @@ FaceRecognizer::FaceRecognizer()
         || !m_mouth_cascade.load(mouth_cascade_path)
         || !m_nose_cascade.load(nose_cascade_path))
     {
-        throw std::runtime_error("can't load cascades");
+        throw std::runtime_error("can't load cascades"); //exs
     }
 
     /*if (!m_camera.open(camera))

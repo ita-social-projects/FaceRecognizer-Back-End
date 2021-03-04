@@ -4,6 +4,7 @@ constexpr int EMPTY_FLAGS = 0;
 constexpr int DEFAULT_SERVICE_PROVIDER_PROTOCOL = 0;
 std::string g_ip;
 int g_port;
+Qt::TransformationMode g_video_quality;
 bool TCPClient::CreateSocket()
 {
     WSAStartup(MAKEWORD(2, 2), &m_wsa_data);
