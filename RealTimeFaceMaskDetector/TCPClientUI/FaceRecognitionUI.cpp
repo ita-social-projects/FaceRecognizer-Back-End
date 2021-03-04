@@ -107,7 +107,8 @@ bool FaceRecognitionUI::is_ready(std::future<faceInfo> const& f)
 void FaceRecognitionUI::displayFrame()
 {
     QImage frame = mat2QImage();
-    QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), Qt::IgnoreAspectRatio, g_video_quality));
+    QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), 
+                                     Qt::IgnoreAspectRatio, g_video_quality));
     ui.frame->setPixmap(map);
     ui.frame->show();
 
