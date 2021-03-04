@@ -10,19 +10,22 @@
 #define CONFIG_FILE "config.xml"
 
 /* These are global variables.
-   g_ip stores server ip & g_port stores server port.
+   g_ip stores server ip & g_port stores server port
+   g_video_quality stores mode for quality.
    They are defined in TCPClient.cpp file. */
 extern std::string g_ip;
 extern int g_port;
+extern Qt::TransformationMode g_video_quality;
 
-TCPClientUI::TCPClientUI(QWidget *parent)
-    : QMainWindow(parent)
+
+TCPClientUI::TCPClientUI(QWidget* parent) : QMainWindow(parent)
 {
     ui.setupUi(this);
 
     const QIcon winIcon("icon.png");
     this->setWindowIcon(winIcon);
 
+    //creating validators for IP and port textEdits on ui
     const QString ip_range = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
     const QRegExp ip_regex("^" + ip_range
         + "\\." + ip_range
@@ -36,6 +39,7 @@ TCPClientUI::TCPClientUI(QWidget *parent)
     ui.IP->setValidator(ipValidator);
     ui.IP->setCursorPosition(0);
 
+    //connecting functions to buttons
     connect(ui.Close, &QPushButton::clicked, this, &TCPClientUI::Close);
     connect(ui.Save, &QPushButton::clicked, this, &TCPClientUI::Save);
 
@@ -44,12 +48,22 @@ TCPClientUI::TCPClientUI(QWidget *parent)
 
     auto std_string_ip = parser->GetParam("Client", "ip");
     auto std_string_port = parser->GetParam("Client", "port");
-
     const QString default_ip = QString::fromStdString(std_string_ip);
     const QString default_port = QString::fromStdString(std_string_port);
 
+    //setting default ip and port on ui
     ui.IP->setText(default_ip);
     ui.Port->setText(default_port);
+
+    //setting g_video_quality based on user choice
+    if (ui.radioButton->isChecked())
+    {
+        g_video_quality = Qt::TransformationMode::FastTransformation;
+    }
+    if (ui.radioButton_2->isChecked())
+    {
+        g_video_quality = Qt::TransformationMode::SmoothTransformation;
+    }
 }
 
 void TCPClientUI::Save()
@@ -74,10 +88,39 @@ void TCPClientUI::Save()
         g_port = ui.Port->text().toInt();
 
         TCPClient client;
+
+        //modifying message box with new butoons
+        msgBox.setStandardButtons(QMessageBox::Ignore | QMessageBox::Close | QMessageBox::Retry);
         
-        client.CreateSocket();
-        
-        client.Connect();
+        try
+        {
+            if (!client.CreateSocket())
+            {
+                throw "Cannot create socket";
+            }
+            if (!client.Connect())
+            {
+                throw "Cannot connect to server";
+            }
+        }
+        catch (const char* e) {
+            msgBox.setText(e);
+            //waiting for user choice
+            int ret = msgBox.exec();
+            switch (ret) {
+            case QMessageBox::Ignore:
+                break;
+            case QMessageBox::Close:
+                Close();
+                return;
+                break;
+            case QMessageBox::Retry:
+                return;
+                break;
+            default:
+                break;
+            }
+        } 
 
         Sleep(1000);
         std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
