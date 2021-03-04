@@ -76,7 +76,13 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         }
 
         QImage frame = mat2QImage(image);
-        QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), Qt::KeepAspectRatio, Qt::FastTransformation));
+        QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), Qt::AspectRatioMode::IgnoreAspectRatio, Qt::TransformationMode::FastTransformation));
+        //Qt::SmoothTransformation;
+        //Qt::FastTranformation;
+       
+            //
+            //
+           
         ui.frame->setPixmap(map);
         ui.frame->show();
 
@@ -109,7 +115,18 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat img)
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
-    client.SendBinaryMessage(buffer);
+    try {
+        client.SendBinaryMessage(buffer);
+    }
+    catch (...) {
+       // msgBox;
+        //set text
+        //show()
+        //OBROBKA
+        //hide()
+    }
+
+    // exs
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()

@@ -74,11 +74,39 @@ void TCPClientUI::Save()
         g_port = ui.Port->text().toInt();
 
         TCPClient client;
-        
-        client.CreateSocket();
-        
-        client.Connect();
 
+        msgBox.setStandardButtons(QMessageBox::Ignore | QMessageBox::Close | QMessageBox::Retry);
+        
+        try
+        {
+            if (!client.CreateSocket())
+            {
+                throw "Cannot create socket";
+            }
+            if (!client.Connect())
+            {
+                throw "Cannot connect to server";
+            }
+        }
+        catch (const char* e) {
+            msgBox.setText(e);
+            int ret = msgBox.exec();
+            switch (ret) {
+            case QMessageBox::Ignore:
+                //do nothing
+                break;
+            case QMessageBox::Close:
+                Close();
+                return;
+                break;
+            case QMessageBox::Retry:
+                return;
+                break;
+            default:
+                // should never be reached
+                break;
+            }
+        } 
         Sleep(1000);
         std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
         m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
