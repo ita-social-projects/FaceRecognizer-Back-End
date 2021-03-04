@@ -7,6 +7,7 @@ FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
 {
     ui.setupUi(this);
     connect(ui.exit_button, &QPushButton::clicked, this, &FaceRecognitionUI::onExitButtonClicked);
+    QMainWindow::statusBar;
 }
 
 void FaceRecognitionUI::onExitButtonClicked()
@@ -59,6 +60,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
                         std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
                         t.detach();
+                        //handling rethrowed
+                        //image wasn't send
                     }
                 }
                 m_is_all_in_mask &= face.second;
@@ -141,11 +144,7 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat face_img)
         client.SendBinaryMessage(buffer);
     }
     catch (...) {
-       // msgBox;
-        //set text
-        //show()
-        //OBROBKA
-        //hide()
+    //rethrow
     }
 }
 
