@@ -4,6 +4,8 @@
 #include <QtGui/QPainter>
 #include <thread>
 #include "TimeCounting.h"
+#include <future>
+#include <utility>
 
 #define IDCAM 0
 
@@ -18,7 +20,7 @@ void FaceRecognitionUI::onExitButtonClicked()
 {
     m_exit_button_clicked = true;
     run_analizer = false;
-    thrd.join();
+    //thrd.join();
     close();
 };
 
@@ -28,19 +30,18 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     std::chrono::high_resolution_clock::time_point send_time, new_send_time;
     send_time = get_current_time_fenced();
 
-    thrd  = std::thread(&FaceRecognitionUI::recognize, this, IDCAM);
+    //thrd  = std::thread(&FaceRecognitionUI::recognize, this, IDCAM);
 
+    auto shared_face_recognizer = std::make_shared<FaceRecognizer>(IDCAM);
+    auto& hz = shared_face_recognizer->runAnalysis();
+    cv::Mat image;
+    faceInfo faces;
     while (!m_exit_button_clicked)
     {
-        cv::Mat image;
-        faceInfo faces;
-        //get info from FaceRecognizer
-        img_data.GetData(image, faces);
-
-        if (image.empty())
-        {
-            continue;
-        }
+        image = hz.m_image;
+        faces = hz.m_faces;
+        auto future = std::async(std::launch::async, &FaceRecognizer::runAnalysis,
+            shared_face_recognizer);
 
         bool is_all_in_mask = true;
         for (auto& face : faces) 
@@ -52,8 +53,9 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                 if (to_us(new_send_time - send_time) >= 5)
                 {
                     send_time = new_send_time;
-                    sendImage(client, face_img.clone());
-                    //qDebug() << "Image_sent\n";
+                    //sendImage(client, face_img.clone());
+                    std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
+                    t.detach();
                 }
                 
                 is_all_in_mask = is_all_in_mask && face.second; 
@@ -79,16 +81,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
         ui.frame->show();
 
         cv::waitKey(30);
-    }
-}
-
-void FaceRecognitionUI::recognize(int camera_id)
-{
-    FaceRecognizer recognizer(camera_id);
-
-    while (run_analizer)
-    {
-        recognizer.runAnalysis(img_data);
+        hz = future.get();
     }
 }
 

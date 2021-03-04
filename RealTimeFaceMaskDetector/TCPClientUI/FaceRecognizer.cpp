@@ -19,7 +19,7 @@ FaceRecognizer::FaceRecognizer(int camera)
     }
 }
 
-void FaceRecognizer::runAnalysis(ImageData& img_data)
+HZ& FaceRecognizer::runAnalysis()
 {
     // current frame of video stream
     cv::Mat color_img, gray_img;
@@ -58,9 +58,9 @@ void FaceRecognizer::runAnalysis(ImageData& img_data)
             face, 
             mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
-
-    // seting the frame and info about it into ImageData FaceRecognitionUI::object
-    img_data.SetData(color_img, faces_with_info);
+    hz.m_image = color_img;
+    hz.m_faces = faces_with_info;
+    return hz;
 }
 
 void FaceRecognizer::SetPanelTextInMask(cv::Mat& image)

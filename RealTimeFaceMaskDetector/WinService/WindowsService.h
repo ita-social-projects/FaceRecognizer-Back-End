@@ -2,6 +2,7 @@
 #include <ws2tcpip.h>
 #include "Logger.h"
 #include <string_view>
+#include "XMLParser.h"
 
 const std::wstring_view
 INSTALL = L"install",
@@ -10,11 +11,8 @@ STOP = L"stop",
 RESTART = L"restart",
 UNINSTALL = L"uninstall";
 
-std::wstring SERVICE_NAME = L"A_server";
-std::wstring SERVER_EXE_PATH = L"D:\\Programing\\Projects\\Real-Time-Face-Mask-Detector-Server\\"
-									"RealTimeFaceMaskDetector\\x64\\Debug\\TCPServer.exe";
 
-/*Singletone class that provides comunication with SCM 
+/*Singletone class that provides comunication with SCM
 and creates service to run as server*/
 class Service
 {
@@ -30,7 +28,7 @@ public:
 
 	static void set_service_name(const std::wstring&);
 
-	/*Functions to interract with 
+	/*Functions to interract with
 	service from command prompt*/
 	bool Install();
 	bool Start();
@@ -42,7 +40,7 @@ private:
 
 	/*heturns handle to SCM database*/
 	SC_HANDLE OpenControlManager();
-	
+
 	/*returns handle to service if it exists*/
 	SC_HANDLE GetServiceFromSCM(SC_HANDLE scm_handle);
 
@@ -51,14 +49,14 @@ private:
 	std::wstring GetPathToModule();
 
 	bool CreateServiceInSCM(SC_HANDLE scm_handle);
-	/*Calls StartService function and 
+	/*Calls StartService function and
 	if suceed takes up the server*/
-	void TryStartService(SC_HANDLE handle_open_service ,bool& is_started);
+	void TryStartService(SC_HANDLE handle_open_service, bool& is_started);
 
 	/*Stops service, using ControlService function.*/
 	void TryStopService(SC_HANDLE handle_open_service, SERVICE_STATUS_PROCESS status_process, bool& is_stopped);
-	
-	/*Deletes service. Required to stop 
+
+	/*Deletes service. Required to stop
 	service by (TryStopService) firstly*/
 	void TryDeleteService(SC_HANDLE handle_service, bool& is_deleted);
 
