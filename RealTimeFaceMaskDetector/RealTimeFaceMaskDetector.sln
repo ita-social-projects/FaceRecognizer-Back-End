@@ -32,10 +32,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinService", "WinService\Wi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogViewerTests", "LogViewerTests\LogViewerTests.vcxproj", "{3BE063CC-90FC-4444-8EE4-0035BC879570}"
 	ProjectSection(ProjectDependencies) = postProject
+		{EEDB5044-5C9E-4609-9AA7-40BE4FB86467} = {EEDB5044-5C9E-4609-9AA7-40BE4FB86467}
 		{3F95BCF6-64DF-49C1-89A6-DD623D76CE61} = {3F95BCF6-64DF-49C1-89A6-DD623D76CE61}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogViewer", "LogViewer\LogViewer.vcxproj", "{EEDB5044-5C9E-4609-9AA7-40BE4FB86467}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3F95BCF6-64DF-49C1-89A6-DD623D76CE61} = {3F95BCF6-64DF-49C1-89A6-DD623D76CE61}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DateTimeDLL", "DateTimeDLL\DateTimeDLL.vcxproj", "{3F95BCF6-64DF-49C1-89A6-DD623D76CE61}"
 EndProject
