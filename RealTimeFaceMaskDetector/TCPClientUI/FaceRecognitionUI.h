@@ -30,13 +30,13 @@ public:
 	QImage mat2QImage();
 	void displayFrame();
 	void updateWindow(TCPClient& client);
-	void sendImage(TCPClient& client, cv::Mat face_img);
+	void sendImage(TCPClient& client, cv::UMat face_img);
 	bool is_ready(std::future<faceInfo> const& f);
 	void SetPanelText();
 	~FaceRecognitionUI();
 
 private:
-	cv::Mat m_image;
+	cv::UMat m_image;
 	bool m_async_is_permitted = true;
 	bool m_is_all_in_mask = true;
 	bool m_exit_button_clicked = false;

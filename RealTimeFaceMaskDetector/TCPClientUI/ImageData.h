@@ -15,21 +15,21 @@ using faceInfo = std::vector<std::pair<cv::Rect, bool>>;
 
 struct HZ
 {
-	cv::Mat m_image;
+	cv::UMat m_image;
 	faceInfo m_faces;
 };
 
 class ImageData
 {
-	cv::Mat m_image;
+	cv::UMat m_image;
 	faceInfo m_faces;
 	std::mutex m_mtx;
 
 public:
 
-	void SetData(cv::Mat image, faceInfo faces);
+	void SetData(cv::UMat image, faceInfo faces);
 
-	void GetData(cv::Mat& image, faceInfo &face);
+	void GetData(cv::UMat& image, faceInfo &face);
 
 	ImageData& operator= (const ImageData& obj);
 };

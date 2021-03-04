@@ -20,7 +20,7 @@ class FaceRecognizer
 public:
 	FaceRecognizer();
 
-	faceInfo runAnalysis(cv::Mat color_img);
+	faceInfo runAnalysis(cv::UMat color_img);
 
 private:
 	cv::CascadeClassifier m_face_cascade;
