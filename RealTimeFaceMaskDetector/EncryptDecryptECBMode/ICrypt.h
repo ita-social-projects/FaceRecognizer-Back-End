@@ -29,7 +29,7 @@ public:
 	[[nodiscard]] virtual CryptoPP::RSA::PrivateKey GetPrivateKey() const = 0;
 	[[nodiscard]] virtual CryptoPP::RSA::PublicKey GetPublicKey() const = 0;
 	[[nodiscard]] virtual void SetPublicKey(const CryptoPP::RSA::PublicKey& paramPublicKey) = 0;
-	[[nodiscard]] virtual std::string EncryptStrPhoto(std::string& strPhoto) = 0;
-	[[nodiscard]] virtual std::string DecryptStrPhoto(std::string& cipher) = 0;
+	[[nodiscard]] virtual std::vector<char> EncryptStrPhoto(std::vector<char>& VecPhoto) = 0;
+	[[nodiscard]] virtual std::vector<char> DecryptStrPhoto(std::vector<char>& cipher) = 0;
 };
 #endif // !ENCRYPT_DECRYPT_INTERFACES_H
