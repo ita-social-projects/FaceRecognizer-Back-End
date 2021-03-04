@@ -9,6 +9,8 @@
 
 const int  DEFAULT_BUFLEN = 512;
 
+enum class ServerStatus { SocketError = -2, NoConnection = -1, Error = 0, Listening, Messaging, ConnectionClosed, ServerIsDown, };
+
 class SocketServer
 {
 public:
@@ -26,15 +28,17 @@ private:
 
 	bool BindListeningSocket();
 	bool AcceptConnection();
-	void TryAcceptAndStartMessaging(bool& ret_value);
+	void TryAcceptAndStartMessaging(ServerStatus& ser_status);
 	void SaveAndSendData();
 	bool UpdateDataBase();
 	void CreateTableIfNeeded(std::unique_ptr<SQLConnection>& sql_server);
 
-	bool ReceiveMessage(bool& ret_value);
-	void StartMessagingWintClient(bool& ret_value);
-	bool ReceiveFullMessage();
-	void TryReceiveAndSendMessage(bool& is_client_connected);
+	void ReceiveMessage(ServerStatus& ser_status);
+	void StartMessagingWintClient(ServerStatus& ser_status);
+	bool ReceiveFullMessage(ServerStatus& ser_status);
+	void TryReceiveAndSendMessage(ServerStatus& ser_status);
+
+	bool ServerStatusCheck(ServerStatus& ser_status);
 
 	/*return path to TCPServer.exe file*/
 	std::filesystem::path GetCurrentPath();
