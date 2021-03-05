@@ -33,9 +33,6 @@
     <ClInclude Include="EncryptDecryptRSA.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AsyncEncrRSA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -48,9 +45,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EncryptDecryptRSA.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AsyncEncrRSA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
