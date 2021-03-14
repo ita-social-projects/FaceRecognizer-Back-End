@@ -233,3 +233,9 @@ void ServiceStarter::ShutdownServer()
 {
 	server.ShutdownServer();
 }
+
+bool RunServerItself()
+{
+	SocketServer server;
+	return ServiceStarter::CreateServer(server, true);
+}
