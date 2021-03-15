@@ -2,7 +2,7 @@
 #include "easylogging++.h"
 #include <filesystem>
 
-INITIALIZE_EASYLOGGINGPP
+//INITIALIZE_EASYLOGGINGPP
 
 	const std::filesystem::path		LOG_FOLDER = R"(RTFMD_Logs\)";
 	const std::string				CONFIGURATION_PATH = R"(Configuration.conf)";

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Logger.h"
-
+INITIALIZE_EASYLOGGINGPP
 el::Configurations Logger::s_configuration{};
 el::Level Logger::s_level{ el::Level::Global };
 std::string Logger::s_format{};
