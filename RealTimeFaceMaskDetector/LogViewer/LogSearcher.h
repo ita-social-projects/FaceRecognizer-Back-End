@@ -18,6 +18,12 @@ public:
 
 		const std::string EXE_DIRECTORY = ExeDirectoryPath();
 		const std::string LOG_DIRECTORY = EXE_DIRECTORY + "\\RTFMD_Logs";
+
+		if (!fs::exists(LOG_DIRECTORY))
+		{
+			return {};
+		}
+		
 		
 		for (const auto& entry : fs::directory_iterator{ LOG_DIRECTORY })
 		{
