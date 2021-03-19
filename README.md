@@ -36,6 +36,7 @@
 ## Installation
 
 - Project is using mvcs compiler, so you need to have intalled **Visual Studio** or **MSBuild tool**
+- Microsoft Visual Studio Installer Projects extension for Visual Studio must be installed 
 - In the repository's root directory create a folder (for instance **"conanfiles"**)
 - Open command prompt and enter to this directory
 - In the command prompt run the following command if you want to build your project in debug mod:
