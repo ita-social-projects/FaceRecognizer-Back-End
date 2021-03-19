@@ -13,6 +13,7 @@ public:
 private slots:
     void Save();
     void Close();
+    void SetRegularExp();
 
 private:
     Ui::TCPClientUIClass ui;

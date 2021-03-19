@@ -46,6 +46,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             faces = future_faces.get();
 
             m_is_all_in_mask = true;
+
             for (auto& face : faces)
             {
                 //if current face without mask - trying to send on server
@@ -56,11 +57,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                     if (to_us(new_send_time - send_time) >= TIME_PERIOD)
                     {
                         send_time = new_send_time;
-
                         std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
                         t.detach();
-                        //handling rethrowed
-                        //image wasn't send
                     }
                 }
                 m_is_all_in_mask &= face.second;
@@ -68,13 +66,11 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                 cv::rectangle(m_image, face.first, rect_color, 3, 8, 0);
             }
         }
-
         //if faces were found, then set info into frame
         if (!faces.empty())
         {
             SetPanelText();
         }
-
         displayFrame();
     }
 }
@@ -139,12 +135,7 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::UMat face_img)
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
-    try {
-        client.SendBinaryMessage(buffer);
-    }
-    catch (...) {
-    //rethrow
-    }
+    client.SendBinaryMessage(buffer);
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()

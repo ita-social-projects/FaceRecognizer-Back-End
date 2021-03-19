@@ -25,19 +25,7 @@ TCPClientUI::TCPClientUI(QWidget* parent) : QMainWindow(parent)
     const QIcon winIcon("icon.png");
     this->setWindowIcon(winIcon);
 
-    //creating validators for IP and port textEdits on ui
-    const QString ip_range = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
-    const QRegExp ip_regex("^" + ip_range
-        + "\\." + ip_range
-        + "\\." + ip_range
-        + "\\." + ip_range + "$");
-    const QRegExp port_regex("[1-9]\\d{4}");
-    auto* portValidator = new QRegExpValidator(port_regex, this);
-    auto* ipValidator = new QRegExpValidator(ip_regex, this);
-    ui.Port->setValidator(portValidator);
-    ui.Port->setCursorPosition(0);
-    ui.IP->setValidator(ipValidator);
-    ui.IP->setCursorPosition(0);
+    SetRegularExp();
 
     //connecting functions to buttons
     connect(ui.Close, &QPushButton::clicked, this, &TCPClientUI::Close);
@@ -109,6 +97,7 @@ void TCPClientUI::Save()
             int ret = msgBox.exec();
             switch (ret) {
             case QMessageBox::Ignore:
+                client.Ignore();
                 break;
             case QMessageBox::Close:
                 Close();
@@ -122,12 +111,11 @@ void TCPClientUI::Save()
             }
         } 
 
-        Sleep(1000);
         std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
         m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
         m_face_recognition_ui->show();
         this->hide();
-        m_face_recognition_ui->updateWindow(client);
+        m_face_recognition_ui->updateWindow(client); // сюди передавати клас без з'єднання
         client.CloseSocket();
     }
 }
@@ -135,4 +123,21 @@ void TCPClientUI::Save()
 void TCPClientUI::Close()
 {
     close();
+}
+
+void TCPClientUI::SetRegularExp()
+{
+    //creating validators for IP and port textEdits on ui
+    const QString ip_range = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
+    const QRegExp ip_regex("^" + ip_range
+        + "\\." + ip_range
+        + "\\." + ip_range
+        + "\\." + ip_range + "$");
+    const QRegExp port_regex("[1-9]\\d{4}");
+    auto* portValidator = new QRegExpValidator(port_regex, this);
+    auto* ipValidator = new QRegExpValidator(ip_regex, this);
+    ui.Port->setValidator(portValidator);
+    ui.Port->setCursorPosition(0);
+    ui.IP->setValidator(ipValidator);
+    ui.IP->setCursorPosition(0);
 }

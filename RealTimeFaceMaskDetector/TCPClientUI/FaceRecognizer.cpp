@@ -51,7 +51,7 @@ faceInfo FaceRecognizer::runAnalysis(cv::UMat color_img)
 
         // adding location rectangle of face and info about mask's presence on it
         // if we didn't find mouth and nose on the face, so mask is put on
-        faces_with_info.push_back(std::pair(
+        faces_with_info.push_back(std::make_pair(
             face, 
             mouth_rects.size() == 0 && nose_rects.size() == 0));
     }
