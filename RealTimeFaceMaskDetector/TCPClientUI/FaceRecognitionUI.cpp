@@ -21,10 +21,7 @@ void FaceRecognitionUI::on_return_button_clicked()
 
 int FaceRecognitionUI::updateWindow(TCPClient& client)
 {
-    
-    // need for same person check
-    std::chrono::high_resolution_clock::time_point send_time, new_send_time;
-    send_time = get_current_time_fenced();
+    int number_of_faces;
 
     cv::VideoCapture camera;
     camera.open(IDCAM);
