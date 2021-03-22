@@ -122,7 +122,6 @@ void TCPClientUI::Save()
             }
         } 
 
-        Sleep(1000);
         std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
         m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
         m_face_recognition_ui->show();

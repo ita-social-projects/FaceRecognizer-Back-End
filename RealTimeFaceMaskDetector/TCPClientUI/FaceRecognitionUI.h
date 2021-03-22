@@ -5,6 +5,7 @@
 #include <thread>
 #include <utility>
 #include <future>
+#include <algorithm>
 
 #include "ui_FaceRecognitionUI.h"
 #include "FaceRecognizer.h"
@@ -12,8 +13,6 @@
 #include "TimeCounting.h"
 
 #define IDCAM 0
-#define TIME_PERIOD 5
-
 
 class FaceRecognitionUI : public QWidget
 {
@@ -38,6 +37,6 @@ public:
 private:
 	cv::UMat m_image;
 	bool m_async_is_permitted = true;
-	bool m_is_all_in_mask = true;
+	int m_in_mask = 0;
 	bool m_exit_button_clicked = false;
 };
