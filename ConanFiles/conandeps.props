@@ -1,9 +1,0 @@
-<?xml version="1.0" ?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-	<ImportGroup Label="ConanDependencies">
-		<Import Project="conan_qt.props" Condition="'$(conan_qt_props_imported)' != 'True'"/>
-		<Import Project="conan_opencv.props" Condition="'$(conan_opencv_props_imported)' != 'True'"/>
-		<Import Project="conan_cryptopp.props" Condition="'$(conan_cryptopp_props_imported)' != 'True'"/>
-		<Import Project="conan_gtest.props" Condition="'$(conan_gtest_props_imported)' != 'True'"/>
-	</ImportGroup>
-</Project>
