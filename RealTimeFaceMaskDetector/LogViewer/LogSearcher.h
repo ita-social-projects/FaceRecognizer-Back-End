@@ -18,12 +18,15 @@ public:
 
 		const std::string EXE_DIRECTORY = ExeDirectoryPath();
 		const std::string LOG_DIRECTORY = EXE_DIRECTORY + "\\RTFMD_Logs";
-		
-		for (const auto& entry : fs::directory_iterator{ LOG_DIRECTORY })
+
+		if (fs::exists(LOG_DIRECTORY))
 		{
-			if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".log")
+			for (const auto& entry : fs::directory_iterator{ LOG_DIRECTORY })
 			{
-				paths_to_log_files.push_back(entry.path().u8string());
+				if (entry.is_regular_file() && entry.path().has_extension() && entry.path().extension() == ".log")
+				{
+					paths_to_log_files.push_back(entry.path().u8string());
+				}
 			}
 		}
 		
