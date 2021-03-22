@@ -76,10 +76,12 @@ void TCPClientUI::Save()
         g_port = ui.Port->text().toInt();
 
         TCPClient client;
+        std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
+        m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
 
         //modifying message box with new butoons
         msgBox.setStandardButtons(QMessageBox::Ignore | QMessageBox::Close | QMessageBox::Retry);
-        
+
         try
         {
             if (client.CreateSocket())
@@ -98,6 +100,7 @@ void TCPClientUI::Save()
             switch (ret) {
             case QMessageBox::Ignore:
                 client.Ignore();
+                m_face_recognition_ui->ui.label->setText("No sending images");
                 break;
             case QMessageBox::Close:
                 Close();
@@ -111,16 +114,14 @@ void TCPClientUI::Save()
             }
         } 
 
-        std::unique_ptr<FaceRecognitionUI> m_face_recognition_ui;
-        m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
         m_face_recognition_ui->show();
         this->hide();
         if (m_face_recognition_ui->updateWindow(client) == RETURN_BUTTON_CLICKED)
         {
             this->show();
-            return;
         }
         client.CloseSocket();
+        return;
     }
 }
 

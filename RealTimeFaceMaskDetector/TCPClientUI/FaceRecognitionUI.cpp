@@ -148,7 +148,16 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::UMat face_img)
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
-    client.SendBinaryMessage(buffer);
+    int func_result = client.SendBinaryMessage(buffer);
+
+    if (func_result)
+    {
+        ui.label->setText("Error " + QString(func_result) + ", while sending image");
+    }
+    else
+    {
+        ui.label->setText("Image was successfully sent");
+    }
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()
