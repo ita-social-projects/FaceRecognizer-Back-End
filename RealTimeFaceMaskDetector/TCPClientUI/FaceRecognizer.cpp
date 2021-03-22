@@ -2,7 +2,7 @@
 
 FaceRecognizer::FaceRecognizer()
 {
-    const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_frontalface_alt.xml";
+    const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_frontalface_default.xml";
     const std::string mouth_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_mcs_mouth.xml";
     const std::string nose_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_mcs_nose.xml";
 
@@ -35,7 +35,7 @@ faceInfo FaceRecognizer::runAnalysis(cv::UMat color_img)
     cv::cvtColor(color_img, gray_img, cv::COLOR_BGR2GRAY);
 
     // detecting face rectangles and writing them in face_rects vector
-    m_face_cascade.detectMultiScale(gray_img, face_rects, 1.1, 4);
+    m_face_cascade.detectMultiScale(gray_img, face_rects, 1.3, 3);
 
     // iterating over each face in current video frame (rectangle of face location)
     for (auto& face : face_rects)
@@ -46,8 +46,8 @@ faceInfo FaceRecognizer::runAnalysis(cv::UMat color_img)
         
         // detecting mouth and nose rectangles in the face image  
         // writing them in mouth_rects and nose_rects respectively
-        m_mouth_cascade.detectMultiScale(face_image, mouth_rects, 1.5, 5);
-        m_nose_cascade.detectMultiScale(face_image, nose_rects, 1.5, 5);
+        m_mouth_cascade.detectMultiScale(face_image, mouth_rects, 1.4, 6);
+        m_nose_cascade.detectMultiScale(face_image, nose_rects, 1.5, 6);
 
         // adding location rectangle of face and info about mask's presence on it
         // if we didn't find mouth and nose on the face, so mask is put on
