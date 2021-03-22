@@ -39,8 +39,8 @@ int FaceRecognitionUI::updateWindow(TCPClient& client)
 
         if (m_return_button_clicked)
         {
-            return RETURN_BUTTON_CLICKED;
             hide();
+            return RETURN_BUTTON_CLICKED;  
         }
 
         camera >> m_image;
