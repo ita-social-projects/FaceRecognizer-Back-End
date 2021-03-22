@@ -14,7 +14,10 @@ void FaceRecognitionUI::onExitButtonClicked()
     close();
 };
 
-
+void FaceRecognitionUI::on_return_button_clicked()
+{
+    m_return_button_clicked = true;
+}
 
 int FaceRecognitionUI::updateWindow(TCPClient& client)
 {
@@ -151,9 +154,4 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::UMat face_img)
 FaceRecognitionUI::~FaceRecognitionUI()
 {
 
-}
-
-void FaceRecognitionUI::on_return_button_clicked()
-{
-    m_return_button_clicked = true;
 }
