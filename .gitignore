@@ -13,6 +13,7 @@
 config.xml
 
 ## additional directories
+3rdPartyLibs
 3rdPartyLibs/
 conafiles/
 

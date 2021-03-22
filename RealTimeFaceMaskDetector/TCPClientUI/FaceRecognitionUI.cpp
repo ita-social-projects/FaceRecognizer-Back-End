@@ -1,7 +1,6 @@
 #pragma once
 #include "FaceRecognitionUI.h"
 
-
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
 {
@@ -15,11 +14,14 @@ void FaceRecognitionUI::onExitButtonClicked()
     close();
 };
 
-void FaceRecognitionUI::updateWindow(TCPClient& client)
+void FaceRecognitionUI::on_return_button_clicked()
 {
-    // need for same person check
-    std::chrono::high_resolution_clock::time_point send_time, new_send_time;
-    send_time = get_current_time_fenced();
+    m_return_button_clicked = true;
+}
+
+int FaceRecognitionUI::updateWindow(TCPClient& client)
+{
+    int number_of_faces;
 
     cv::VideoCapture camera;
     camera.open(IDCAM);
@@ -31,6 +33,13 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     
     while (!m_exit_button_clicked)
     {
+
+        if (m_return_button_clicked)
+        {
+            hide();
+            return RETURN_BUTTON_CLICKED;  
+        }
+
         camera >> m_image;
 
         if (m_async_is_permitted)
@@ -45,38 +54,38 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             m_async_is_permitted = true;
             faces = future_faces.get();
 
-            m_is_all_in_mask = true;
+            m_in_mask = std::count_if(faces.begin(), faces.end(), 
+                [](std::pair<cv::Rect, bool> i) {return !i.second; }
+            );
+
             for (auto& face : faces)
             {
                 //if current face without mask - trying to send on server
                 if (!face.second)
                 {
                     cv::UMat face_img(m_image, face.first);
-                    new_send_time = get_current_time_fenced();
-                    if (to_us(new_send_time - send_time) >= TIME_PERIOD)
+
+                    if (m_in_mask != number_of_faces)
                     {
-                        send_time = new_send_time;
+                        std::cout << "send" << std::endl;
 
                         std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
                         t.detach();
-                        //handling rethrowed
-                        //image wasn't send
                     }
                 }
-                m_is_all_in_mask &= face.second;
                 auto rect_color = face.second == true ? GREEN : RED;
                 cv::rectangle(m_image, face.first, rect_color, 3, 8, 0);
-            }
+            }  
+            number_of_faces = m_in_mask;
         }
-
         //if faces were found, then set info into frame
         if (!faces.empty())
         {
             SetPanelText();
         }
-
         displayFrame();
     }
+    return 0;
 }
 
 
@@ -84,7 +93,7 @@ void FaceRecognitionUI::SetPanelText()
 {
     cv::Scalar color;
     std::string message;
-    if (m_is_all_in_mask)
+    if (m_in_mask == 0)
     {
         color = GREEN;
         message = "Thanks for wearing mask :)";
@@ -139,12 +148,7 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::UMat face_img)
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
-    try {
-        client.SendBinaryMessage(buffer);
-    }
-    catch (...) {
-    //rethrow
-    }
+    client.SendBinaryMessage(buffer);
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()
