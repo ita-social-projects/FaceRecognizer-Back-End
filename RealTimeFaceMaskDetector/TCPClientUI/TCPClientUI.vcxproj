@@ -46,7 +46,10 @@
     <LibraryPath>$(SolutionDir)x64\Debug;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)x64\Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
       <AdditionalDependencies>opencv_core450d.lib;opencv_calib3d450d.lib;opencv_features2d450d.lib;opencv_flann450d.lib;opencv_highgui450d.lib;opencv_imgcodecs450d.lib;opencv_imgproc450d.lib;opencv_ml450d.lib;opencv_objdetect450d.lib;opencv_photo450d.lib;opencv_stitching450d.lib;opencv_video450d.lib;opencv_videoio450d.lib;EncryptDecryptECBMode.lib;Qt5Concurrentd.lib;Qt5Cored.lib;Qt5DBusd.lib;Qt5Guid.lib;Qt5Widgetsd.lib;SQLServerDLL.lib</AdditionalDependencies>
@@ -59,12 +62,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\build\include;$(Qt_INCLUDEPATH_);.\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\3rdPartyLibs\opencv\include;$(Qt_INCLUDEPATH_);$(SolutionDir)SQLServerDLL</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\build\x64\vc15\lib;$(Qt_LIBPATH_)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_world450.lib;$(Qt_LIBS_);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\3rdPartyLibs\opencv\lib;C:\Qt_vs\lib;..\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Qt5Concurrent.lib;Qt5Core.lib;Qt5DBus.lib;Qt5Gui.lib;Qt5Widgets.lib;opencv_core450.lib;opencv_calib3d450.lib;opencv_features2d450.lib;opencv_flann450.lib;opencv_highgui450.lib;opencv_imgcodecs450.lib;opencv_imgproc450.lib;opencv_ml450.lib;opencv_objdetect450.lib;opencv_photo450.lib;opencv_stitching450.lib;opencv_video450.lib;opencv_videoio450.lib;EncryptDecryptECBMode.lib;SQLServerDLL.lib;libEGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
@@ -76,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>Qt_vs</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
-    <QtBuildConfig>debug</QtBuildConfig>
+    <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
     <Import Project="$(QtMsBuild)\qt.props" />
@@ -100,7 +103,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

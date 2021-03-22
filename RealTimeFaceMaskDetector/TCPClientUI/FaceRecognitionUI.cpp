@@ -1,7 +1,6 @@
 #pragma once
 #include "FaceRecognitionUI.h"
 
-
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
 {
@@ -15,8 +14,14 @@ void FaceRecognitionUI::onExitButtonClicked()
     close();
 };
 
-void FaceRecognitionUI::updateWindow(TCPClient& client)
+void FaceRecognitionUI::on_return_button_clicked()
 {
+    m_return_button_clicked = true;
+}
+
+int FaceRecognitionUI::updateWindow(TCPClient& client)
+{
+    
     // need for same person check
     std::chrono::high_resolution_clock::time_point send_time, new_send_time;
     send_time = get_current_time_fenced();
@@ -31,6 +36,13 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     
     while (!m_exit_button_clicked)
     {
+
+        if (m_return_button_clicked)
+        {
+            hide();
+            return RETURN_BUTTON_CLICKED;  
+        }
+
         camera >> m_image;
 
         if (m_async_is_permitted)
@@ -46,6 +58,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
             faces = future_faces.get();
 
             m_is_all_in_mask = true;
+
             for (auto& face : faces)
             {
                 //if current face without mask - trying to send on server
@@ -56,11 +69,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                     if (to_us(new_send_time - send_time) >= TIME_PERIOD)
                     {
                         send_time = new_send_time;
-
                         std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
                         t.detach();
-                        //handling rethrowed
-                        //image wasn't send
                     }
                 }
                 m_is_all_in_mask &= face.second;
@@ -68,15 +78,14 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                 cv::rectangle(m_image, face.first, rect_color, 3, 8, 0);
             }
         }
-
         //if faces were found, then set info into frame
         if (!faces.empty())
         {
             SetPanelText();
         }
-
         displayFrame();
     }
+    return 0;
 }
 
 
@@ -139,12 +148,7 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::UMat face_img)
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
-    try {
-        client.SendBinaryMessage(buffer);
-    }
-    catch (...) {
-    //rethrow
-    }
+    client.SendBinaryMessage(buffer);
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()
