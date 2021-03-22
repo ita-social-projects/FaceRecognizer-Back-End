@@ -82,6 +82,7 @@ int FaceRecognitionUI::updateWindow(TCPClient& client)
         }
         displayFrame();
     }
+    return 0;
 }
 
 

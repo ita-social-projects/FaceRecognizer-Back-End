@@ -21,6 +21,7 @@ class FaceRecognitionUI : public QWidget
 
 public slots:
 	void onExitButtonClicked();
+	void on_return_button_clicked();
 
 public:
 	FaceRecognitionUI(QWidget *parent = Q_NULLPTR);
@@ -35,8 +36,6 @@ public:
 	void SetPanelText();
 	~FaceRecognitionUI();
 
-private slots:
-    void on_return_button_clicked();
 
 private:
 	cv::UMat m_image;
