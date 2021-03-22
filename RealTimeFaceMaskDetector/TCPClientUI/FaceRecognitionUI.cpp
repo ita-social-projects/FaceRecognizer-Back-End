@@ -1,7 +1,6 @@
 #pragma once
 #include "FaceRecognitionUI.h"
 
-
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
 {
@@ -15,9 +14,17 @@ void FaceRecognitionUI::onExitButtonClicked()
     close();
 };
 
-void FaceRecognitionUI::updateWindow(TCPClient& client)
+void FaceRecognitionUI::on_return_button_clicked()
 {
-    int number_of_faces = 0;
+    m_return_button_clicked = true;
+}
+
+int FaceRecognitionUI::updateWindow(TCPClient& client)
+{
+    
+    // need for same person check
+    std::chrono::high_resolution_clock::time_point send_time, new_send_time;
+    send_time = get_current_time_fenced();
 
     cv::VideoCapture camera;
     camera.open(IDCAM);
@@ -29,6 +36,13 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     
     while (!m_exit_button_clicked)
     {
+
+        if (m_return_button_clicked)
+        {
+            hide();
+            return RETURN_BUTTON_CLICKED;  
+        }
+
         camera >> m_image;
 
         if (m_async_is_permitted)
@@ -60,25 +74,21 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
                         std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
                         t.detach();
-                        // handling rethrowed
-                        // image wasn't send
                     }
-                        
                 }
                 auto rect_color = face.second == true ? GREEN : RED;
                 cv::rectangle(m_image, face.first, rect_color, 3, 8, 0);
             }  
             number_of_faces = m_in_mask;
         }
-
         //if faces were found, then set info into frame
         if (!faces.empty())
         {
             SetPanelText();
         }
-
         displayFrame();
     }
+    return 0;
 }
 
 
@@ -141,12 +151,7 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::UMat face_img)
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
-    try {
-        client.SendBinaryMessage(buffer);
-    }
-    catch (...) {
-    //rethrow
-    }
+    client.SendBinaryMessage(buffer);
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>517</width>
+    <width>417</width>
     <height>204</height>
    </rect>
   </property>
@@ -164,7 +164,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>517</width>
+     <width>417</width>
      <height>21</height>
     </rect>
    </property>
@@ -184,7 +184,4 @@
   <include location="TCPClientUI.qrc"/>
  </resources>
  <connections/>
- <buttongroups>
-  <buttongroup name="buttonGroup"/>
- </buttongroups>
 </ui>
