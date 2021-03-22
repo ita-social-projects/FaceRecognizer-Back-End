@@ -54,7 +54,7 @@
     </Link>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\SQLAPI\include;..\EncryptDecryptECBMode;..\..\3rdPartyLibs\cryptopp820\include;..\..\3rdPartyLibs\opencv\include;$(SolutionDir)SQLServerDLL;C:\Qt_vs\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SQLAPI\include;..\..\3rdPartyLibs\opencv\include;..\..\3rdPartyLibs\cryptopp820\include;$(SolutionDir)SQLServerDLL;C:\Qt_vs\include;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

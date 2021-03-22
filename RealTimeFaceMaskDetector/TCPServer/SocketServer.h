@@ -5,8 +5,9 @@
 #include <mutex>
 #include <thread>
 #include <future>
+#include <filesystem>
 #pragma comment (lib, "Ws2_32.lib")
-
+#include <iostream>
 const int  DEFAULT_BUFLEN = 512;
 
 enum class ServerStatus { SocketError = -2, NoConnection = -1, Error = 0, Listening, Messaging, ConnectionClosed, ServerIsDown, };

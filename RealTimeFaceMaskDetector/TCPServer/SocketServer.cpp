@@ -2,6 +2,9 @@
 #include "SocketServer.h"
 #include "Ws2spi.h"
 
+
+#include <fstream>
+
 bool SocketServer::InitSocketServer()
 {
 	LOG_MSG << "InitSocketServer: begin";

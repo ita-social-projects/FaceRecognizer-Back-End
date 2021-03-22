@@ -51,7 +51,7 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
                 //if current face without mask - trying to send on server
                 if (!face.second)
                 {
-                    cv::Mat face_img(m_image, face.first);
+                    cv::UMat face_img(m_image, face.first);
                     new_send_time = get_current_time_fenced();
                     if (to_us(new_send_time - send_time) >= TIME_PERIOD)
                     {
@@ -59,6 +59,8 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
 
                         std::thread t(&FaceRecognitionUI::sendImage, this, std::ref(client), face_img.clone());
                         t.detach();
+                        //handling rethrowed
+                        //image wasn't send
                     }
                 }
                 m_is_all_in_mask &= face.second;
@@ -106,7 +108,7 @@ void FaceRecognitionUI::displayFrame()
 {
     QImage frame = mat2QImage();
     QPixmap map = QPixmap::fromImage(frame.scaled(ui.frame->width(), ui.frame->height(), 
-                                     Qt::KeepAspectRatio, Qt::FastTransformation));
+                                     Qt::IgnoreAspectRatio, g_video_quality));
     ui.frame->setPixmap(map);
     ui.frame->show();
 
@@ -116,12 +118,12 @@ void FaceRecognitionUI::displayFrame()
 QImage FaceRecognitionUI::mat2QImage()
 {
     // make the same cv::Mat
-    cv::Mat temp;
+    cv::UMat temp;
 
     // cvtColor Makes a copt, that what i need
     cvtColor(m_image, temp, cv::COLOR_BGR2RGB);
 
-    QImage dest((const uchar*)temp.data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
+    QImage dest((const uchar*)temp.getMat(cv::ACCESS_READ).data, temp.cols, temp.rows, temp.step, QImage::Format_RGB888);
     
     // enforce deep copy, see documentation 
     dest.bits(); 
@@ -130,14 +132,19 @@ QImage FaceRecognitionUI::mat2QImage()
     return dest;
 }
 
-void FaceRecognitionUI::sendImage(TCPClient& client, cv::Mat face_img)
+void FaceRecognitionUI::sendImage(TCPClient& client, cv::UMat face_img)
 {
     std::vector<uchar> ubuffer;
     cv::imencode(".png", face_img.clone(), ubuffer);
     
     std::vector<char> buffer(ubuffer.begin(), ubuffer.end());
 
-    client.SendBinaryMessage(buffer);
+    try {
+        client.SendBinaryMessage(buffer);
+    }
+    catch (...) {
+    //rethrow
+    }
 }
 
 FaceRecognitionUI::~FaceRecognitionUI()

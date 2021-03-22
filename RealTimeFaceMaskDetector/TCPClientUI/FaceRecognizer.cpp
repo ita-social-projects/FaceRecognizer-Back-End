@@ -10,7 +10,7 @@ FaceRecognizer::FaceRecognizer()
         || !m_mouth_cascade.load(mouth_cascade_path)
         || !m_nose_cascade.load(nose_cascade_path))
     {
-        throw std::runtime_error("can't load cascades");
+        throw std::runtime_error("can't load cascades"); //exs
     }
 
     /*if (!m_camera.open(camera))
@@ -19,10 +19,10 @@ FaceRecognizer::FaceRecognizer()
     }*/
 }
 
-faceInfo FaceRecognizer::runAnalysis(cv::Mat color_img)
+faceInfo FaceRecognizer::runAnalysis(cv::UMat color_img)
 {
     // current frame of video stream
-    cv::Mat gray_img;
+    cv::UMat gray_img;
 
     // arrays with rectangles of face\mouth\nose location
     std::vector<cv::Rect> face_rects, mouth_rects, nose_rects;
@@ -42,7 +42,7 @@ faceInfo FaceRecognizer::runAnalysis(cv::Mat color_img)
     {
         // cv::Mat() 'cuts' the face from whole frame by the rectangle,
         // then returns cv::Mat image of this face only
-        auto face_image = cv::Mat(gray_img, face);
+        auto face_image = cv::UMat(gray_img, face);
         
         // detecting mouth and nose rectangles in the face image  
         // writing them in mouth_rects and nose_rects respectively

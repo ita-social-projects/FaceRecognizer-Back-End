@@ -1,6 +1,6 @@
 #include "ImageData.h"
 
-void ImageData::SetData(cv::Mat image, faceInfo faces)
+void ImageData::SetData(cv::UMat image, faceInfo faces)
 {
 	std::lock_guard l_g(m_mtx);
 	m_faces.clear();
@@ -8,7 +8,7 @@ void ImageData::SetData(cv::Mat image, faceInfo faces)
 	std::copy(faces.begin(), faces.end(), std::back_inserter(m_faces));
 }
 
-void ImageData::GetData(cv::Mat& image, faceInfo& faces)
+void ImageData::GetData(cv::UMat& image, faceInfo& faces)
 {
 	std::lock_guard l_g(m_mtx);
 	image = m_image.clone();

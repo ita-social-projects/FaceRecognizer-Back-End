@@ -62,9 +62,4 @@ private:
 	 static SocketServer server;
 };
 
-
-bool RunServerItself()
-{
-	SocketServer server;
-	return ServiceStarter::CreateServer( server, true);
-}
+bool RunServerItself();
