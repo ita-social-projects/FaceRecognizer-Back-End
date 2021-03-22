@@ -1,0 +1,6 @@
+
+add_subdirectory(Logger)
+add_subdirectory(EncryptDecryptECBMode)
+add_subdirectory(SQLServerDLL)
+add_subdirectory(TCPServer)
+add_subdirectory(WinService)

@@ -1,0 +1,4 @@
+<RCC>
+    <qresource prefix="TCPClientUI">
+    </qresource>
+</RCC>
