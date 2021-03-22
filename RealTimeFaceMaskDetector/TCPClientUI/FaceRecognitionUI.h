@@ -21,6 +21,7 @@ class FaceRecognitionUI : public QWidget
 
 public slots:
 	void onExitButtonClicked();
+	void on_return_button_clicked();
 
 public:
 	FaceRecognitionUI(QWidget *parent = Q_NULLPTR);
@@ -29,15 +30,17 @@ public:
 
 	QImage mat2QImage();
 	void displayFrame();
-	void updateWindow(TCPClient& client);
+	int updateWindow(TCPClient& client);
 	void sendImage(TCPClient& client, cv::UMat face_img);
 	bool is_ready(std::future<faceInfo> const& f);
 	void SetPanelText();
 	~FaceRecognitionUI();
+
 
 private:
 	cv::UMat m_image;
 	bool m_async_is_permitted = true;
 	bool m_is_all_in_mask = true;
 	bool m_exit_button_clicked = false;
+	bool m_return_button_clicked = false;
 };
