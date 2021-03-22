@@ -27,9 +27,30 @@ namespace net {
 			return false;
 		}
 
+		T front() {
+			std::unique_lock<std::mutex> lck{ mtx };
+			return queue.front();
+		}
+
+		void pop() {
+			std::unique_lock<std::mutex> lck{ mtx };
+			queue.pop();
+		}
+
+		bool try_pop(T& value) {
+			std::unique_lock<std::mutex> lck{ mtx };
+			if (queue.empty()) {
+				return false;
+			}
+			value = std::move(queue.front());
+			queue.pop();
+			return true;
+		}
+
 		size_t count() const {
 			std::lock_guard<std::mutex> lck{ mtx };
 			return queue.size();
+			queue.
 		}
 
 		void clear() {
@@ -41,6 +62,13 @@ namespace net {
 		bool empty() const {
 			std::lock_guard<std::mutex> lck{ mtx };
 			return queue.empty();
+		}
+
+		void wait() {
+			while (empty()) {
+				std::unique_lock<std::mutex> lck{ mtx };
+				cond.wait(lck);
+			}
 		}
 	private:
 		std::queue<T> queue;
