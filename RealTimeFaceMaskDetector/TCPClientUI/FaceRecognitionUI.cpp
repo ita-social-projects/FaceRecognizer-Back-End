@@ -1,7 +1,6 @@
 #pragma once
 #include "FaceRecognitionUI.h"
 
-
 FaceRecognitionUI::FaceRecognitionUI(QWidget* parent)
     : QWidget(parent)
 {
@@ -15,8 +14,11 @@ void FaceRecognitionUI::onExitButtonClicked()
     close();
 };
 
-void FaceRecognitionUI::updateWindow(TCPClient& client)
+
+
+int FaceRecognitionUI::updateWindow(TCPClient& client)
 {
+    
     // need for same person check
     std::chrono::high_resolution_clock::time_point send_time, new_send_time;
     send_time = get_current_time_fenced();
@@ -31,6 +33,13 @@ void FaceRecognitionUI::updateWindow(TCPClient& client)
     
     while (!m_exit_button_clicked)
     {
+
+        if (m_return_button_clicked)
+        {
+            return RETURN_BUTTON_CLICKED;
+            hide();
+        }
+
         camera >> m_image;
 
         if (m_async_is_permitted)
@@ -141,4 +150,9 @@ void FaceRecognitionUI::sendImage(TCPClient& client, cv::UMat face_img)
 FaceRecognitionUI::~FaceRecognitionUI()
 {
 
+}
+
+void FaceRecognitionUI::on_return_button_clicked()
+{
+    m_return_button_clicked = true;
 }

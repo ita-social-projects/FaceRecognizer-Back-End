@@ -115,7 +115,11 @@ void TCPClientUI::Save()
         m_face_recognition_ui = std::make_unique<FaceRecognitionUI>();
         m_face_recognition_ui->show();
         this->hide();
-        m_face_recognition_ui->updateWindow(client); // сюди передавати клас без з'єднання
+        if (m_face_recognition_ui->updateWindow(client) == RETURN_BUTTON_CLICKED)
+        {
+            this->show();
+            return;
+        }
         client.CloseSocket();
     }
 }
