@@ -39,7 +39,7 @@ int FaceRecognitionUI::updateWindow(TCPClient& client)
 
         if (m_return_button_clicked)
         {
-            hide();
+            close();
             return RETURN_BUTTON_CLICKED;  
         }
 
