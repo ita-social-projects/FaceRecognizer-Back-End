@@ -2,9 +2,9 @@
 
 FaceRecognizer::FaceRecognizer()
 {
-    const std::string face_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_frontalface_default.xml";
-    const std::string mouth_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_mcs_mouth.xml";
-    const std::string nose_cascade_path = "..\\..\\3rdPartyLibs\\opencv\\res\\haarcascades\\haarcascade_mcs_nose.xml";
+    const std::string face_cascade_path = "cascades\\haarcascade_frontalface_default.xml";
+    const std::string mouth_cascade_path = "cascades\\haarcascade_mcs_mouth.xml";
+    const std::string nose_cascade_path = "cascades\\haarcascade_mcs_nose.xml";
 
     if (!m_face_cascade.load(face_cascade_path)
         || !m_mouth_cascade.load(mouth_cascade_path)
