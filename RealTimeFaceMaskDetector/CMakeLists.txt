@@ -1,5 +1,6 @@
 add_subdirectory(TCPClientUI)
 add_subdirectory(DateTimeDLL)
+add_subdirectory(LogViewer)
 add_subdirectory(Logger)
 add_subdirectory(EncryptDecryptECBMode)
 add_subdirectory(SQLServerDLL)

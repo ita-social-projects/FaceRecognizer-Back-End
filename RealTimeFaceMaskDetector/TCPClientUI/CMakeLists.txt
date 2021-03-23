@@ -90,8 +90,6 @@ set(THIRD_PARTY_LIBS
         ${OpenCvDll_PATHS}
         ${CMAKE_BINARY_DIR}/RealTimeFaceMaskDetector/SQLServerDLL/SQLServerDLL.dll
         C:/SQLAPI/vs2019/x86_64/bin/sqlapi.dll
-
-
         )
 foreach (libpath ${THIRD_PARTY_LIBS})
     add_custom_command(TARGET TCPClientUI POST_BUILD
